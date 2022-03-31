@@ -1,0 +1,215 @@
+unit uFrmConfig;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, IniFiles, FMX.DialogService,
+  FMX.Edit, FMX.Effects;
+
+type
+  TFrmConfig = class(TFrmTemplate)
+    edtAPI: TEdit;
+    Label1: TLabel;
+    rctConfirmar: TRectangle;
+    Label2: TLabel;
+    rctSenha: TRectangle;
+    rctTopSenha: TRectangle;
+    SpeedButton1: TSpeedButton;
+    Label3: TLabel;
+    edtSenha: TEdit;
+    Layout1: TLayout;
+    rctOK: TRectangle;
+    Label4: TLabel;
+    rctTermina: TRectangle;
+    Rectangle2: TRectangle;
+    SpeedButton2: TSpeedButton;
+    Label5: TLabel;
+    Layout2: TLayout;
+    Rectangle3: TRectangle;
+    Label6: TLabel;
+    Path1: TPath;
+    Layout4: TLayout;
+    Layout5: TLayout;
+    Layout6: TLayout;
+    ckbCelular: TCheckBox;
+    Rectangle10: TRectangle;
+    Label7: TLabel;
+    ShadowEffect5: TShadowEffect;
+    procedure rctConfirmarClick(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure rctOKClick(Sender: TObject);
+    procedure edtAPIClick(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure Rectangle3Click(Sender: TObject);
+    procedure Layout5Click(Sender: TObject);
+    procedure ckbCelularChange(Sender: TObject);
+    procedure edtAPIChangeTracking(Sender: TObject);
+    procedure edtSenhaChangeTracking(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure Rectangle10Click(Sender: TObject);
+  private
+    { Private declarations }
+    PrimeiraConx, Autorizado :Boolean;
+
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmConfig: TFrmConfig;
+
+implementation
+
+{$R *.fmx}
+
+uses Constantes, Notificacao, uLoading, UntLib, uFrmMain, uDMLocal;
+
+procedure TFrmConfig.ckbCelularChange(Sender: TObject);
+begin
+  inherited;
+ UsaCelular:= ckbCelular.IsChecked;
+end;
+
+procedure TFrmConfig.edtAPIChangeTracking(Sender: TObject);
+begin
+  inherited;
+ {$IFNDEF MSWINDOWS}
+   FrmMain.EscondeTeclado(EdtAPI);
+
+  {$ENDIF}
+end;
+
+procedure TFrmConfig.edtAPIClick(Sender: TObject);
+begin
+  inherited;
+  if not PrimeiraConx then
+   if not Autorizado then
+   Begin
+    rctSenha.Visible:=true;
+    rctSenha.BringToFront;
+    edtSenha.SetFocus;
+   End;
+end;
+
+procedure TFrmConfig.edtSenhaChangeTracking(Sender: TObject);
+begin
+  inherited;
+  {$IFNDEF MSWINDOWS}
+   FrmMain.EscondeTeclado(EdtAPI);
+
+  {$ENDIF}
+end;
+
+procedure TFrmConfig.FormShow(Sender: TObject);
+var ini:TIniFile;
+begin
+  inherited;
+  lbl_titulo.Text :='Configurações' ;
+  ckbCelular.IsChecked := UsaCelular;
+  if not (FileExists(GetHomePath + PathDelim + 'config.ini')) then
+  Begin
+  lblInfoTexto.Text := 'Configurando a primeira conexão... ' ;
+  PrimeiraConx      :=true;
+  End
+   else
+  Begin
+  PrimeiraConx      :=false;
+  lblInfoTexto.Text := 'Configurações do aplicativo...';
+  ini := TIniFile.Create(GetHomePath + PathDelim + 'config.ini');
+  edtAPI.Text := ini.ReadString('API','caminho','');
+  ini.DisposeOf;
+  End;
+end;
+
+procedure TFrmConfig.Layout5Click(Sender: TObject);
+begin
+  inherited;
+  if edtSenha.Password then
+  Begin
+  edtSenha.Password:= false;
+  Path1.Fill.Color := $483D8B;
+  End
+  else
+  Begin
+  edtSenha.Password:= true;
+  Path1.Fill.Color := $A9A9A9;
+  End;
+end;
+
+procedure TFrmConfig.rctConfirmarClick(Sender: TObject);
+var ini:TIniFile;
+begin
+  inherited;
+   if not DMLocal.GravaConfiguracao then
+    Begin
+    TDialogService.ShowMessage('Configirações não foram Gravadas, Tente novamente mais tarde! ');
+    abort
+    End;
+
+    ini := TIniFile.Create(GetHomePath + PathDelim + 'config.ini');
+    ini.WriteString('API','caminho',edtAPI.Text);
+    ini.WriteString('SENHA','senhaADM','@allisson2020');
+    ini.DisposeOf;
+    rctTermina.Visible:=true;
+end;
+
+procedure TFrmConfig.rctOKClick(Sender: TObject);
+var senha :string;
+ini : TInifile;
+begin
+  inherited;
+
+   ini   := TIniFile.Create (GetHomePath + PathDelim + 'config.ini');
+   senha := ini.ReadString('SENHA','senhaADM','');
+   ini.DisposeOf;
+
+   if senha=edtSenha.Text then
+   Begin
+     rctConfirmar.Enabled:= True;
+     edtSenha.Text := '';
+     rctSenha.Visible:=false;
+     edtAPI.SetFocus;
+     Autorizado := true;
+   End else
+   Begin
+     TDialogService.ShowMessage('Senha não confere.Verifique!');
+     rctConfirmar.Enabled := false;
+     edtSenha.Text:='';
+     edtSenha.SetFocus;
+     Autorizado := false;
+   End;
+
+end;
+
+procedure TFrmConfig.Rectangle10Click(Sender: TObject);
+begin
+  inherited;
+  if PrimeiraConx then
+   Application.Terminate else
+  TLibery.MudarAba(FrmMain.tbiPrincipal,Sender);
+end;
+
+procedure TFrmConfig.Rectangle3Click(Sender: TObject);
+begin
+  inherited;
+  Application.Terminate;
+end;
+
+procedure TFrmConfig.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  if PrimeiraConx then
+   Application.Terminate else
+  TLibery.MudarAba(FrmMain.tbiPrincipal,Sender);
+end;
+
+procedure TFrmConfig.SpeedButton1Click(Sender: TObject);
+begin
+  inherited;
+  rctSenha.Visible:= false;
+  edtSenha.Text   := '';
+end;
+
+end.

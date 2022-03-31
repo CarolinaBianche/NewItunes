@@ -1,0 +1,17 @@
+inherited FrmOcorrencia: TFrmOcorrencia
+  Caption = 'FrmOcorrencia'
+  DesignerMasterStyle = 3
+  inherited lytGeral: TLayout
+    inherited rect_titulo: TRectangle
+      inherited lytBotoes: TLayout
+        inherited lbl_titulo: TLabel
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+        end
+      end
+    end
+    inherited vertLista: TVertScrollBox
+      Viewport.Width = 324.000000000000000000
+      Viewport.Height = 343.000000000000000000
+    end
+  end
+end

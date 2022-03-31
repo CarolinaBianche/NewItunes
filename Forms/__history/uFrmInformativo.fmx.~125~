@@ -1,0 +1,1786 @@
+inherited FrmInformativo: TFrmInformativo
+  Caption = 'FrmTemplate1'
+  ClientHeight = 698
+  ClientWidth = 404
+  DesignerMasterStyle = 3
+  inherited lytGeral: TLayout
+    Size.Width = 404.000000000000000000
+    Size.Height = 698.000000000000000000
+    inherited rect_titulo: TRectangle
+      Position.X = -9.975304603576660000
+      Size.Width = 413.975250244140600000
+      Size.Height = 82.043479919433590000
+      inherited lytBotoes: TLayout
+        Size.Width = 413.975250244140600000
+        inherited lbl_titulo: TLabel
+          Size.Width = 413.975250244140600000
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+        end
+        inherited speBtnAtualizar: TSpeedButton
+          Position.X = 365.975250244140600000
+        end
+        inherited speBtnMenu: TSpeedButton
+          OnClick = speBtnMenuClick
+        end
+      end
+    end
+    inherited rect_informativo: TRectangle
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 374.000000000000000000
+      Size.Height = 100.000000000000000000
+      inherited lblInfoTexto: TLabel
+        StyledSettings = [Family]
+        Size.Width = 364.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.VertAlign = Leading
+        Text = 'Cliente'
+        inherited Layout3: TLayout
+          Size.Width = 350.000000000000000000
+        end
+        object lblCnpj: TLabel
+          Align = Bottom
+          AutoSize = True
+          StyledSettings = [Family]
+          Margins.Left = 5.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Position.Y = 16.000000000000000000
+          Size.Width = 354.000000000000000000
+          Size.Height = 11.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 9.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF959595
+          TextSettings.HorzAlign = Trailing
+          Text = 'CNPJ'
+          TabOrder = 1
+        end
+      end
+      inherited Line1: TLine
+        Size.Width = 364.000000000000000000
+      end
+      object Layout4: TLayout
+        Align = Bottom
+        Position.Y = 50.000000000000000000
+        Size.Width = 374.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object lblnroPedido: TLabel
+          AutoSize = True
+          StyledSettings = [Family]
+          Margins.Left = 5.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Position.X = 6.000000000000000000
+          Size.Width = 218.000000000000000000
+          Size.Height = 11.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 9.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF959595
+          Text = 'Nota'
+          TabOrder = 0
+        end
+        object lblPedido: TLabel
+          AutoSize = True
+          StyledSettings = [Family]
+          Margins.Left = 5.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Position.X = 6.000000000000000000
+          Position.Y = 18.000000000000000000
+          Size.Width = 195.000000000000000000
+          Size.Height = 11.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 9.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF959595
+          Text = 'COD.'
+          TabOrder = 1
+        end
+        object lblData: TLabel
+          AutoSize = True
+          StyledSettings = [Family]
+          Margins.Left = 5.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Position.X = 6.000000000000000000
+          Position.Y = 35.000000000000000000
+          Size.Width = 195.000000000000000000
+          Size.Height = 11.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 9.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF959595
+          Text = 'Nome Produto'
+          TabOrder = 2
+        end
+        object Rectangle1: TRectangle
+          Align = Right
+          Fill.Color = xFFB8CCCE
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 3.000000000000000000
+          Position.X = 288.000000000000000000
+          Size.Width = 76.000000000000000000
+          Size.Height = 47.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFD6D6D6
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object Label1: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 5.000000000000000000
+            Size.Width = 71.000000000000000000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            Text = 'Qtd.'
+            TabOrder = 0
+            object lblQdtRateada: TLabel
+              Align = Right
+              StyledSettings = [Family, FontColor]
+              Margins.Right = 10.000000000000000000
+              Position.X = 22.000000000000000000
+              Size.Width = 39.000000000000000000
+              Size.Height = 11.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.HorzAlign = Trailing
+              Text = '0'
+              TabOrder = 0
+            end
+          end
+          object Label15: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 27.000000000000000000
+            Size.Width = 71.000000000000000000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            Text = 'Qtd.PL'
+            TabOrder = 1
+            object lblQtdPaletes: TLabel
+              Align = Right
+              StyledSettings = [Family, FontColor]
+              Margins.Right = 10.000000000000000000
+              Position.X = 22.000000000000000000
+              Size.Width = 39.000000000000000000
+              Size.Height = 11.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.HorzAlign = Trailing
+              Text = '0'
+              TabOrder = 2
+            end
+          end
+          object Label18: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 16.000000000000000000
+            Size.Width = 71.000000000000000000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            Text = 'Qtd.Emb.'
+            TabOrder = 2
+            object lblQtdEmbalagens: TLabel
+              Align = Right
+              StyledSettings = [Family, FontColor]
+              Margins.Right = 10.000000000000000000
+              Position.X = 22.000000000000000000
+              Size.Width = 39.000000000000000000
+              Size.Height = 11.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.HorzAlign = Trailing
+              Text = '0'
+              TabOrder = 2
+            end
+          end
+        end
+        object Rectangle2: TRectangle
+          Align = Right
+          Fill.Color = xFFA7D9DF
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 3.000000000000000000
+          Position.X = 202.000000000000000000
+          Size.Width = 76.000000000000000000
+          Size.Height = 47.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFD6D6D6
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object Label11: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 5.000000000000000000
+            Size.Width = 71.000000000000000000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            Text = 'Qtd.'
+            TabOrder = 0
+            object lblQtds: TLabel
+              Align = Right
+              StyledSettings = [Family, FontColor]
+              Margins.Right = 10.000000000000000000
+              Position.X = 22.000000000000000000
+              Size.Width = 39.000000000000000000
+              Size.Height = 11.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.HorzAlign = Trailing
+              Text = '0'
+              TabOrder = 0
+            end
+          end
+          object Label20: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 27.000000000000000000
+            Size.Width = 71.000000000000000000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            Text = 'Qtd.PL'
+            TabOrder = 1
+            object lblQtdPL: TLabel
+              Align = Right
+              StyledSettings = [Family, FontColor]
+              Margins.Right = 10.000000000000000000
+              Position.X = 22.000000000000000000
+              Size.Width = 39.000000000000000000
+              Size.Height = 11.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.HorzAlign = Trailing
+              Text = '0'
+              TabOrder = 2
+            end
+          end
+          object Label22: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 16.000000000000000000
+            Size.Width = 71.000000000000000000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            Text = 'Qtd.Emb.'
+            TabOrder = 2
+            object lblQtdEm: TLabel
+              Align = Right
+              StyledSettings = [Family, FontColor]
+              Margins.Right = 10.000000000000000000
+              Position.X = 22.000000000000000000
+              Size.Width = 39.000000000000000000
+              Size.Height = 11.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.HorzAlign = Trailing
+              Text = '0'
+              TabOrder = 2
+            end
+          end
+        end
+      end
+    end
+    inherited vertLista: TVertScrollBox
+      Margins.Top = 150.000000000000000000
+      Size.Width = 404.000000000000000000
+      Size.Height = 548.000000000000000000
+      TabOrder = 0
+      Viewport.Width = 404.000000000000000000
+      Viewport.Height = 548.000000000000000000
+      object rctCard3: TRectangle
+        Align = Top
+        Margins.Left = 15.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Position.X = 15.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 374.000000000000000000
+        Size.Height = 303.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF979797
+        XRadius = 10.000000000000000000
+        YRadius = 10.000000000000000000
+        object rctTopCard3: TRectangle
+          Align = Bottom
+          Corners = [BottomLeft, BottomRight]
+          Fill.Color = xFF434343
+          Margins.Left = 1.000000000000000000
+          Margins.Right = 1.000000000000000000
+          Position.X = 1.000000000000000000
+          Position.Y = 262.000000000000000000
+          Size.Width = 372.000000000000000000
+          Size.Height = 41.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object spdBtnFinal: TSpeedButton
+            Align = Right
+            StyledSettings = [Family, Size, Style]
+            IconTintColor = claWhite
+            Position.X = 264.000000000000000000
+            Size.Width = 108.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Concluir '
+            TextSettings.FontColor = claWhite
+            OnClick = spdBtnFinalClick
+          end
+          object spdBtnVC2: TSpeedButton
+            Align = Left
+            StyledSettings = [Family, Size, Style]
+            IconTintColor = claWhite
+            Size.Width = 105.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            Text = '<< Anterior '
+            TextSettings.FontColor = claWhite
+            OnClick = spdBtnVC2Click
+          end
+        end
+        object ckbVetor: TCheckBox
+          Align = Bottom
+          StyledSettings = [Family, Style, FontColor]
+          IsChecked = True
+          Margins.Left = 10.000000000000000000
+          Margins.Bottom = 5.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 238.000000000000000000
+          Size.Width = 364.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Automatiza 5'#186' Vetor conforme Qtd Paletes'
+          TextSettings.Font.Size = 9.000000000000000000
+          TextSettings.HorzAlign = Center
+        end
+        object rect_andar: TRectangle
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 196.000000000000000000
+          Position.Y = 80.000000000000000000
+          Size.Width = 126.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label9: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 121.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE LAOD'
+            TabOrder = 0
+          end
+          object ShadowEffect12: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtAndar: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 4
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 116.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'LADO'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            OnChangeTracking = edtAndarChangeTracking
+            OnKeyDown = edtAndarKeyDown
+            OnEnter = edtAndarEnter
+            object btn_limpa_andar: TSpeedButton
+              Align = Right
+              Position.X = 84.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_andarClick
+            end
+          end
+        end
+        object rect_apto: TRectangle
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 37.000000000000000000
+          Position.Y = 157.000000000000000000
+          Size.Width = 126.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label10: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 121.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE NR PALETE'
+            TabOrder = 0
+          end
+          object ShadowEffect13: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtApto: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 5
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 116.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'NR PALETE'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            OnChangeTracking = edtAptoChangeTracking
+            OnKeyDown = edtAptoKeyDown
+            OnEnter = edtAptoEnter
+            object btn_limpa_apto: TSpeedButton
+              Align = Right
+              Position.X = 84.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_aptoClick
+            end
+          end
+        end
+        object rect_galpao: TRectangle
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 36.000000000000000000
+          Position.Y = 3.000000000000000000
+          Size.Width = 126.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label17: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 121.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE ARMAZ'#201'M'
+            TabOrder = 0
+          end
+          object ShadowEffect9: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtGalpao: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 1
+            ReturnKeyType = Next
+            MaxLength = 1
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 116.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'ARMAZ'#201'M'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            OnChangeTracking = edtGalpaoChangeTracking
+            OnKeyDown = edtGalpaoKeyDown
+            OnEnter = edtGalpaoEnter
+            object btn_limpa_galpao: TSpeedButton
+              Align = Right
+              Position.X = 84.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_galpaoClick
+            end
+          end
+        end
+        object rect_numero: TRectangle
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 36.000000000000000000
+          Position.Y = 79.000000000000000000
+          Size.Width = 126.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label8: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 121.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE QUADRA'
+            TabOrder = 0
+          end
+          object ShadowEffect11: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtNumero: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 3
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 116.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'QUADRA'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            OnChangeTracking = edtNumeroChangeTracking
+            OnKeyDown = edtNumeroKeyDown
+            OnEnter = edtNumeroEnter
+            object btn_limpa_num: TSpeedButton
+              Align = Right
+              Position.X = 84.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_numClick
+            end
+          end
+        end
+        object rect_rua: TRectangle
+          Fill.Color = xFFDBDEC9
+          Locked = True
+          HitTest = False
+          Position.X = 197.000000000000000000
+          Position.Y = 4.000000000000000000
+          Size.Width = 126.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label7: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 121.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE GALP'#195'O'
+            TabOrder = 0
+          end
+          object ShadowEffect10: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtRua: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 2
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 116.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'GALP'#195'O'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            OnChangeTracking = edtRuaChangeTracking
+            OnKeyDown = edtRuaKeyDown
+            OnEnter = edtRuaEnter
+            object btn_limpa_rua: TSpeedButton
+              Align = Right
+              Position.X = 84.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_ruaClick
+            end
+          end
+        end
+      end
+      object lv: TListView
+        ItemAppearanceClassName = 'TDynamicAppearance'
+        ItemEditAppearanceClassName = 'TDynamicAppearance'
+        HeaderAppearanceClassName = 'TListHeaderObjects'
+        FooterAppearanceClassName = 'TListHeaderObjects'
+        ItemSpaces.Left = 0.000000000000000000
+        ItemSpaces.Right = 0.000000000000000000
+        Align = Client
+        Size.Width = 404.000000000000000000
+        Size.Height = 548.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Visible = False
+        ItemAppearance.ItemHeight = 60
+        ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+          item
+            AppearanceObjectName = 'TxtDescricao'
+            AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.TextAlign = Leading
+            Appearance.TextColor = xFFB0B0B0
+            Appearance.Width = 299.000000000000000000
+            Appearance.Height = 18.000000000000000000
+            Appearance.PlaceOffset.X = 49.000000000000000000
+            Appearance.PlaceOffset.Y = 7.000000000000000000
+          end
+          item
+            AppearanceObjectName = 'ImgCheckbox'
+            AppearanceClassName = 'TImageObjectAppearance'
+            Appearance.Width = 30.000000000000000000
+            Appearance.Height = 30.000000000000000000
+            Appearance.PlaceOffset.X = 5.000000000000000000
+            Appearance.PlaceOffset.Y = 14.000000000000000000
+          end
+          item
+            AppearanceObjectName = 'TxtQtd'
+            AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.TextAlign = Leading
+            Appearance.TextColor = xFFB0B0B0
+            Appearance.Width = 297.000000000000000000
+            Appearance.Height = 17.000000000000000000
+            Appearance.PlaceOffset.X = 48.000000000000000000
+            Appearance.PlaceOffset.Y = 32.000000000000000000
+          end>
+        ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+          item
+            AppearanceObjectName = 'Text1'
+            AppearanceClassName = 'TTextObjectAppearance'
+          end>
+        CanSwipeDelete = False
+        OnItemClick = lvItemClick
+        ShowSelection = False
+      end
+      object rectExcluir: TRectangle
+        Align = Top
+        Fill.Color = xFF434343
+        Locked = True
+        HitTest = False
+        Position.Y = 155.000000000000000000
+        Size.Width = 404.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        Visible = False
+        object Label14: TLabel
+          Align = Contents
+          StyledSettings = [Family]
+          Locked = True
+          Size.Width = 404.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+          TextSettings.FontColor = claWhite
+          TextSettings.HorzAlign = Center
+          Text = 'Produtos Rateados'
+          TabOrder = 0
+        end
+        object img_excluir: TImage
+          MultiResBitmap.Height = 64
+          MultiResBitmap.Width = 64
+          MultiResBitmap = <
+            item
+              Width = 64
+              Height = 64
+              PNG = {
+                89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
+                DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                015549444154785EEDDA3B6E8340180460960EA4A481D292AF911C23910F92A3
+                F80039420E9203584A0E9002CA38021A76E3FDE589E5222ED8350FEB9FAF99C5
+                12FB180A5C90101111118DC539F7D834CDFE7720B947EEC534B7C91FE0C11FE4
+                1B671A4CEE953930DD280C72106C6A75BCBAE8AEEBBA6D9EE7F7B80ED2B6ED3E
+                CBB2173FFC39FE72D1579AA6EF188FCB5AFB8687B418B2276C6F9014A9160B40
+                AAA5BE00D22EE87FC039FF9F6083E12CFCBB3FE8F5F727BA00790763380BE361
+                18846F01A45A2C00A9160B40AAC502906AB100A45A2C00A9160B40AAC502906A
+                B100A45A2C00A9160B40AAC502906AB100A45A2C00A9160B40AA155D405DD70E
+                C3C95D63EDE8028AA2F8C4707265597E60182CBA80C9BECEFC873166B6B54F9C
+                73EB908FA163E163EA35B6312FBF91E7294BC0E19FB0FC32C8D3B0D6BEF67DBF
+                ABAACA62AF572373CADCB2C6629E3C111111DDB024390052319B2C736FFF5C00
+                00000049454E44AE426082}
+              FileName = 
+                'D:\99Coders\Posts\205 - Listview com checkbox -------\FontesFull' +
+                '\Images\delete.png'
+            end>
+          Align = Right
+          Margins.Top = 5.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 5.000000000000000000
+          Position.X = 349.000000000000000000
+          Position.Y = 5.000000000000000000
+          Size.Width = 50.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          OnClick = img_excluirClick
+        end
+      end
+      object rect_qtd_inicial: TRectangle
+        Align = Top
+        Margins.Left = 15.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Margins.Bottom = 2.000000000000000000
+        Position.X = 15.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 374.000000000000000000
+        Size.Height = 296.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF979797
+        Visible = False
+        XRadius = 10.000000000000000000
+        YRadius = 10.000000000000000000
+        object rect_EtdEmb: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          Position.X = 114.792480468750000000
+          Position.Y = 19.000000000000000000
+          Size.Width = 137.936111450195300000
+          Size.Height = 102.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object ShadowEffect1: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object Edit1: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Bottom
+            TabOrder = 0
+            KeyboardType = NumberPad
+            ReturnKeyType = Send
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.HorzAlign = Center
+            Position.X = 10.000000000000000000
+            Position.Y = 55.000000000000000000
+            Margins.Left = 10.000000000000000000
+            Margins.Top = 2.000000000000000000
+            Margins.Bottom = 15.000000000000000000
+            Size.Width = 127.936111450195300000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'digite '
+            StyledSettings = [Style, FontColor]
+            OnChangeTracking = edtLoteChangeTracking
+            OnKeyDown = Edit1KeyDown
+            OnEnter = edtLoteEnter
+          end
+          object Label12: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 10.000000000000000000
+            Size.Width = 132.936111450195300000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            TextSettings.VertAlign = Leading
+            Text = 'Digite Total Qtd.Embalagem'
+            TabOrder = 1
+          end
+        end
+        object ShadowEffect2: TShadowEffect
+          Distance = 3.000000000000000000
+          Direction = 45.000000000000000000
+          Softness = 0.300000011920929000
+          Opacity = 0.600000023841857900
+          ShadowColor = claBlack
+        end
+        object rect_QtdPal: TRectangle
+          Align = Scale
+          Fill.Color = xFFC9DECC
+          Position.X = 114.792480468750000000
+          Position.Y = 131.000000000000000000
+          Size.Width = 137.936111450195300000
+          Size.Height = 102.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object ShadowEffect3: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object Edit2: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Bottom
+            TabOrder = 0
+            KeyboardType = NumberPad
+            ReturnKeyType = Send
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.HorzAlign = Center
+            Position.X = 10.000000000000000000
+            Position.Y = 55.000000000000000000
+            Margins.Left = 10.000000000000000000
+            Margins.Top = 2.000000000000000000
+            Margins.Bottom = 15.000000000000000000
+            Size.Width = 127.936111450195300000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'digite '
+            StyledSettings = [Style, FontColor]
+            OnChangeTracking = edtLoteChangeTracking
+            OnKeyDown = Edit2KeyDown
+            OnEnter = edtLoteEnter
+          end
+          object Label13: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 10.000000000000000000
+            Size.Width = 132.936111450195300000
+            Size.Height = 11.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            TextSettings.VertAlign = Leading
+            Text = 'Digite Total Qtd.Paletes '
+            TabOrder = 1
+          end
+        end
+        object rect_Confirmar: TRectangle
+          Align = Bottom
+          Corners = [BottomLeft, BottomRight]
+          Fill.Color = xFF434343
+          HitTest = False
+          Margins.Left = 1.000000000000000000
+          Margins.Right = 1.000000000000000000
+          Position.X = 1.000000000000000000
+          Position.Y = 246.000000000000000000
+          Size.Width = 372.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object SpeedButton4: TSpeedButton
+            Align = Bottom
+            StyledSettings = [Family, Size, Style]
+            IconTintColor = xFFC60101
+            Position.Y = 2.000000000000000000
+            Size.Width = 372.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Confirmar as Informa'#231#245'es '
+            TextSettings.FontColor = xFFFCFCFC
+            OnClick = SpeedButton4Click
+          end
+        end
+      end
+      object rctCard2: TRectangle
+        Align = Top
+        Margins.Left = 15.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Position.X = 15.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 374.000000000000000000
+        Size.Height = 283.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF979797
+        Visible = False
+        XRadius = 10.000000000000000000
+        YRadius = 10.000000000000000000
+        object rect_Proximo: TRectangle
+          Align = Bottom
+          Corners = [BottomLeft, BottomRight]
+          Fill.Color = xFF434343
+          Position.Y = 243.000000000000000000
+          Size.Width = 374.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object SpeedButton2: TSpeedButton
+            Align = Right
+            StyledSettings = [Family, Size, Style]
+            IconTintColor = claWhite
+            Position.X = 256.000000000000000000
+            Size.Width = 118.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Pr'#243'ximo >>'
+            TextSettings.FontColor = claWhite
+            OnClick = SpeedButton2Click
+          end
+        end
+        object rect_Lote: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 40.000000000000000000
+          Position.Y = 5.000000000000000000
+          Size.Width = 139.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object edtLote: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 0
+            ReturnKeyType = Next
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 18.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 129.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'LOTE'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            OnChangeTracking = edtLoteChangeTracking
+            OnKeyDown = edtLoteKeyDown
+            OnEnter = edtLoteEnter
+            object btn_limpa_Lote: TSpeedButton
+              Align = Right
+              Margins.Right = 5.000000000000000000
+              Position.X = 92.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_LoteClick
+            end
+          end
+          object Label2: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 134.000000000000000000
+            Size.Height = 14.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE LOTE'
+            TabOrder = 1
+          end
+          object ShadowEffect4: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+        end
+        object rect_serie: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 214.000000000000000000
+          Position.Y = 6.000000000000000000
+          Size.Width = 139.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object ShadowEffect5: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtSerie: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 0
+            ReturnKeyType = Next
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            Position.X = 4.000000000000000000
+            Position.Y = 28.000000000000000000
+            Margins.Left = 4.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 4.000000000000000000
+            Size.Width = 131.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'S'#201'RIE'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            OnChangeTracking = edtSerieChangeTracking
+            OnKeyDown = edtSerieKeyDown
+            OnEnter = edtSerieEnter
+            object btn_limpa_serie: TSpeedButton
+              Align = Right
+              Position.X = 99.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_serieClick
+            end
+          end
+          object Label3: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 10.000000000000000000
+            Size.Width = 134.000000000000000000
+            Size.Height = 14.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.HorzAlign = Center
+            TextSettings.VertAlign = Leading
+            Text = 'DIGITE S'#201'RIE'
+            TabOrder = 1
+          end
+        end
+        object rect_QtdEmb: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 214.000000000000000000
+          Position.Y = 84.000000000000000000
+          Size.Width = 139.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object ShadowEffect6: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object EdtQtdEm: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 0
+            KeyboardType = NumberPad
+            ReturnKeyType = Next
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            Position.X = 4.000000000000000000
+            Position.Y = 27.000000000000000000
+            Margins.Left = 4.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 4.000000000000000000
+            Size.Width = 131.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'QTD EMBS'
+            StyledSettings = [Style, FontColor]
+            OnChangeTracking = EdtQtdEmChangeTracking
+            OnKeyDown = EdtQtdEmKeyDown
+            OnEnter = EdtQtdEmEnter
+            object btn_limpa_qtdEm: TSpeedButton
+              Align = Right
+              Position.X = 99.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = k
+            end
+          end
+          object Label5: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 10.000000000000000000
+            Size.Width = 134.000000000000000000
+            Size.Height = 13.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 10.000000000000000000
+            TextSettings.HorzAlign = Center
+            TextSettings.VertAlign = Leading
+            Text = 'DIGITE QTD EMB. POR PAL'
+            TabOrder = 1
+          end
+        end
+        object rect_QtdUni: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 39.000000000000000000
+          Position.Y = 83.000000000000000000
+          Size.Width = 139.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object ShadowEffect7: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object EdtQtd: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 0
+            KeyboardType = NumberPad
+            ReturnKeyType = Next
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            Position.X = 4.000000000000000000
+            Position.Y = 28.000000000000000000
+            Margins.Left = 4.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 4.000000000000000000
+            Size.Width = 131.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'QTD UNID'
+            StyledSettings = [Style, FontColor]
+            OnChangeTracking = EdtQtdChangeTracking
+            OnKeyDown = EdtQtdKeyDown
+            OnEnter = EdtQtdEnter
+            object btn_limpa_qtd: TSpeedButton
+              Align = Right
+              Position.X = 99.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_qtdClick
+            end
+          end
+          object Label4: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 10.000000000000000000
+            Size.Width = 134.000000000000000000
+            Size.Height = 14.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.HorzAlign = Center
+            TextSettings.VertAlign = Leading
+            Text = 'DIGITE QTD UNIDS'
+            TabOrder = 1
+          end
+        end
+        object rect_QtdPals: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 37.000000000000000000
+          Position.Y = 162.000000000000000000
+          Size.Width = 139.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object ShadowEffect8: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtQtdPL: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 0
+            KeyboardType = NumberPad
+            ReturnKeyType = Next
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            Position.X = 4.000000000000000000
+            Position.Y = 28.000000000000000000
+            Margins.Left = 4.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 4.000000000000000000
+            Size.Width = 131.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'QTD PALTS'
+            StyledSettings = [Style, FontColor]
+            OnChangeTracking = edtQtdPLChangeTracking
+            OnKeyDown = edtQtdPLKeyDown
+            OnEnter = edtQtdPLEnter
+            object btn_limpa_qtdPl: TSpeedButton
+              Align = Right
+              Position.X = 99.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_qtdPlClick
+            end
+          end
+          object Label6: TLabel
+            Align = Top
+            AutoSize = True
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Position.X = 5.000000000000000000
+            Position.Y = 10.000000000000000000
+            Size.Width = 134.000000000000000000
+            Size.Height = 14.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.HorzAlign = Center
+            TextSettings.VertAlign = Leading
+            Text = 'DIGITE QTD PALT.'
+            TabOrder = 1
+          end
+        end
+      end
+    end
+    object lytFinalizar: TLayout
+      Align = Top
+      Locked = True
+      Margins.Left = 4.000000000000000000
+      Margins.Right = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 4.000000000000000000
+      Position.Y = 155.000000000000000000
+      Size.Width = 396.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+    end
+    object rctFinalizar: TRectangle
+      Align = Bottom
+      Fill.Color = xFFBD0E0E
+      Position.Y = 648.000000000000000000
+      Size.Width = 404.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+      OnClick = rctFinalizarClick
+      object Label16: TLabel
+        Align = Client
+        StyledSettings = [Size]
+        Locked = True
+        Size.Width = 404.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Century Gothic'
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = claWhite
+        TextSettings.HorzAlign = Center
+        Text = 'CONFERIR E FINALIZAR'
+        TabOrder = 0
+      end
+    end
+    object rect_tipo_rateio: TRectangle
+      Align = Top
+      Position.Y = 257.000000000000000000
+      Size.Width = 404.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      Visible = False
+      object rctEntregue: TRoundRect
+        Align = Center
+        Fill.Color = xFF00A9B5
+        Margins.Left = 4.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 4.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Size.Width = 196.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFFFEFEFE
+        OnClick = rctEntregueClick
+        object lbl_dis: TLabel
+          Align = Client
+          StyledSettings = []
+          Locked = True
+          Margins.Right = 10.000000000000000000
+          Size.Width = 186.000000000000000000
+          Size.Height = 42.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Century Gothic'
+          TextSettings.Font.Size = 11.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claWhite
+          TextSettings.HorzAlign = Trailing
+          Text = '+ INICIAR CONFER'#202'NCIA'
+          TabOrder = 1
+          object Image1: TImage
+            MultiResBitmap.Height = 64
+            MultiResBitmap.Width = 64
+            MultiResBitmap = <
+              item
+                Width = 64
+                Height = 64
+                PNG = {
+                  89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
+                  DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  07A849444154785EED9B5B6C154518807B4E45AC4AC3252848B804C4448C7231
+                  90A844241A1F8C10540817035649883122541E880FC66A24D1072F68C4608CA2
+                  06C1124DA4F10601EF8926020FA055098260D1D64A6B2FF6DEFAFDB3FF1E77CF
+                  D93DB73D5BB6D22F99CCECFC97F96776CEECEC6C5B1426BDBDBDB3480F93666A
+                  55D604B18D04D281E3C78F77F5414D4D4D27D90C156524886D64A0131BA40336
+                  723755949120B69181A067EADD337791EBE92ACA4810DB4841FC3308BE3C9F0E
+                  04B11D649041FA1F7EAB0B7B7A7AAAC8176B55C1615D58441B1FD3C652AD8A0E
+                  1D1D1D7FD8AB36D9B55A5D30E8F4D50D0D0D6DD2467373738B564707EECC8712
+                  9CD0D5D5554D365C4581C1D7087C7E6F9C437777F7E72A8A0EDCA189ADADAD7F
+                  6B8C12E4176417AB386FF05B8AAFAF2CAFD6DDA76EAA8AA305812DAEAEAEEED1
+                  5865100EC9C0A83867B09D828FC3EAAE0FDF54F52E57713421C08724508DB98F
+                  59D12475A4A1AA9211744B481BE46EAB1B0375E5AA126D0874556D6D6D87C66D
+                  E8ECECFC8D75E20964D3B98CAB6A02EA8A91CD446793BDA0DA882F64F7A8EAC0
+                  8080E7307D8F681F5CB4B4B434233B4867F74A929F4AF2DDB6111FF89AAD6E07
+                  16043E9454CEDDAFD1FE648DCC186CD78B0F753770D181B883BBFDB6744CFB98
+                  02B253E86CA7B8A8BF3A1ED33C6F08741CD99DA4D6582CF63AA9CF08D280CD25
+                  6413D0357B053ADC4876321E8FD7C9753AD01D42BA9F6237E93D6C6A8DA03F21
+                  80E174E23EEED63EE7638FBA15AA121AB4F18036278FC56E62F888BA95A461AA
+                  120E34604FE377ED2D6932C8437B0FB0A18DD5DA9C8BA6A6A65662DB817C0197
+                  43543D18388AE3703E8E5F6D6B6B6B302D25216777C83F90C151B350A1C9186D
+                  2DA7CD4F64065851B8696F6FAF47BE85E25C527E3F731A99CAFEFB98F1E8018F
+                  A76FD0594B92DFF35981B6C792CA89E580869502B2C3E88C5793ECC02EC6087E
+                  6AB970239B141CDEA6AA918198EE923BAF61BAA02F55AA961D385BA1B6BEC8DB
+                  197A1B4963D5ACDFA1ED71A475DCE5C4CB921FE8DDAE66E941719873E3C2E8ED
+                  24BDC4E8FEA9552E7425DE43B10CDB5275131AB4234FA0D5B4B9DFF90472C27A
+                  7506F92BA437B44A6ED831EC4AD48D3F183DA33632DD6BC946483D7931E916E4
+                  6FCA5656E4C9D4D7D7B7239753A1555C5E681C1600FCC9136881B42DABBDD59A
+                  1BAFB625E7669E300A80EC31E3D00F14A6D9E7F14A998A5CA057826C893498A4
+                  9F409E1A12B004CEE5796A9A35D8C44973F1B139CDECEB91E94F1BEB48A3D4D4
+                  05F5CB54BDAFB1B1F11FB2C92A4A85C6F65BAA66F5FC9A2CE323840646A2B746
+                  0221A0C46BB013D9FE4A4728CE55335FF077157A154CD95F8CB1077A3A54419A
+                  A46669A1ED7DC61028EFD66A37349C58F8F4F99AF3F7386C26E0672301FE681C
+                  7980EC07B20AF412A73A94C79364313B6469A5C220FEAA8398735CF876CD6CAE
+                  DD0B2215C90BDF0B2ACA1B7CCEC6CF73AC23BFAB5B17325B649649F29B394CFD
+                  3A7CBC88AFEBB80CF4DE829F672DAF1E0B2242E7C2278711853CD0B47FCB5B9D
+                  67867EC8361BDD2A8A4B4885D9D282DC64FA76DA34025C5B0B22852B9DD383C6
+                  37194108C8A89396D246E23769C34CF812D9DDA48B54BDE048DFB43933D06493
+                  24A8F556D57F30457E2693DFE9156A5B5008E435AB2517952A2E28D2077CCBA2
+                  2A7D72816CAD284CF412DA7067BE45671DC531EA3310F8BADEEF378FEC66550B
+                  04AEC648CC12BBE53915D6BC53E85C6E1B389FB9754623098236CF5C8A6B30CC
+                  6BC7876D313E0E1A871EE81322AFDF3D3165DC9BC83E40E414657D395F4DDDE0
+                  682842F906B7CBEFBD5F1DED44573639DE8E3C40FF41CB833FE86C50F58CA03E
+                  446220961DBAC9F184413F80DE72526EEB0B06A5D897D1C05EDD1BA4206F60C8
+                  5FA698F6DD1B5F973ACF14640A6AD1857E47F07DC142254692D9BA45DA364699
+                  A950F3FC21A85138CAB4E33B49609BD19DA56609106FB3B4CC1D3982DE937A99
+                  02B2B7D42C013EA72192C5ECA8A59513C107C009C14C24C98EEF276D200564F6
+                  767532BA37240DDA4D24917922BA308F94F5EB6E06721F008CE4384C0E1B574A
+                  59AB53403E873BF67C9A1D9FBCB2365A57E6EE6E173B8ABE03A034AA6D21C87D
+                  00E898BC561A6410B4DA17D4E4D3D6ADE4DBFC767CFAFBBE4CF5330D4021F11D
+                  00DF3B1B8BC512AF8D94A768D117747AE2F1F81EF2B29292923134BA94CEBE5F
+                  5757D7A92A45D43F8ACE69BD8C04BE0310043AD946AA2C2E2E5E347AF46859D1
+                  EF65409651B7D9D2880EA10C80133A7D8659B18DFC1DAD8A14A10F40D4191C00
+                  CDCF59060740F37396C101D0FC9C25AB0160FF3E9F5DDD3C3633FFBB01F3ED10
+                  9D6DD562113BBA1BD9CC7CC61BDE0906E36906E31A150D089C7DC91A3A296785
+                  F237BF9EF08A2ADFDD1F113D35C9095CF4CBCB107D906F00F9FDB52AF619CF0A
+                  95EF6844BECF65FDC712D884360041BF4B7A82B3C4175ABF3F6AE4FD5D3E95EF
+                  454F5EA5D3FEA134F2820E40585FA63DA1915269481AB4FFBF2F193DA4AC9441
+                  234F39E9A52EF000C881899C16D186EFD7E1D091868925ED592153F22F066B2B
+                  C5C4C12979DE0320C76DB47B56FF3AC51302F2FD0A6383EC2883F138C9EBEB90
+                  2FEA33B4AF55058740E53BFF53CE0F92B9A247EEAE9933E020F09CBE0E675A3B
+                  063474E802ED58A5F3FF099C4F0F52685F87BD386BD38A8E8E6477B950CA8CC1
+                  6E393A33827EA5A8E85FA279D6BFC6B1CC170000000049454E44AE426082}
+                FileName = 'C:\Users\ALLISSON\Downloads\icons8-entrega-bem-sucedida-64.png'
+              end>
+            Align = Left
+            Locked = True
+            HitTest = False
+            Margins.Left = 3.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 3.000000000000000000
+            Margins.Bottom = 4.000000000000000000
+            Position.X = 3.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 50.000000000000000000
+            Size.Height = 34.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+      end
+    end
+    object img_uncheck: TImage
+      MultiResBitmap.Height = 195
+      MultiResBitmap.Width = 195
+      MultiResBitmap = <
+        item
+          Width = 195
+          Height = 195
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000C3000000C308060000003F7FA5
+            AA000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            09E949444154785EEDDC7F6CDC651DC0F1CFF37CAFEDA6AD0B3F2B8A9AB13822
+            BAEB75D74D3722B26004342A189D2846F047422451A2F11F44A37F8012F94330
+            9A188444620C0AC88C28D105E28F04CC7AEDF57A34083366319A98CA0F19656C
+            DDDDF7797CBEC767B5CD5DBBEBDAEFB7D7E3FD4A469FCFD325037AEF7E7FF47B
+            13000000B462F46326C6C6C67A74D93073C619912E8196F66CDE7C4C97A94B25
+            86F0A2DFE4A3DEAB8CF80B63E37745DE9F2B26DAA09F06962FAE4D7BDBF3B431
+            F2A889E5E162313FA69F5935AB1A4369A27A9D71F26589E47CDD0252E3BCDCE5
+            8CFBF6BB0A8543BAB522AB124388E0F650EC0D3A0299723EAE462EFADC4A8F16
+            2B8A61AC3C79BD58F3431D8135E61F9BD9F4BAF79EEA75C629C5905C08FB5CEE
+            71237644B780CEE1E5CA91E1FCAF746A9BD58F6D1BAD548625D77B9410D0B18C
+            EC2B55AACB3E6359D691215C1B7C205C1BFC4647A0A339F1FB7716862ED5F1A4
+            DA8E617C72F212EFCD233A02EB82F7F2BB1DC3F9CB755C525B318C8F3FF1361F
+            F9277504D69B7B460AF96B75BDA8B6AE19BCAD977509AC47D78C56AA9FD5F5A2
+            4E1A43A93CF94B7E7A8CF52EBCD0EF2E97CB67E9D8D2923124D709C69A8FE808
+            AC6BB1C93DA0CB96968CA1EEE56E5D02EB9E317251F20D5EC7268BC6303651BD
+            2212F3161D81AEE06BE6C7BA6CB2F891C1C9ADBA02BA474E3697269EB858A705
+            5AC6303E5E1DE1C953742B6FDC5775B940CB187CE43FAF4BA0EB583197FDE1D0
+            A1A63BA48B9C2699AB740174A368E085990FEA7A4E530C8F4F4D9D1E3E6C7A65
+            02BA94915DBA9AD314436FCD5DA44BA06B7971EFD6E59CA618BCF89DBA04BA56
+            2CB6E9C7064D0FEA8D56AA3F0B857C52C74CCD88BCBC51E448CEC7B16E2DCDB9
+            537A7312D698B5BE6EA22827D21FA6F0255F1B339B0636CE7F575CD38BA954A9
+            24EF606B3A9F4A4B12C080F883CEC9BFAC354F1A2F7F0FDBB57084F2AFFC8EC5
+            1931C619B3C84D0074A2E4EB1A857FB870461EBE805BC2D7FB7C31EECC787636
+            1FF56D4CE2C84C5DDC79F3FF3281A618C62AD503E143EAA74AD3D3D37EF0CCC1
+            8A8F645FE4CCAFFBFBFB9EDABA75EBAC7E1AAF12070F1EEC3B72E4C839B18992
+            3B9857865FDBC3AF70D0489F8965C7FCBF44604D62488E06FDE21F0C4782DB8A
+            F97C55B7F12A77A052D96AC57E21BC283F13C6D4EF683A71DB77160A133AB6BA
+            8076A99E76C4B3475FEAF7FE8E9C775F2404CCF7CE42E1E0C8D0B6AF8433A96F
+            8597EA73BA9D99ACCFB763DBB7F1AE1EE36F191E1E7E41F78039C6185F2CE4EF
+            F062BF13C6C3AFEC6623CB18E27091FC48DDCAAD8542E188EE014D92207AC4FD
+            289CA5FC42B732915D0C75F97714F9DB76E5F3D3BA032CAAF10DD347F7D67D9C
+            DC5DCC445631C43EE74B2F3EFFFC9F74064EAA7674E6404EECC3C99D47DD4A55
+            3631C4B567C3A5FB037BF6ECA9EB0E7052BB77EF3EEABD8C0F0E0EBEA85BA9CA
+            E8C8D0F34224514507A06D91D84AECE4291D5395490CB191E3C76DFDA88E40DB
+            921FC61ADB782A217599C410597FACCFFBE33A026D4B9E4AB0E267744C5546A7
+            49BE56AFF7391D806571DE64F2DAC9E634C95942C0290B47864C9E4ECE24066B
+            841870CA9C98EEB9B5EA7DF3038140A7C9E89A01E87CD91C195A3C2A0E749A4C
+            62886C361740C04A709A042862001431008A180095490CB1CBE68726C04A6412
+            8369DC5D053A1BA749802206401103A0880150C4002862001431008A1800450C
+            802206401103A0880150C4002862001431008A1800450C802206401103A08801
+            50C4002862001431008A1800450C802206401103A0880150C400286200143100
+            8A1800450C802206401103A0880150C4002862001431008A1800450C80220640
+            1103A0880150C4002862001431008A1800450C802206401103A0880150C40028
+            62001431008A1800450C802206401103A0880150C4002862001431008A180045
+            0C802206401103A0880150C4002862001431008A1800450C802206401103A088
+            0150C4002862001431008A1800450C802206401103A0880150C4002862001431
+            008A1800450C802206401103A0880150C4002862001431008A1800450C802206
+            401103A0880150C4002862001431008A1800450C80CA24066B7D5CEFAB3B1D81
+            8EC491011DCF8A37BA4C552631C4CE6CECADD5221D8165F1C664F2DAC92486C8
+            FA3E910D3D3A026DF3DE5BE325BC7ED297490C75EF3618E35FAB23D0B64AA5F2
+            6631EE0D3AA62A93187271D4EFAC3F4F47A06D35638AC7C5BC5DC7546512C3CC
+            CC73677BF197EB08B4259C2285130A93EF1573B66EA52A9318064E3BA337FCA7
+            5D5C2E4F5DA05BC0498D562A17386F2E0DCBEEB9804EFC47CC5B63EBAE9F9A9A
+            0A61004B4B2E9CADD8BD2F1F7E6E876EA5AE290613DB542A1C14E9392EF2F1D9
+            9ABB5AB780458D4D3C71592CEEEA705691DA37EC28B61B74D9D0F407F9C8C5BA
+            5C757D2267FA58BE313651FD986E014D46CBD5F7182F37E74CB445B7D252D38F
+            0DADAA5BF01B565D4E367B23DF2B4D4CDE144E99FA751768189FA87E2A9C9E7C
+            3F5C250CEB566AE2C81DD36543F3699298D49F2132226F3CFEB2B9F158CDDD59
+            9A9CFCE87DF7DDC74FA75FE54AE5EAFB4B95EA9DB3C67FD79A28AFDBE93266C1
+            37FEA6673EC229CCBD61F72A1DD3E7EAFF14933B108E1687BCC853C69BA7BD89
+            0F279F8A6CB88652F5F8FFEB138CA99BF9BF079DCF852BE344E37CDDCA96F075
+            7F87783927366EF7B3D3CF6C191C1CCCE439A4C4CCA6818D7B366F9E3B3A34FD
+            C1A589EAEDC6C80D3A66A95E17F96F2E96E79D8D6775AF21FCAF33916FFE776D
+            8816D947678AC34B3F70918B6C1C9F3E1DF59C9EDC5C697C2E4B716D7AA4587C
+            BD4E0DAD8E0C5784DD7D3A025DC98B1BDB51282CB86DDB748A617DFD315D02DD
+            CBDBA6D779530CDBB76F7F269CAE3CA323D095ACF50FE9724ECB8BCF48E47E5D
+            02DD282E0E0D3DAAEB392D63B0B1F9812E81AEE3C4351D15122D632816B7FD35
+            5CF53FAD23D055A2D8DEA2CB055AC6903091F99A2E81AE91DC452A16F3633A2E
+            B0680CC5C2B60763F1FFD011E80E3EBA49574D168D21918BCD277409AC7BDEC9
+            433B86B7EDD7B1C9923184C3C95FC4FB9FEA08AC6B2F9D36B057972D2D194362
+            6478E8D35297433A02EB9211F7A1F9CF21B572D21812B55ED9153EA4F63E0720
+            6537170B8596B753E76BFB21B7F1F1EA888FA4A423B05EDC3352C85FABEB252D
+            EB89CFD14A65D88A2DEB0874362F3F1F19CEB77D13A8ADD3A41376160A132636
+            C9DF70D178BF01D0C1BEB99C1012A7FC5E80D1CAE4EFAD98F7E908748AD87BF9
+            F08EE1FC6F756EDB8ADE18532A4F5E63ACF9898EC05ABB3F5C1F2C79FB74292B
+            8AE184D2C4E4D75F32E6C60191D7E8169019277E7F78257F69E7D0D08A9EA75B
+            95184E488E1462FD75466C722B16484F5C9B9628BABF66EDCDBBF2F969DD5D91
+            558DE18472B97C9633B90BC5B84BBCB77913CB9BA67372EE9ABCD715DDE0B017
+            F7B7F04DF650B81EF8B337EE8F3B0B8529FDDCAA492586A5F0D7C26039F6EEDD
+            CB0F7B010000D692C8FF003944A71BCD3B4FA90000000049454E44AE426082}
+          FileName = 
+            'D:\99Coders\Posts\205 - Listview com checkbox -------\FontesFull' +
+            '\Images\uncheck.png'
+        end>
+      Position.X = 8.000000000000000000
+      Position.Y = 592.000000000000000000
+    end
+    object img_check: TImage
+      MultiResBitmap.Height = 195
+      MultiResBitmap.Width = 195
+      MultiResBitmap = <
+        item
+          Width = 195
+          Height = 195
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000C3000000C308060000003F7FA5
+            AA000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            0EF749444154785EEDDD7B7015D51D07F0DFD99B90F010480041C140C4161340
+            79D519AA305A5BAD04A53AAD631FA3D6DAB1D399AA9DB65A4511DFDA8E1D3BAD
+            533BEAB4B675C691565B0954B1B63EAA1DCB4B24012C2A242A25BC0221E47DF7
+            F4FEAEBFD0C0DEDCDCDCECD9ECD9FD7EFEC93997E00C63BED9F33B7B1E040000
+            00009928F91A88B9EBD6154A336DDFE1310969026454775E799B348D331286B9
+            2FBD3FAAB5BDE00A52EA6CA593F3A93331898650B1FC3140BF7512351492FBAE
+            D6CECB8ED2AB6BAA26AF933FF28DAF61A8ACAEBB8E347D5F396A9A7C04608C76
+            F5E305AEBEEF9D255376C84703E24B182AABEB1F568A6E902E40A05CEDBE9350
+            EA5B037D5A0C280CD3ABEBBF9BFA2F3C225D8041E5BAF446CB88E4E7F3AD33F2
+            0A0317C22DBB4E7CD349D03CF90820345CA24BB75695FD59BA3973E46BCE2A56
+            EF98DDDA50DC8A204058A57EA89FAB5CB5B3DF23967E3D196654EFACD2CAA996
+            2E40A8B99AD66C5D5C76A174FB9473182A56EF3CDFD1CEDFA40B6009F785DAAA
+            29174927AB9CC230BD7A4705A9C416E902D8E6C9DAAAB2ABA5DDABDC6A86CEC4
+            066901D8E8AA19ABEBAF9176AFFA0C43C5AABA3FE1ED3118D3D0A0A5955DAEDF
+            D70BADE98959AB778D936E4659C390AE13485D265D00FF8D1F9F5BDD9AEBF765
+            D1A93BFE28CD8CB2862155303F214D80087016F22F78E978F41A868A55F55F4A
+            7D99FC490F201A94761E93A647AF6150AE7E409A0091911A6B954F5FF9E1B9D2
+            3D46C630CC5855370F2B4F21AAB4A37F28CD63640C832675AD340122A8E98B93
+            FFB1C333439A390C49BA429A0091A3686462F811E762E91EE50943E50BF5A52A
+            41A3A40B10494AA9F9D23CCA1386D45361A1340122CB4DD202691EE50983A3E9
+            2C69024496725DCF6B036FCDA035DE2D40E4A94267DCF145B47798E450B93401
+            226D54933A499A699E3028D238CB0862C12D5063A499E61D2601C44452A5CAE8
+            1E3C6170930E0202B1841F7C0081300008840140200C00026100100803804018
+            0004C2002010060081300008840140200C000261001008038040180004C20020
+            100600813040DE4A863854E40CF8DA84D0F0FC4B2A9EAF5F8B6B6D219389C30A
+            68C1B8629A535244734B8B687CF1276747D41CEAA0B7F6B5D186C60E7A754F6B
+            FA331BB82A3967EBA2F28DD2451820375F9B3C826E3C7D340D4B647F123CB5B3
+            99EEDFD228BD703B3E0C1826419F7E3A6B0CDD3ABDA4CF20B0AF4F19418F7E66
+            1C8D2BB2EFC4218401B2FA71E568BAE8E461D2CBCD39A9A1D4ED334AA4670F84
+            017AB578E230FAC69413A4D73F9F1B3F94BE796A7E7F77B0200C90D169230A69
+            D98C52E9E5E79A5347D2588B864B080364C4C39C5C6A846C78EA95679E6C8130
+            80C7DD6794A6A74EFD30B77488B4C20F618063708D70E9A4E1D21BB8B2E185D2
+            0ABFFCC3D0D0A0A50511317DD490F4EC515CE51F8692F1EDD28288B86DBAFFD3
+            A1F5473AA5157E79874127086188907B5375C2CCD1FE8FEFD71FE89056F8E5FF
+            644834D95319415697978DA0253ED609DD9ABB5CDAD068CFEFCCBCC3A068E450
+            6982C5CE1A5344CB0CBD2D7EBAAE99F6B51F731F48A8E5FF6400EB153A6AC02F
+            D67AF3514B17FDFABD26E9D9016188B1BB6696D094E105D2F3D75D358DD49AB4
+            6BC2116188A96BA78EA48B27FA5F27B087DF3D446FEE6B939E3D108618E23AE1
+            C669A3A4E7AFBFEE6AA1C7DFB76B78D40D6188199375C27BCD9D74DBE603D2B3
+            0FC210330FCE2A355627DC9DAA13DA2DAB137A42186284EB840B26F46FA34EAE
+            7EB2F520AD3F60F77B584F1854C2BB2F1AECC79B6D4CD509AB5275C2EF761C96
+            9EBD3C6170499B7986C2A0E17D05A6B6616E6BEAA49BDFDE2F3DBB79C290D0AE
+            99F9361834BC3FC1D406FDBB6BEC2D988FE709435227464A1322E07B9F1E45E7
+            9E6866E50CD7099B0EDAB310AF2FDE274317210C1171FE84A174DD6966FE773E
+            F7D19148D4093D79C2408D0DF66C5A855E950E49D03203FB13D8A6C60EBAFD9D
+            E80C8FBA79C3307E3C669322E08E54C13CC6509D709F2527E6F597370C60BD9B
+            2A46A78748263CB0E520D51E8A4E9DD013C210317CF0D795E5660EEF5A51DF4C
+            7FD819AD3AA127842142F8946C53EB8ED61D68A73B6BA2393CEA863044C8D2CA
+            BE4FC9CE07AF37E2FD0951873044046FDD5C68E87DC25DB58DF441B33DA75CE4
+            0B6188003EF48B37F59BF04CAA4EF8CB4747A4176D0883E57839B6A97547FFDC
+            DB168BE1513784C1724BA797D01003F7AA1DEE74D3FB13E2C41B061C1B690D5E
+            80377F6CB1F4FCC575C2C7AD5DD28B076F18706CA415F88E353F0F08EE89DF25
+            F05EE6B8F18421594076EEE68E91CA5143D277AC99B066774BFA2D731C79C290
+            50498421E46E371484FDED49BAA7269E4160DE278372E2318F66295E7764E280
+            60C675C2810E7B8E83F49B270C0EA978554D16E17709A6D61DF159472FEFB6E7
+            4273133C61D049C26C5208F1D3C0D401C17F6F684D9F8217779E30403899AA13
+            F6A6EA84B8BD4FE80DC260017E9FC0334826701038108030841E5F2C6EEA7DC2
+            AFB637A58748F0098421C4669714D10F4E3773E120BF4F78643BEA849E221186
+            C9C30BD2C38862036BF9070BFF534C15CCBCCC228A1BFA07CAF3D353F17CFD5A
+            2741F3A41B5A3C7498535A440BC615D3D81E1BDFB71CEAA095BB5AE8F53DADB4
+            F388BDB3C47CE1A0897BD6D877D6EE4DAF488D3B5725E76C5D54BE51BAF63D19
+            A68D2CA4A7E68F4F17951C889E4160FC84B8B962343DBB60027DF9143B0F07FC
+            F6D491C682F08BFF1C42107A615518F8877BC5D913E8CC92BE67567859F3F299
+            A5E9DFB0363927F5A4BBC1E001C1B6DDB316246BC2307544617AB37B7F97EEF3
+            6F585B0231BC4019DBA8C3DB366FDD148D03824DB1260CFCDB32DF3D2C1C88FB
+            CF0C7F2038EC13879ABB70D0E27B44026145183E3BB6387DBFC040F0657E5C67
+            841587BDEA643317893CB4ED60FAA817C8CE8A30F0AC911FB8E00E632016A6EA
+            042E9A4DE03AE1371F44F7E02F3F591186B925FE9D85CC8108530DC175C25243
+            75021F0319958B4482604518CA7CBE908F6B08532FB4FACB649D704F2D16E0F5
+            873505B4DF786FC0600F99F822115375025F24B23942178904C18A30D41B7A93
+            CC43A6BB660E4E20BE60F02291A7EB9A2377914810AC08C3FA46733321979D12
+            7C20F87E35530704F34522181EE5C78A306C303C2DC8810872C8C42FD6F8064E
+            13A27A914810AC08C39BFBDAA8DAF0393E41CD32F186FE81BE33E94D942F1209
+            821561603FDB76900E75BAD233C3F4D20DAE134C6DE8E73A21CA178904C19A30
+            EC694BA697140411081343A6138BCDD5096FED6F439DE0036BC2C05EFC6F0B2D
+            DB7C207DD895493C64F27B2DD3724375025F24820DFDFEB02A0C8CCFF6E1C3AE
+            1A3BCC3E21782D935F43263E0AD2E44522366F620A13EBC2C0D281A839603C10
+            7ED4103C53C587049BC075425C2E1209829561602FA50271476AC864FA989381
+            04E2B4F41E0C33CB3E5EDBD38A3AC167D68681F131273C5E0EEB2C13BF4F2850
+            FE1F52C01789C4E9469DA0581D06C681086A96A93F6FAAF97BE7FAB4F4FC785C
+            27EC6EC3C15F7EB33E0C2CA859261EFFE7F284E0D928FE5E13E27A9148102211
+            06C645F52D9B8229AAB34DBB7EEA844263FB98F92918D78B4482109930305EB6
+            11C42C53B669572E984D5C38C8077FE17D8259910A03EB9E65323D64CA545473
+            9F8F8434E1BEDA833820D8B0C88581A58BEA5491194451FDE0AC31E936AF39E2
+            BE097C91C8AB7B7040B069910C03FBE4C59CF940F04EB587668F49AF463581FF
+            1DB8482418910D03E359A6E5A92113CFCB9B74E14966B66EF2B06879AA068260
+            443A0C8C6B081E32990E84095C309B9E0C80FF8B7C1818CFCBF37B089B02F1F3
+            D4D0081789042B166160363D217878F758AA688660C5260C8C9F10610F042FC7
+            E6978710BC588581750F99C23A16E797861D2E4E081E0CB10B03E32113CFD284
+            ED09C175C2BFF7E380E0C112CB30B0EE1D736109043FB150270CAED88681F10F
+            E0F2005ECCF5858F77F9110E081E74B10E03E3999B20DE5467831D6BE110FB30
+            B0EEFD108311081C101C1E0883086A2D534FBC991F07048707C2D043506B99D8
+            B6A64E5A8A8BC9430561384E506FAAEFC602BCD0411832E89E656AEE321308AE
+            1336A14E081D84A1173C64E255A37E0702754278210C59F04D9977A602E1D790
+            6963633BEA84104318FAD0BD96C98F40E0E0AF70431872D05D54B70CE08A7D0E
+            C2F6C39DD28330421872C44F085E519A4F209EFDF0083D53DF2C3D082B84A11F
+            AA3F6EA19B36EE4F5F9C922BBE9D9F8759107E08433FBDB2A7952E7D7D373DFA
+            5E53D650ACD9DD42D7AFDF470F6DC30978B6F01CFD56F17CFD5A2741F3A40B59
+            0C4D289A535A44734B8A68DAC8423AD2A569FD8176DAD0D88EFAC002AE4ACED9
+            BAA87CA374110688AFE3C38061128040180004C2002010060081300008840140
+            200C000261001008038040180004C2002010060081300008840140200C000261
+            0010080380F084C15194902640A425BA0A8BA599E60983AB29F7A31F006C9648
+            1EB351DD130695D0D8C90EB1D0E5AA3669A679C2A05D65F62C768090282C70FA
+            783238EE87D20488B4A6E2CE3A69A679C240DA6990164064A51E090D75E795F7
+            314C52F48A3401222B9124CF08C813862255F0863401224B39E4F939F784E1ED
+            4527EFD59DEE5EE902449276DC95D23CCA5B33B0425A212D80C8D1D494DCBA68
+            CACBD23D2A631894D6BF942640E4283DC2F3546019C350BBB87CAB76F5BBD205
+            8814A5D4BDD23C46E661528A52CEADD204880C3749EB6AAA26AF93EE317A0D43
+            EDE2539E4D7D39E6A50480ED9C02BD549A1EBD8681A9A4F355690258CFD5B4B2
+            76D1E435D2F5C81A869A4B26FD4B13FD5EBA00566B199EBC5C9A19650D03DB52
+            5576652A103BA40B6027A52F397EF9C5F1FA0C0373BA3AE7F3DCAC7401ACA249
+            DF931A1E659C4EEDC973A75B6F66ACAA9BA749AD952E802D9EACAD2ABB5ADA59
+            E51C0656B17AC76C472736481720D434B94F6FA99A92F324504EC3A46EE99B11
+            75B25227E9907C04104A5AD31DFD0902EBD793A1A78AEAFA171D451748172014
+            B8B675F48825358BA7AC928F7296771858E5CABAAB94A37E2B5D80C1B622551F
+            649D3ECD664061E836BDBAFEB64ED5724B210D1B261F0104C6D5B4A620E15CBF
+            F9A249035A4FE74B18BAF1932255855CA748CD978F008CE06D9B855AAF50C9AE
+            7B6A964CF565ABB2AF61E8366BF5AE71EDBAEB6C47EBF349E9333439A7342669
+            5269820AE55B0072C613369A68BB93A01DA9AFAFB92EBDB2EDE2B21AF963DF18
+            0943365F7946E3C43EC8D98ACB155EF6020000000C26A2FF01F05D0789B8690C
+            4D0000000049454E44AE426082}
+          FileName = 
+            'D:\99Coders\Posts\205 - Listview com checkbox -------\FontesFull' +
+            '\Images\check.png'
+        end>
+      Position.X = 64.000000000000000000
+      Position.Y = 592.000000000000000000
+    end
+  end
+end

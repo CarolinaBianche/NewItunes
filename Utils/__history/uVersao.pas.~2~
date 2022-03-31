@@ -1,0 +1,98 @@
+unit uVersao;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, REST.Types, REST.Client,
+  Data.Bind.Components, Data.Bind.ObjectScope,System.Json, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, REST.Response.Adapter,AnonThread, Constantes,uDmLocal;
+
+
+type
+   TVersao = class
+
+private
+
+public
+
+ class Function Executar(Versao:string):Boolean;
+
+end;
+
+implementation
+
+
+
+{ TVersao }
+
+class function TVersao.Executar(Versao: string): Boolean;
+var
+ Qry : TFdQuery;
+begin
+  result := true;
+   if versao='3.0.4' then
+   Begin
+     try
+      Try
+      Qry := TFDQuery.Create(nil);
+      Qry.Active := False;
+      Qry.SQL.Clear;
+      Qry.SQL.Add('DROP TABLE TBL_PEDIDOITENS');
+      Qry.ExecSQL;
+
+      Qry.Active := False;
+      Qry.SQL.Clear;
+      Qry.SQL.Add('CREATE TABLE [TBL_PEDIDOITENS](             ');
+      Qry.SQL.Add('[FILIAL] VARCHAR(10),                       ');
+      Qry.SQL.Add('[CNPJ] VARCHAR,                             ');
+      Qry.SQL.Add('[RESPONSAVEL] VARCHAR(100),                 ');
+      Qry.SQL.Add('[LOTE] VARCHAR(100),                        ');
+      Qry.SQL.Add('[SERIE] VARCHAR(100),                       ');
+      Qry.SQL.Add('[NRONOTA] [DOUBLE PRECISION],               ');
+      Qry.SQL.Add('[CODIGO] VARCHAR(50),                       ');
+      Qry.SQL.Add('[DESCRICAO] VARCHAR(200),                   ');
+      Qry.SQL.Add('[NROPEDIDO] INTEGER,                        ');
+      Qry.SQL.Add('[SEQUENCIA] [DOUBLE PRECISION],             ');
+      Qry.SQL.Add('[QTD_LIDA]  [DOUBLE PRECISION],             ');
+      Qry.SQL.Add('[QTD_TOTAL] [DOUBLE PRECISION],             ');
+      Qry.SQL.Add('[TIPO] VARCHAR,                             ');
+      Qry.SQL.Add('[PESO] FLOAT,                               ');
+      Qry.SQL.Add('[UNIDADE] VARCHAR,                          ');
+      Qry.SQL.Add('[RATEIO] BOOLEAN DEFAULT False,             ');
+      Qry.SQL.Add('[ATIVO] BOOLEAN DEFAULT True,               ');
+      Qry.SQL.Add('[STATUS] VARCHAR(20) NOT NULL DEFAULT N,    ');
+      Qry.SQL.Add('[GALPAO] VARCHAR(20),                       ');
+      Qry.SQL.Add('[NUMERO] VARCHAR(20),                       ');
+      Qry.SQL.Add('[RUA] VARCHAR(20),                          ');
+      Qry.SQL.Add('[ANDAR] VARCHAR(20),                        ');
+      Qry.SQL.Add('[APTO] VARCHAR(20),                         ');
+      Qry.SQL.Add('[QTD_PALETES] INTEGER,                      ');
+      Qry.SQL.Add('[CONFERIDO] BOOLEAN NOT NULL DEFAULT False, ');
+      Qry.SQL.Add('[NR_ENTRADA] INTEGER,        ');
+      Qry.SQL.Add('[DCA] CHAR(3),               ');
+      Qry.SQL.Add('[VLR_UNITARIO] CURRENCY,     ');
+      Qry.SQL.Add('[VLR_TOTAL] CURRENCY,        ');
+      Qry.SQL.Add('[VLR_UNI_RATEADO] CURRENCY,  ');
+      Qry.SQL.Add('[PESO_UNI_RATEADO] FLOAT,    ');
+      Qry.SQL.Add('[QTD_EMBALAGEM] INTEGER,     ');
+      Qry.SQL.Add('[SERIE_PRODUTO] VARCHAR(20), ');
+      Qry.SQL.Add('[PESO_BRUTO] FLOAT,         ');
+      Qry.SQL.Add('[ID_INTERNO] INTEGER,      ');
+      Qry.SQL.Add('[FINALIZADOR] CHAR,         ');
+      Qry.SQL.Add('[NOME_CLIENTE] VARCHAR(200),');
+      Qry.SQL.Add('[id_entrada_prod] INTEGER); ');
+
+      Qry.ExecSQL;
+      except
+       result := false;
+      End;
+
+     finally
+       Qry.Free;
+     end;
+   End;
+end;
+
+end.

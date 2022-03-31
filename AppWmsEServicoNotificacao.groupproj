@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{9CBDB84A-01D3-4881-9C64-0BE7829ECBF6}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="AppWms.dproj">
+            <Dependencies>Servico_Notificacao\ServicoAndroid.dproj</Dependencies>
+        </Projects>
+        <Projects Include="Servico_Notificacao\ServicoAndroid.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="AppWms" DependsOnTargets="ServicoAndroid">
+        <MSBuild Projects="AppWms.dproj"/>
+    </Target>
+    <Target Name="AppWms:Clean" DependsOnTargets="ServicoAndroid:Clean">
+        <MSBuild Projects="AppWms.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AppWms:Make" DependsOnTargets="ServicoAndroid:Make">
+        <MSBuild Projects="AppWms.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ServicoAndroid">
+        <MSBuild Projects="Servico_Notificacao\ServicoAndroid.dproj"/>
+    </Target>
+    <Target Name="ServicoAndroid:Clean">
+        <MSBuild Projects="Servico_Notificacao\ServicoAndroid.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ServicoAndroid:Make">
+        <MSBuild Projects="Servico_Notificacao\ServicoAndroid.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="AppWms;ServicoAndroid"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="AppWms:Clean;ServicoAndroid:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="AppWms:Make;ServicoAndroid:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

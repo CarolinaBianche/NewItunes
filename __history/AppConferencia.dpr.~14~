@@ -1,0 +1,38 @@
+program AppConferencia;
+
+uses
+  System.StartUpCopy,
+  FMX.Forms,
+  FMX.Types,
+  uFrmMain in 'uFrmMain.pas' {FrmMain},
+  UntLib in 'Utils\UntLib.pas',
+  uFrmTemplate in 'uFrmTemplate.pas' {FrmTemplate},
+  uFrmNotas in 'Forms\uFrmNotas.pas' {FrmNotas},
+  uLoading in 'Utils\uLoading.pas',
+  uDmRest in 'DataModulos\uDmRest.pas' {DmRest: TDataModule},
+  uDMLocal in 'DataModulos\uDMLocal.pas' {DMLocal: TDataModule},
+  Androidapi.JNI.Network in 'Utils\Androidapi.JNI.Network.pas',
+  AnonThread in 'Utils\AnonThread.pas',
+  Constantes in 'Utils\Constantes.pas',
+  DelphiSelfUpdate in 'Utils\DelphiSelfUpdate.pas',
+  U_TJSONMaps in 'Utils\U_TJSONMaps.pas',
+  uFrmAtividades in 'Forms\uFrmAtividades.pas' {FrmAtividades},
+  Notificacao in 'Utils\Notificacao.pas',
+  uFrmInformativo in 'Forms\uFrmInformativo.pas' {FrmInformativo},
+  U_FrmSplash in 'Forms\U_FrmSplash.pas' {FrmSplash},
+  UFrmConfere in 'Forms\UFrmConfere.pas' {FrmConfere},
+  uFramItens in 'Frames\uFramItens.pas' {FrameItens: TFrame};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  {$IFDEF ANDROID}
+  //VKAutoShowMode := TVKAutoShowMode.Never;
+  {$ENDIF}
+  Application.FormFactor.Orientations := [TFormOrientation.Portrait];
+  Application.CreateForm(TDmRest, DmRest);
+  Application.CreateForm(TDMLocal, DMLocal);
+  Application.CreateForm(TFrmSplash, FrmSplash);
+  Application.Run;
+end.

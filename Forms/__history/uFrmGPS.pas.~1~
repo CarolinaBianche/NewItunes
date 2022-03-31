@@ -1,0 +1,25 @@
+unit uFrmGPS;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation;
+
+type
+  TFrmGPS = class(TFrmTemplate)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmGPS: TFrmGPS;
+
+implementation
+
+{$R *.fmx}
+
+end.

@@ -1,0 +1,167 @@
+object FrmTemplate: TFrmTemplate
+  Left = 0
+  Top = 0
+  Caption = 'FrmTemplate'
+  ClientHeight = 553
+  ClientWidth = 324
+  Fill.Kind = Solid
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnShow = FormShow
+  DesignerMasterStyle = 3
+  object lytGeral: TLayout
+    Align = Client
+    Size.Width = 324.000000000000000000
+    Size.Height = 553.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object rect_titulo: TRectangle
+      Align = Scale
+      Fill.Color = xFF434343
+      Position.X = -8.000000000000000000
+      Size.Width = 332.000000000000000000
+      Size.Height = 65.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+      object lytBotoes: TLayout
+        Align = Top
+        Size.Width = 332.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object lbl_titulo: TLabel
+          Align = Contents
+          StyledSettings = []
+          Locked = True
+          Size.Width = 332.000000000000000000
+          Size.Height = 42.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Calibri'
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+          TextSettings.FontColor = claWhite
+          TextSettings.HorzAlign = Center
+          Text = 'Titulo'
+          TabOrder = 0
+        end
+        object speBtnAtualizar: TSpeedButton
+          Align = Right
+          IconTintColor = claWhite
+          Margins.Bottom = 20.000000000000000000
+          Position.X = 284.000000000000000000
+          Size.Width = 48.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'refreshtoolbutton'
+          Text = 'speBtnMenu'
+        end
+        object speBtnMenu: TSpeedButton
+          Align = Left
+          IconTintColor = claWhite
+          Margins.Left = 10.000000000000000000
+          Margins.Bottom = 15.000000000000000000
+          Position.X = 10.000000000000000000
+          Size.Width = 48.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'backtoolbutton'
+          Text = 'speBtnMenu'
+        end
+      end
+    end
+    object rect_informativo: TRectangle
+      Align = Top
+      Fill.Color = claWhite
+      Margins.Left = 15.000000000000000000
+      Margins.Top = 45.000000000000000000
+      Margins.Right = 15.000000000000000000
+      Position.X = 15.000000000000000000
+      Position.Y = 45.000000000000000000
+      Size.Width = 294.000000000000000000
+      Size.Height = 96.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = xFF959595
+      Stroke.Thickness = 2.000000000000000000
+      Stroke.Cap = Round
+      Stroke.Join = Round
+      XRadius = 10.000000000000000000
+      YRadius = 10.000000000000000000
+      object lblInfoTexto: TLabel
+        Align = Top
+        StyledSettings = [Family, Style]
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 10.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 284.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 9.000000000000000000
+        TextSettings.FontColor = xFF959595
+        TextSettings.HorzAlign = Trailing
+        Text = 'texto'
+        TabOrder = 0
+        object Layout3: TLayout
+          Align = Contents
+          Margins.Left = 10.000000000000000000
+          Margins.Right = 4.000000000000000000
+          Size.Width = 270.000000000000000000
+          Size.Height = 27.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object pthImg: TPath
+            Align = Left
+            Data.Path = {
+              2A00000000000000C976F741AC1C024202000000C74BF641F853F74102000000
+              77BEF641F853EE410200000077BEF641448BE241020000008195FC41E27ADF41
+              0200000025860342AAF1CB410200000073680442A470BB41020000003AB40642
+              6210BB4102000000F2520A428195B641020000004E620B4260E5A44102000000
+              BDF40B4266669B41020000001BAF0942560E964102000000CD4C084241609441
+              0200000038090C42D8CE7B4102000000C7CB13423689E1400200000061E5F341
+              CACCC440020000007593EE41886C9F4002000000B7F3E04110838C4002000000
+              7E3FCF4110838C4002000000806A88415CBA91400200000079BE7F41633B3141
+              0200000068668F414160944102000000D9A38C41550E96410200000095188841
+              66669B4102000000663B894160E5A441020000002B5C8B418195B64102000000
+              8F9792416210BB41020000001C2F9741A470BB4102000000ABF198419EEFCB41
+              02000000F3D2A341E27ADF410200000016AEA941448BE2410200000016AEA941
+              F853EE4102000000BA1EAA41F853F74102000000B8F3A841AC1C024202000000
+              9EEF9A41B6F3144202000000D578F140FCA90F42020000000000E04000003442
+              01000000000034420000344202000000ECD13142FCA90F420200000071BD0242
+              B6F3144202000000C976F741AC1C024203000000C976F741AC1C0242}
+            Fill.Color = xFF959595
+            Opacity = 0.800000011920929000
+            Size.Width = 33.000000000000000000
+            Size.Height = 27.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+          end
+        end
+      end
+      object Line1: TLine
+        Align = Top
+        LineType = Diagonal
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 3.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 45.000000000000000000
+        Size.Width = 284.000000000000000000
+        Size.Height = 1.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF7F78EE
+      end
+    end
+    object vertLista: TVertScrollBox
+      Align = Contents
+      Margins.Top = 210.000000000000000000
+      Size.Width = 324.000000000000000000
+      Size.Height = 343.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Viewport.Width = 324.000000000000000000
+      Viewport.Height = 343.000000000000000000
+    end
+  end
+end

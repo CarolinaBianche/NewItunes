@@ -1,0 +1,404 @@
+unit uFrmAtividades;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, AnonThread,
+  uDMLocal, uDmRest, uFrmMain, UntLib, Androidapi.JNI.Network, FMX.DialogService;
+
+type
+  TFrmAtividades = class(TFrmTemplate)
+    lytQuantidades: TLayout;
+    rctCard: TRectangle;
+    lytEsqCard: TLayout;
+    LinTop: TLine;
+    lytBoxCard: TLayout;
+    lytTopCard: TLayout;
+    lytRomaneio: TLayout;
+    lblNumRomaneio: TLabel;
+    lblRomaneio: TLabel;
+    lytRodCard: TLayout;
+    rctTipoDoc: TRectangle;
+    imgEx: TImage;
+    lblAtividade: TLabel;
+    lblEnderecoCompleto: TLabel;
+    Label3: TLabel;
+    imgVis: TImage;
+    lblCliente: TLabel;
+    lblData: TLabel;
+    lblCNPJ: TLabel;
+    lblPedido: TLabel;
+    lblnroPedido: TLabel;
+    rect_nv_pedido: TRectangle;
+    Layout12: TLayout;
+    Image8: TImage;
+    Label2: TLabel;
+    Label1: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure speBtnAtualizarClick(Sender: TObject);
+    procedure rect_nv_pedidoClick(Sender: TObject);
+  private
+    { Private declarations }
+     procedure OnSelecionarAtividade(Sender :TObject);
+     procedure TapSelecionaAtividade(Sender: TObject; const Point: TPointF);
+     procedure AbreNotas(Documento:integer;Filial,Cliente,Endereco:string);
+     procedure SetCloneAtv(ARectBase : TRectangle; var AClone: TRectangle; AScroll:TVertScrollBox;
+     var APosition : Single; MClick:TNotifyEvent; MTap:TTapEvent;Tipo:string);overload;
+     procedure InsertOnClick(AObject : TRectangle;AEvent : TNotifyEvent);
+     procedure OnClickCliente(Sender :TObject);
+
+  public
+    { Public declarations }
+    procedure CarregaAtv(Sender:TObject);
+  end;
+
+var
+  FrmAtividades: TFrmAtividades;
+
+implementation
+
+{$R *.fmx}
+
+uses uFrmNotas, uLoading, UFrmConfere,uFrmInformativo;
+
+procedure TFrmAtividades.AbreNotas(Documento: integer; Filial, Cliente,
+  Endereco: string);
+begin
+  TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Localizando Item ...');
+          TLibery.ActiveForm := nil;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+        End
+
+      );
+    End,
+    procedure()
+    Begin
+     DmLocal.QryItens.Locate('ID', Documento ,[]);
+    End,
+    procedure()
+    begin
+     TLoading.Hide;
+     if DmLocal.QryFilaTIPO.AsString='CARGA' then
+     Begin
+     FrmMain.lytNavegacao.Controls.Clear;
+     TLibery.OpenForm(TFrmConfere,FrmMain.lytNavegacao);
+     TLibery.MudarAba(FrmMain.tbiMain,self);
+     End else
+     if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+     Begin
+     if not DmLocal.QryItensCONFERIDO.Value then
+      Begin
+      FrmMain.lytNavegacao.Controls.Clear;
+      TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+      TLibery.MudarAba(FrmMain.tbiMain,self);
+      End else
+
+     End;
+    end,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Carregar Atividades! ' +
+      AException);
+    End,
+    True
+  );
+end;
+
+procedure TFrmAtividades.CarregaAtv(Sender: TObject);
+begin
+
+
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Carregando Atividades...');
+          //DmRest.AtividadesRomaneio(DMLocal.QryFilaNRONOTA.asstring,
+            //                 DMLocal.QryFilaCLIENTE_NOME.asstring);
+
+         vertLista.Visible:=false;
+         vertLista.BeginUpdate;
+         DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+         DMLocal.QryItens.DisableControls;
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao : Single;
+     Qtd      : Integer;
+    Begin
+    //Processo Principal
+      lblData.Text          := 'Data Entrada: ' +  FormatDateTime('dd/mm/yy',DmLocal.QryFilaDATA_ENTRADA.AsDateTime);
+      lblInfoTexto.Text     := 'Nota Nº: ' + DmLocal.QryFilaNRONOTA.AsInteger.ToString + ' Cliente: ' +  DmLocal.QryFilaCLIENTE_NOME.AsString;
+      lblCNPJ.Text          := 'CNPJ:         ' +  DmLocal.QryFilaCLIENTE_CNPJ.AsString;
+
+
+      DmLocal.BuscaItens(DMLocal.QryFilaNRONOTA.AsInteger,DmLocal.QryFilaCLIENTE_CNPJ.AsString,
+                          DMLocal.QryFilaTIPO.AsString);
+
+      if DmLocal.QryFilaTIPO.AsString='CARGA' then
+       Begin
+        rect_nv_pedido.Visible    :=false;
+        lblnroPedido.Text          :=DMLocal.QryItensNROPEDIDO.AsInteger.ToString;
+       End
+      else
+      if DMlocal.QryFilaTIPO.AsString='DESCARGA' then
+        Begin
+        rect_nv_pedido.Visible     :=false;
+        lblnroPedido.Text          := 'sem pedido';
+        End;
+
+
+
+
+       DmLocal.QryItens.First;
+
+       rctCard.Visible  := false;
+       LPosicao         := 8;
+
+          qtd := DmLocal.QryItens.RecordCount;
+
+
+          while not DMLocal.QryItens.Eof do
+           Begin
+
+            //Povoando os Cards
+            lblRomaneio.Text         := DmLocal.QryItens.FieldByName('QTD_TOTAL').AsInteger.ToString;
+            lblNumRomaneio.Text      := 'Cod.: ' + DmLocal.QryItens.FieldByName('CODIGO').asstring;
+
+            rctCard.Tag              := DmLocal.QryItens.FieldByName('ID').AsInteger;
+            rctCard.TagString        := DMLocal.QryItens.FieldByName('NRONOTA').AsInteger.ToString;
+
+
+
+            lblAtividade.Text        := UpperCase(DmLocal.QryItens.FieldByName('DESCRICAO').AsString);
+
+            lblEnderecoCompleto.Text := UpperCase('GALPÃO : ' +DmLocal.QryItens.FieldByName('GALPAO').AsString +
+                                        ' RUA : ' + DmLocal.QryItens.FieldByName('RUA').AsString +
+                                        ' Nº  : ' + DmLocal.QryItens.FieldByName('NUMERO').AsString+
+                                        ' ANDAR : ' + DmLocal.QryItens.FieldByName('ANDAR').AsString +
+                                        ' APTO : ' + DmLocal.QryItens.FieldByName('APTO').AsString);
+
+            lblCliente.Text          := DmLocal.QryITENS.FieldByName('TIPO').AsString;
+
+
+           if DmLocal.QryItens.FieldByName('STATUS').asstring='N' then
+            Begin
+
+            if DmLocal.QryItens.FieldByName('TIPO').AsString='CARGA' then
+             Begin
+              lblRomaneio.FontColor   := $FF000000;
+              lblCliente.FontColor    := $FF000000;
+              LinTOP.Stroke.Color     := $FFE0FF6A;
+              rctTipoDoc.Fill.Color   := $FFE0FF6A;
+              rctTipoDoc.Stroke.Color := $FFE0FF6A;
+
+              //rctCliente.Fill.Color   := $FFE0FF6A;
+             End else
+             Begin
+              if DmLocal.QryItens.FieldByName('CONFERIDO').AsBoolean=True then
+              Begin
+                rctTipoDoc.Fill.Color   := $FFFFAD26;
+                rctTipoDoc.Stroke.Color := $FFFFAD26;
+              End else
+              Begin
+                lblRomaneio.FontColor   := $FFFFFFFF;
+                lblCliente.FontColor    := $FF000000;
+                LinTOP.Stroke.Color     := $FF8CA3AD;
+                rctTipoDoc.Fill.Color   := $FF8CA3AD;
+                rctTipoDoc.Stroke.Color := $FF8CA3AD;
+
+              //rctCliente.Fill.Color   := $FF8CA3AD;
+
+              End;
+             End;
+
+
+
+           End else
+           if DmLocal.QryItens.FieldByName('STATUS').asstring ='E' then
+            Begin
+
+            lblRomaneio.FontColor   := $FFFFFFFF;
+            lblCliente.FontColor    := $FF000000;
+            LinTOP.Stroke.Color     := $FFFFAD26;
+            rctTipoDoc.Fill.Color   := $FFFFAD26;
+            rctTipoDoc.Stroke.Color := $FFFFAD26;
+
+            //rctCliente.Fill.Color   := $FFFFAD26;
+           End ;
+
+           //Clonando
+           SetCloneAtv(rctCard,LFrame,vertLista,LPosicao,OnSelecionarAtividade,TapSelecionaAtividade,'ATV');
+
+
+           DMLocal.QryItens.Next;
+          End;
+
+
+
+
+
+
+
+
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      VertLista.EndUpdate;
+      VertLista.ScrollTo(0,0);
+      VertLista.Visible := true;
+      DmLocal.QryItens.EnableControls;
+
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Carregar Atividades! ' +
+      AException);
+    End,
+    True
+  );
+
+end;
+
+procedure TFrmAtividades.FormCreate(Sender: TObject);
+begin
+  inherited;
+  rctCard.Visible    :=false;
+  lbl_titulo.Text    := 'Pedido';
+  CarregaAtv(speBtnAtualizar);
+end;
+
+procedure TFrmAtividades.InsertOnClick(AObject: TRectangle;
+  AEvent: TNotifyEvent);
+begin
+  for  var I :Integer := 0 to Pred(AObject.ComponentCount) do
+    Begin
+      if AObject.Components[i] is TSpeedButton then
+       Begin
+         TThread.Synchronize(
+         TThread.CurrentThread,
+         procedure ()
+         Begin
+          TSpeedButton(AObject.Components[i]).OnClick := AEvent;
+         End
+         );
+         Break  ;
+
+       End;
+    End;
+end;
+
+
+procedure TFrmAtividades.OnClickCliente(Sender: TObject);
+begin
+   {DmLocal.QryAtv.Locate('NR_DOCUMENTO',TSpeedButton(SEnder).Tag);
+
+   TLibery.ActiveForm := nil;
+   DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+   TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+   TLibery.MudarAba(FrmMain.tbiMain,self); }
+end;
+
+procedure TFrmAtividades.OnSelecionarAtividade(Sender: TObject);
+begin
+ {$IFDEF MSWINDOWS}
+  AbreNotas(TRectangle(Sender).Tag,'','','');
+ {$ENDIF}
+end;
+
+procedure TFrmAtividades.rect_nv_pedidoClick(Sender: TObject);
+begin
+  inherited;
+   if not  DmLocal.LancaPedido(DmLocal.QryFilaNRONOTA.AsInteger,DmLocal.QryFilaCLIENTE_CNPJ.AsString) Then
+ Begin
+   //Pedido não lançado
+   ShowMessage('Erro ao Lançar Pedido. Tente Novamente!');
+ End else
+ Begin
+   //Pedido Lançado
+   if Not DmLocal.ExistePedido(DmLocal.QryFilaNRONOTA.AsInteger,DmLocal.QryFilaCLIENTE_CNPJ.AsString) then
+   Begin
+     // não achou pedido
+     DmLocal.BuscaItens(DmLocal.Qry_PedidosNROPEDIDO.AsInteger,DmLocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+     DmLocal.QryFilaTIPO.AsString);
+   End else
+   Begin
+     // achou pedido
+     lblnroPedido.Text          := DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString;
+     ShowMessage('Pedido Criado Nro : ' + DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString);
+    // DmLocal.BuscaItens(DmLocal.Qry_PedidosNROPEDIDO.AsInteger,'');
+     TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+   End;
+ End;
+end;
+
+procedure TFrmAtividades.SetCloneAtv(ARectBase: TRectangle;
+  var AClone: TRectangle; AScroll: TVertScrollBox; var APosition: Single;
+  MClick: TNotifyEvent; MTap: TTapEvent; Tipo: string);
+begin
+  AClone                 := TRectangle(ARectBase.Clone(AScroll));
+  AClone.Parent          := AScroll;
+  AClone.Name            := Tipo + ARectBase.Tag.ToString;
+  AClone.Position.Y      := APosition;
+  AClone.Position.X      := 4;
+  AClone.Height          := ARectBase.Height;
+  {$IFDEF MSWINDOWS}
+   AClone.Width          := AScroll.Width - 24;
+  {$ELSE}
+   AClone.Width          := AScroll.Width - 8;
+  {$ENDIF}
+  ARectBase.Opacity      := 1;
+  AClone.Visible         := True;
+  APosition              := APosition + ARectBase.Height + 4;
+  AClone.OnClick         := MClick;
+  AClone.OnTap           := MTap;
+end;
+
+procedure TFrmAtividades.speBtnAtualizarClick(Sender: TObject);
+begin
+  inherited;
+
+  DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+  // CarregaAtv(Self);
+end;
+
+procedure TFrmAtividades.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+  TLibery.OpenForm(TFrmNotas,nil);
+end;
+
+procedure TFrmAtividades.TapSelecionaAtividade(Sender: TObject;
+  const Point: TPointF);
+begin
+ {$IFDEF ANDROID}
+  AbreNotas(TRectangle(Sender).Tag,'','','');
+ {$ENDIF}
+end;
+
+end.

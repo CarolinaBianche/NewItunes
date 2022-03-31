@@ -1,0 +1,43 @@
+unit uFrmGPS;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.Maps;
+
+type
+  TFrmGPS = class(TFrmTemplate)
+    Layout9: TLayout;
+    MapView1: TMapView;
+    RoundRect1: TRoundRect;
+    lbl_distancia: TLabel;
+    Circle3: TCircle;
+    Layout10: TLayout;
+    Rectangle16: TRectangle;
+    Label12: TLabel;
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmGPS: TFrmGPS;
+
+implementation
+
+{$R *.fmx}
+
+uses Notificacao, U_TJSONMaps, uDMLocal, uDmRest, uFrmMain, uLoading, UntLib;
+
+procedure TFrmGPS.FormCreate(Sender: TObject);
+begin
+  inherited;
+  lbl_titulo.Text    := 'ROTA ';
+  lblInfoTexto.Text  := 'CLIENTE : ' + DmLocal.QryAtv.FieldByName('NOME_CLIENTE').asstring;
+end;
+
+end.

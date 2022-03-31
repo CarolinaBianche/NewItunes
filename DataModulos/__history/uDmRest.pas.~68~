@@ -1,0 +1,768 @@
+unit UDMRest;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, REST.Types, REST.Client,
+  Data.Bind.Components, Data.Bind.ObjectScope,System.Json, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, REST.Response.Adapter,AnonThread, Constantes;
+
+type
+  TDMRest = class(TDataModule)
+    rstRequest: TRESTRequest;
+    rstClient: TRESTClient;
+    rstResponse: TRESTResponse;
+    rstAdapter: TRESTResponseDataSetAdapter;
+    memRest: TFDMemTable;
+    memRomaneio: TFDMemTable;
+    memRomaneioid: TWideStringField;
+    memRomaneioidfil_romaneio: TWideStringField;
+    memRomaneioidromaneio: TWideStringField;
+    memRomaneioveiculo: TWideStringField;
+    memRomaneiocpfMotorista: TWideStringField;
+    memRomaneionomeMotorista: TWideStringField;
+    memRomaneioprevSaida: TWideStringField;
+    memRomaneioqtdEntregas: TWideStringField;
+    memRomaneioqtdColetas: TWideStringField;
+    memRomaneiodocumento: TWideStringField;
+    rstClientOcorrencia: TRESTClient;
+    rstRequestOcorrencia: TRESTRequest;
+    rstResponseOcorrencia: TRESTResponse;
+    rstAdapterOcorrencia: TRESTResponseDataSetAdapter;
+    memOcorrencia: TFDMemTable;
+    memOcorrenciacodigo: TWideStringField;
+    memOcorrenciadescricao: TWideStringField;
+    ResponseMapa: TRESTResponse;
+    RequestMapa: TRESTRequest;
+    ClienteMapa: TRESTClient;
+
+    procedure DataModuleCreate(Sender: TObject);
+  private
+    { Private declarations }
+    function Execute(const AServerMethod: String;
+      AMethod: TRESTRequestMethod): Boolean;
+
+    procedure ClearToDefaults;
+
+    procedure IntegrarROM(Filial,Romaneio :string);
+
+  public
+    { Public declarations }
+
+   //Entradas
+   function BuscaEntradas(conferente:string): Boolean;
+   function RecebeNotasEntrada(Und:string;NrEntrada:string):Boolean;
+
+   //Saida
+
+   function RecebePedidos:Boolean;
+
+   //Servico
+   function IniciaServico:Boolean;
+   function FinalizaServico:Boolean;
+
+   //Servico CARGA
+   function IniciaServicoCarga(fil_pedido:string;nropedido:integer):Boolean;
+
+   //Itens Notas
+   function RecebeItens(CNPJ:string;Nota:integer;Serie:string):boolean;
+   //Itens Pedido
+   function RecebeItensPedido(Filial:String;Pedido:integer):boolean;
+   //Itens enviar
+   function IntegraItemLido(Filial,Tipo:string;Pedido,Item:integer):Boolean;
+
+   function LimpaString(sString, sSujeiras: String): String;
+
+   procedure RecuperarOcorrenicas;
+   Function ValidaConferente(CPF:String):Boolean;
+
+
+
+   function IntegrarBaixas(sJson:string):boolean;
+   function LancarCarga(sJson:string):boolean;
+
+  end;
+
+var
+  DMRest: TDMRest;
+
+implementation
+
+{%CLASSGROUP 'FMX.Controls.TControl'}
+
+uses uDmLocal, Androidapi.JNI.Network;
+
+{$R *.dfm}
+
+{ TDMRest }
+
+function TDMRest.RecebeItens(CNPJ:string;Nota:integer;Serie:string): boolean;
+var
+  i: integer;
+  s: String;
+  JsonArr : TJSONArray;
+  JsonObj,retorno,ObjID : TJSONObject;
+begin
+  Result := False;
+
+  try
+    try
+   // Reset de componentes
+      Self.ClearToDefaults;
+
+      if Execute('entradas/movimentos/'+CNPJ+'/'+Nota.ToString+'/'+Serie, rmGET) then
+      begin
+        Result := True;
+        JsonArr := DMRest.rstRequest.Response.JSONValue as  TJSONArray;
+
+       for i := 0 to JsonArr .Count-1 do
+        begin
+        retorno   := JsonArr.Items[i] as TJSONObject;
+        ObjID     := retorno.GetValue('id') as TJSONObject;
+
+         if not DMLocal.ConsultaItens(ObjID.GetValue('cgc').Value,ObjID.GetValue('nota').Value.ToInteger,ObjID.GetValue('serie').Value,
+                                      ObjID.GetValue('und_armazem').Value,ObjID.GetValue('responsavel').Value,
+                                      ObjID.GetValue('lote').Value,ObjID.GetValue('produto').Value) then
+          begin
+            DMLocal.QryItens.Append;
+
+            DmLocal.QryItens.FieldByName('ID_INTERNO').AsInteger          := DmLocal.GerarID;
+            DMLocal.QryItens.FieldByName('FILIAL').AsString       := ObjID.GetValue('und_armazem').Value;
+            DMLocal.QryItens.FieldByName('CNPJ').AsString         := ObjID.GetValue('cgc').Value;
+            DMLocal.QryItens.FieldByName('RESPONSAVEL').AsString  := ObjID.GetValue('responsavel').Value;
+            DmLocal.QryItens.FieldByName('LOTE').AsString         := ObjID.GetValue('lote').Value;
+            DmLocal.QryItens.FieldByName('SERIE').AsString        := ObjID.GetValue('serie').Value;
+            DmLocal.QryItens.FieldByName('NRONOTA').AsString      := ObjID.GetValue('nota').Value;
+            DmLocal.QryItens.FieldByName('CODIGO').AsString       := ObjID.GetValue('produto').Value;
+            DMLocal.QryItens.FieldByName('STATUS').asstring       := 'N';
+            DmLocal.QryItens.FieldByName('CONFERIDO').asboolean   := FALSE;
+            DmLocal.QryItens.FieldByName('ATIVO').AsBoolean       := TRUE;
+          end
+          else
+            DMLocal.QryItens.Edit;
+
+            if DmLocal.QryItensSTATUS.AsString='N' then
+            Begin
+            DmLocal.QryItens.FieldByName('DCA').AsString          := retorno.GetValue('dca').Value;
+            DmLocal.QryItens.FieldByName('VLR_UNITARIO').AsString := retorno.GetValue('vlr_unitario').Value;
+            DmLocal.QryItens.FieldByName('VLR_TOTAL').AsString    := retorno.GetValue('vlr_mov').Value;
+            DmLocal.QryItens.FieldByName('QTD_TOTAL').AsString    := retorno.GetValue('qtd_mov').Value;
+            DmLocal.QryItens.FieldByName('DESCRICAO').AsString    := retorno.GetValue('produto').Value;
+            DmLocal.QryItens.FieldByName('NOME_CLIENTE').AsString := retorno.GetValue('cliente').Value;
+            DmLocal.QryItens.FieldByName('PESO_BRUTO').AsString   := retorno.GetValue('peso_bruto').Value;
+            DmLocal.QryItens.FieldByName('PESO').AsString         := retorno.GetValue('peso_liquido').Value;
+            DmLocal.QryItens.FieldByName('SERIE_PRODUTO').AsString := retorno.GetValue('serie_produto').Value;
+             if DmLocal.QryFilaTIPO.AsString='CARGA' then
+             DmLocal.QryItens.FieldByName('TIPO').asstring        := 'SAIDA'
+             else
+             DmLocal.QryItens.FieldByName('TIPO').asstring        := 'ENTRADA';
+            End;
+
+
+
+            DmLocal.QryItensNR_ENTRADA.AsInteger                  := DmLocal.QryNotasNRENTRADA.AsInteger;
+
+
+            try
+            DMLocal.QryItens.Post;
+            except
+            continue
+            end;
+        end;
+      end;
+    except
+      Result := False;
+    end;
+  finally
+  end;
+
+
+end;
+
+
+
+
+function TDMRest.RecebeItensPedido(Filial: String; Pedido: integer): boolean;
+var
+  i: integer;
+  s: String;
+  JsonArr : TJSONArray;
+  JsonObj,retorno,ObjID : TJSONObject;
+begin
+  Result := False;
+
+  try
+    try
+   // Reset de componentes
+      Self.ClearToDefaults;
+
+      if Execute('pedidos/'+Filial+'/'+Pedido.ToString+'/itens', rmGET) then
+      begin
+        Result := True;
+        JsonArr := DMRest.rstRequest.Response.JSONValue as  TJSONArray;
+
+       for i := 0 to JsonArr .Count-1 do
+        begin
+        retorno   := JsonArr.Items[i] as TJSONObject;
+        ObjID     := retorno.GetValue('id') as TJSONObject;
+
+         if not DMLocal.ConsultaItensPedido(ObjID.GetValue('fil_pedido').Value,ObjID.GetValue('nro_pedido').Value.ToInteger,ObjID.GetValue('tipo').Value,
+                                            ObjID.GetValue('item').Value.ToInteger()) then
+          begin
+            DMLocal.QryItens.Append;
+
+            DmLocal.QryItens.FieldByName('ID_INTERNO').AsInteger      := DmLocal.GerarID;
+            DmLocal.QryItens.FieldByName('ID_ENTRADA_PROD').AsInteger := retorno.GetValue('id_entrada').Value.ToInteger;
+            DMLocal.QryItens.FieldByName('FILIAL').AsString           := ObjID.GetValue('fil_pedido').Value;
+            DmLocal.QryItens.FieldByName('CODIGO').AsString           := retorno.GetValue('cod_produto').Value;
+            DMLocal.QryItens.FieldByName('STATUS').asstring           := 'N';
+            DmLocal.QryItens.FieldByName('CONFERIDO').asboolean       := FALSE;
+            DmLocal.QryItens.FieldByName('ATIVO').AsBoolean           := TRUE;
+            DmLocal.QryItens.FieldByName('SEQUENCIA').AsInteger       := ObjID.GetValue('item').Value.ToInteger;
+          end
+          else
+            DMLocal.QryItens.Edit;
+
+            DmLocal.QryItens.FieldByName('QTD_LIDA').AsString         := retorno.GetValue('qtd_item_lido').Value;
+
+            if DmLocal.QryItensSTATUS.AsString='N' then
+            Begin
+            DmLocal.QryItens.FieldByName('DCA').AsString              := ObjID.GetValue('tipo').Value;
+            DmLocal.QryItens.FieldByName('QTD_TOTAL').AsString        := retorno.GetValue('qtd_item').Value;
+
+
+            DmLocal.QryItens.FieldByName('DESCRICAO').AsString        := retorno.GetValue('descricao').Value;
+
+             if DmLocal.QryFilaTIPO.AsString='CARGA' then
+             DmLocal.QryItens.FieldByName('TIPO').asstring            := 'SAIDA'
+             else
+             DmLocal.QryItens.FieldByName('TIPO').asstring            := 'ENTRADA';
+            End;
+
+
+
+            DmLocal.QryItensNR_ENTRADA.AsInteger                      := DmLocal.QryFilaNR_ENTRADA.AsInteger;
+            DmLocal.QryItensNROPEDIDO.AsInteger                       := DmLocal.Qry_PedidosNROPEDIDO.AsInteger;
+
+
+            try
+            DMLocal.QryItens.Post;
+            except
+            continue
+            end;
+        end;
+      end;
+    except
+      Result := False;
+    end;
+  finally
+  end;
+
+
+end;
+
+
+procedure TDMRest.ClearToDefaults;
+begin
+  rstRequest.ResetToDefaults;
+  rstClient.ResetToDefaults;
+  rstResponse.ResetToDefaults;
+
+  rstRequest.Accept        := 'application/json;charset=UTF-8';
+  rstRequest.AcceptEncoding:= 'gzip, deflate, br';
+  rstClient.Accept         := 'application/json;charset=UTF-8';
+  rstClient.AcceptCharset  := 'utf-8, *;q=0.8';
+  rstClient.ContentType    := CONTENTTYPE_APPLICATION_JSON;
+  rstRequest.Params.AddHeader('X-TenantID','TRIANGULO');
+
+
+  rstResponse.RootElement := '';
+end;
+
+
+procedure TDMRest.DataModuleCreate(Sender: TObject);
+begin
+ if (FileExists(GetHomePath + PathDelim + 'config.ini')) then
+ Begin
+ DmLocal.AlimentaAPI;
+ End;
+end;
+
+function TDMRest.Execute(const AServerMethod: String;
+  AMethod: TRESTRequestMethod): Boolean;
+begin
+   Result := False;
+
+  try
+    try
+
+      rstRequest.Method := AMethod;
+
+      rstClient.BaseURL := Format('%s%s', [C_BASEURL , AServerMethod]);
+
+
+      rstRequest.Execute;
+
+      Result := rstResponse.StatusCode in ([200,204,201]);
+    except
+      on E: Exception do
+      begin
+        if Pos('O tempo limite da operação foi atingido', E.Message) > 0 then
+          Result := True;
+      end;
+    end;
+  finally
+
+  end;
+end;
+
+function TDMRest.FinalizaServico: Boolean;
+begin
+ result:=false;
+  try
+   // Reset de componentes
+    Self.ClearToDefaults;
+    try
+       Execute('entradas/terminoServico/'+DMLocal.QryNotasUNDENTRADA.AsString+'/'+DmLocal.QryNotasNRENTRADA.AsInteger.ToString+'', rmPUT);
+       result:=true;
+    except
+     result:=false;
+    end;
+  finally
+
+  end;
+end;
+
+function TDMRest.IniciaServico: Boolean;
+begin
+  result:=false;
+  try
+   // Reset de componentes
+    Self.ClearToDefaults;
+    try
+       Execute('entradas/inicioServico/'+DMLocal.QryNotasUNDENTRADA.AsString+'/'+DmLocal.QryNotasNRENTRADA.AsInteger.ToString+'', rmPUT);
+       result:=true;
+    except
+     result:=false;
+    end;
+  finally
+
+  end;
+end;
+
+function TDMRest.IniciaServicoCarga(fil_pedido: string;
+  nropedido: integer): Boolean;
+begin
+  result:=false;
+  try
+   // Reset de componentes
+    Self.ClearToDefaults;
+    try
+       Execute('pedidos/'+fil_pedido+'/'+nropedido.ToString+'/iniciar', rmPUT);
+       result:=true;
+    except
+     result:=false;
+    end;
+  finally
+
+  end;
+end;
+
+function TDMRest.IntegraItemLido(Filial,Tipo: string; Pedido,Item: integer): Boolean;
+begin
+ result:=false;
+  try
+   // Reset de componentes
+    Self.ClearToDefaults;
+    try
+       Execute('itemPedido/'+Filial+'/'+Pedido.ToString+'/P/'+Item.ToString+'/lido', rmPUT);
+       result:=true;
+    except
+     result:=false;
+    end;
+  finally
+
+  end;
+end;
+
+function TDMRest.IntegrarBaixas(sJson: string): boolean;
+begin
+  Result := False;
+
+  rstRequest.Params.Clear;
+  try
+    try
+   // Reset de componentes
+    Self.ClearToDefaults;
+    rstRequest.Accept        := 'application/json;';
+    rstRequest.AcceptEncoding:= 'gzip';
+    rstClient.Accept         := 'application/json;charset=UTF-8';
+    rstClient.AcceptCharset  := 'utf-8, *;q=0.8';
+
+      with rstRequest.Params.AddItem do
+      begin
+        ContentType := ctAPPLICATION_JSON;
+        name := 'body';
+        Value := sJson;
+        Kind := pkREQUESTBODY;
+      end;
+
+      if Execute('baixar', rmPost) then
+      begin
+        Result := True;
+        rstRequest.Params[0].Value := '';
+      end;
+    except
+      Result := False;
+    end;
+  finally
+    rstRequest.Params.Clear;
+
+  end;
+
+end;
+
+procedure TDMRest.IntegrarROM(Filial, Romaneio: string);
+var teste:string;
+begin
+   try
+   // Reset de componentes
+    Self.ClearToDefaults;
+    try
+       Execute('integrar/romaneio/'+Filial+'/'+Romaneio+'', rmPUT)
+    except
+     teste:='0';
+    end;
+  finally
+
+  end;
+end;
+
+function TDMRest.ValidaConferente(CPF: String): Boolean;
+var objeto :TJSONObject;
+begin
+   // Reset de componentes
+    Result := False;
+
+    Self.ClearToDefaults;
+    try
+      if Execute('entradas/conferente/'+ LimpaString(CPF,'./-'), rmGET) then
+      begin
+        Result := True;
+        objeto:= rstRequest.Response.JSONValue as TJSONObject;
+        if not DMLocal.ValidaMotLocal(CPF) then
+         Begin
+
+          DMLocal.IntegraMotorista(objeto.GetValue('cpf').Value,objeto.GetValue('nome').Value);
+         End;
+       // Self.ServicosMotorista(LimpaString(CPF,'./-'));
+      end;
+    except
+    end;
+
+end;
+
+
+function TDmRest.BuscaEntradas(Conferente:string): Boolean;
+var
+  i: integer;
+  s: String;
+  JsonArr : TJSONArray;
+  JsonObj,ObjID,retorno,JsonID : TJSONObject;
+  recebe :string ;
+begin
+  Result := False;
+
+  try
+    try
+   // Reset de componentes
+      Self.ClearToDefaults;
+
+      if Execute('entradas', rmGET) then
+      begin
+      Result := True;
+      JsonArr := DMRest.rstRequest.Response.JSONValue as  TJSONArray;
+
+       for i := 0 to JsonArr .Count-1 do
+        begin
+        retorno   := JsonArr.Items[i] as TJSONObject;
+        ObjID     := retorno.GetValue('id') as TJSONObject;
+
+          if not DMLocal.ConsultarNotas(ObjID.GetValue('nr_entrada').Value.ToInteger,ObjID.GetValue('sigla_condominio').Value) then
+          begin
+            DMLocal.QryFila.Append;
+            DMLocal.QryFilaNR_ENTRADA.AsInteger      := ObjID.GetValue('nr_entrada').Value.ToInteger;
+            DmLocal.QryFilaUND_ARMAZEN.AsString      := ObjID.GetValue('sigla_condominio').Value;
+            DMLocal.QryFilaINTEGRADO.AsBoolean       := False;
+            DMLocal.QryFilaSTATUS.AsString           := 'N';
+            try
+             // FrmPrincipal.executarSOM;
+            except
+             exit
+            end;
+          end
+          else
+           DMLocal.QryFila.Edit;
+
+           DMLocal.QryFilaTIPO.AsString           := retorno.GetValue('tipo_operacao').Value;
+           DMLocal.QryFilaFALAR_COM.AsString      := retorno.GetValue('falar_com').Value;
+           DmLocal.QryFilaVEICULO.AsString        := retorno.GetValue('placa1').Value;
+           DmLocal.QryFilaCONDOMINIO.AsString     := retorno.GetValue('condomino').Value;
+
+
+           S:=retorno.GetValue('placa2').Value;
+           if s<>'null' then
+           DmLocal.QryFilaCARRETA.AsString        := retorno.GetValue('placa2').Value;
+
+           s := retorno.GetValue('dt_inicio_carga_descarga').Value;
+           if s<>'null' then
+           Begin
+           DMLocal.QryFilaDATA_INICIO.AsDateTime  := StrToDateTime(retorno.GetValue('dt_inicio_carga_descarga').Value);
+           DmLocal.QryFilaSTATUS.AsString         := 'E';
+           End;
+
+           s := retorno.GetValue('dt_termino_carga_descarga').Value;
+           if s<>'null' then
+           Begin
+           DMLocal.QryFilaDATA_TERMINO.AsDateTime := StrToDateTime(retorno.GetValue('dt_termino_carga_descarga').Value);
+           DmLocal.QryFilaSTATUS.AsString         := 'F';
+           End;
+
+
+           s := retorno.GetValue('dt_entrada').Value;
+           if s<>'null' then
+           DMLocal.QryFilaDATA_ENTRADA.AsDateTime := StrToDateTime(retorno.GetValue('dt_entrada').Value);
+
+           s := retorno.GetValue('dt_saida').Value;
+           if s<>'null' then
+           DMLocal.QryFilaDATA_SAIDA.AsDateTime   := StrToDateTime(retorno.GetValue('dt_saida').Value);
+
+           Try
+           DMLocal.QryFila.Post;
+           except
+            continue
+           End;
+          // Self.IntegrarROM(JsonObj.GetValue('fil_romaneio').Value,JsonObj.GetValue('romaneio').Value);
+
+        end;
+
+      end;
+    except
+      Result := False;
+    end;
+  finally
+
+  end;
+
+
+end;
+
+function TDMRest.RecebeNotasEntrada(Und, NrEntrada: string): Boolean;
+var
+  i,vnota,vEntrada: integer;
+  s,vUnd,vCNPJ: String;
+  JsonArr : TJSONArray;
+  JsonObj,ObjID,retorno,JsonID : TJSONObject;
+  recebe :string ;
+begin
+  Result := False;
+
+  try
+    try
+   // Reset de componentes
+      Self.ClearToDefaults;
+
+      if Execute('entradas/'+Und+'/'+NrEntrada, rmGET) then
+      begin
+      Result := True;
+      JsonArr := DMRest.rstRequest.Response.JSONValue as  TJSONArray;
+
+       for i := 0 to JsonArr .Count-1 do
+        begin
+        retorno   := JsonArr.Items[i] as TJSONObject;
+        ObjID     := retorno.GetValue('id') as TJSONObject;
+
+        vEntrada := ObjID.GetValue('nr_entrada').Value.ToInteger ;
+        vNota    := ObjID.GetValue('nota_fiscal').Value.ToInteger ;
+        vUnd     := ObjID.GetValue('sigla_condominio').Value;
+        vCNPJ    := retorno.GetValue('cgc').Value;
+
+          if not DMLocal.ConsultarNotasEntrada(vEntrada,vNota,vUnd,vCNPJ) then
+          begin
+            DMLocal.QryNotas.Append;
+            DMLocal.QryNotasNRENTRADA.AsInteger      := ObjID.GetValue('nr_entrada').Value.ToInteger;
+            DmLocal.QryNotasUNDENTRADA.AsString      := ObjID.GetValue('sigla_condominio').Value;
+            DMLocal.QryNotasNRNOTA.AsInteger         := ObjID.GetValue('nota_fiscal').Value.ToInteger;
+            DmLocal.QryNotasCNPJ.AsString            := retorno.GetValue('cgc').Value;
+            DmLocal.QryNotasNRSERIE.AsString         := ObjID.GetValue('nota_serie').Value;
+            DMLocal.QryNotasSTATUS.AsString          := DmLocal.QryFilaSTATUS.AsString;
+            try
+             // FrmPrincipal.executarSOM;
+            except
+             exit
+            end;
+          end else
+           DmLocal.QryNotas.Edit;
+
+           DMLocal.QryNotasNOME_CLIENTE.AsString     := retorno.GetValue('nome').Value;
+
+
+
+           Try
+           DMLocal.QryNotas.Post;
+           except
+            continue
+           End;
+          // Self.IntegrarROM(JsonObj.GetValue('fil_romaneio').Value,JsonObj.GetValue('romaneio').Value);
+
+
+        end;
+
+      end;
+    except
+      Result := False;
+    end;
+  finally
+
+  end;
+
+end;
+
+
+function TDMRest.RecebePedidos: Boolean;
+var
+  i: integer;
+  s: string;
+  JsonArr : TJSONArray;
+  JsonObj,ObjID,retorno,JsonID : TJSONObject;
+begin
+  Result := False;
+
+  try
+    try
+   // Reset de componentes
+      Self.ClearToDefaults;
+
+      if Execute('pedidos', rmGET) then
+      begin
+      Result := True;
+      JsonArr := DMRest.rstRequest.Response.JSONValue as  TJSONArray;
+
+       for i := 0 to JsonArr .Count-1 do
+        begin
+        retorno   := JsonArr.Items[i] as TJSONObject;
+        ObjID     := retorno.GetValue('id') as TJSONObject;
+
+          if not DMLocal.BuscaPedido(ObjID.GetValue('fil_pedido').Value,ObjID.GetValue('nro_pedido').Value.ToInteger) then
+          begin
+            DMLocal.Qry_Pedidos.Append;
+            DMLocal.Qry_PedidosNROPEDIDO.AsInteger      := ObjID.GetValue('nro_pedido').Value.ToInteger;
+            DmLocal.Qry_PedidosPEDIDO_FILIAL.AsString   := ObjID.GetValue('fil_pedido').Value;
+            try
+             // FrmPrincipal.executarSOM;
+            except
+             exit
+            end;
+          end else
+           DmLocal.Qry_Pedidos.Edit;
+
+           DmLocal.Qry_PedidosCLIENTE_CNPJ.AsString    := retorno.GetValue('cgc').Value;
+           DmLocal.Qry_PedidosClienTe.AsString         := retorno.GetValue('cliente').Value;
+           DMLocal.Qry_PedidosSTATUS.AsString          := retorno.GetValue('status').Value;
+           DMLocal.Qry_PedidosESPECIE.asstring         := retorno.GetValue('especie').Value;
+
+
+           s := retorno.GetValue('dt_emissao').Value;
+           if s<>'null' then
+           DMLocal.Qry_PedidosData_Emissao.AsDateTime := StrToDateTime(retorno.GetValue('dt_emissao').Value);
+
+           DMLocal.Qry_PedidosQdt_Total.asinteger      := retorno.GetValue('qtd_total').Value.ToInteger;
+
+
+
+           Try
+           DMLocal.Qry_Pedidos.Post;
+           except
+            continue
+           End;
+          // Self.IntegrarROM(JsonObj.GetValue('fil_romaneio').Value,JsonObj.GetValue('romaneio').Value);
+
+
+        end;
+
+      end;
+    except
+      Result := False;
+    end;
+  finally
+
+  end;
+
+end;
+
+
+function TDMRest.LancarCarga(sJson: string): boolean;
+begin
+   Result := False;
+
+  rstRequest.Params.Clear;
+  try
+    try
+     // Reset de componentes
+    Self.ClearToDefaults;
+    rstRequest.Accept        := 'application/json;';
+    rstRequest.AcceptEncoding:= 'gzip';
+    rstClient.Accept         := 'application/json;charset=UTF-8';
+    rstClient.AcceptCharset  := 'utf-8, *;q=0.8';
+
+      with rstRequest.Params.AddItem do
+      begin
+        ContentType := ctAPPLICATION_JSON;
+        name := 'body';
+        Value := sJson;
+        Kind := pkREQUESTBODY;
+      end;
+
+      if Execute('entradas/lancarCarga', rmPost) then
+      begin
+        Result := True;
+        rstRequest.Params[0].Value := '';
+      end;
+    except
+      Result := False;
+    end;
+  finally
+    rstRequest.Params.Clear;
+
+  end;
+
+end;
+
+function TDmRest.LimpaString(sString, sSujeiras: String): String;
+var
+  sStrLimpa: String;
+  iTamanho: integer;
+begin
+  sStrLimpa := '';
+
+  for iTamanho := 1 to Length(sString) do
+    if Pos(Copy(sString, iTamanho, 1), sSujeiras) <= 0 then
+      sStrLimpa := sStrLimpa + Copy(sString, iTamanho, 1);
+
+  Result := sStrLimpa;
+end;
+
+procedure TDMRest.RecuperarOcorrenicas;
+begin
+  rstRequestOcorrencia.ResetToDefaults;
+  rstClientOcorrencia.ResetToDefaults;
+  rstResponseOcorrencia.ResetToDefaults;
+  rstClientOcorrencia.baseUrl := C_BASEURL;
+  rstRequestOcorrencia.Accept:='application/json;';
+  rstRequestOcorrencia.Resource := 'ocorrencias';
+  rstRequestOcorrencia.Execute;
+end;
+
+end.

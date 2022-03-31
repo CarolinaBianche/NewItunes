@@ -1,0 +1,534 @@
+inherited FrmArrumacao: TFrmArrumacao
+  Caption = 'FrmArrumacao'
+  DesignerMasterStyle = 3
+  inherited lytGeral: TLayout
+    inherited rect_titulo: TRectangle
+      inherited lytBotoes: TLayout
+        inherited lbl_titulo: TLabel
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+        end
+        inherited speBtnAtualizar: TSpeedButton
+          Visible = False
+        end
+        inherited speBtnMenu: TSpeedButton
+          OnClick = speBtnMenuClick
+        end
+      end
+    end
+    inherited rect_informativo: TRectangle
+      Size.Height = 100.000000000000000000
+      object lyt_codigo_barras: TLayout
+        Align = Bottom
+        Margins.Top = 5.000000000000000000
+        Position.Y = 52.000000000000000000
+        Size.Width = 294.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object rect_cod_barras: TRectangle
+          Align = Client
+          Fill.Kind = None
+          Margins.Left = 5.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 5.000000000000000000
+          Size.Width = 284.000000000000000000
+          Size.Height = 41.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFB2B2B2
+          XRadius = 20.000000000000000000
+          YRadius = 20.000000000000000000
+          object edt_codbarras: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            TabOrder = 0
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.HorzAlign = Center
+            Margins.Left = 20.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 20.000000000000000000
+            Margins.Bottom = 10.000000000000000000
+            Size.Width = 194.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'Ler Entrada '
+            StyledSettings = [Style, FontColor]
+          end
+          object btnLancar: TSpeedButton
+            Align = Right
+            Position.X = 238.000000000000000000
+            Size.Width = 66.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'incluir'
+            Visible = False
+          end
+          object Layout1: TLayout
+            Align = Left
+            HitTest = True
+            Size.Width = 50.000000000000000000
+            Size.Height = 41.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object Path1: TPath
+              Align = Client
+              Data.Path = {
+                28000000000000009C248E4342008043010000004E12FD437593084202000000
+                0E7D0044FCA9D241020000000E7D00443AB45A41020000004E12FD43F07CBB40
+                020000007F2AF94354BAF9BF0200000081D5F24318DBF9BF02000000D3EDEE43
+                F07CBB4001000000000080438DB76343010000006F920842EE7CBB4002000000
+                F0A7D24120DBF9BF0200000022B05A4120DBF9BF02000000C074BB40EE7CBB40
+                0200000014DBF9BF52B85A4102000000D8FBF9BF08ACD24102000000C074BB40
+                75930842010000000AB763432100804301000000BC74BB40F4EDEE4302000000
+                E8FBF9BFC3D5F24302000000E8FBF9BFC12AF94302000000BC74BB406F12FD43
+                020000003F351C414606FF4302000000AC1C6E4111000044020000000C02A041
+                1100004402000000C2F5C84111000044020000006CE7F1414706FF4302000000
+                749308427012FD430100000000008043BC248E4301000000B2EDEE436E12FD43
+                0200000089E1F0434506FF4302000000C470F34310000044020000000000F643
+                10000044020000003C8FF8431000004402000000561EFB434506FF4302000000
+                4E12FD436E12FD43020000000E7D00449F2AF943020000000E7D0044A1D5F243
+                020000004E12FD43F3EDEE43010000009C248E4342008043030000009C248E43
+                42008043}
+              Fill.Color = xFFE5E5E5
+              Locked = True
+              HitTest = False
+              Margins.Left = 10.000000000000000000
+              Margins.Top = 10.000000000000000000
+              Margins.Right = 10.000000000000000000
+              Margins.Bottom = 10.000000000000000000
+              Size.Width = 30.000000000000000000
+              Size.Height = 21.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+            end
+          end
+        end
+      end
+    end
+    inherited vertLista: TVertScrollBox
+      Margins.Top = 150.000000000000000000
+      Size.Height = 403.000000000000000000
+      Viewport.Width = 324.000000000000000000
+      Viewport.Height = 403.000000000000000000
+      object rctCard3: TRectangle
+        Align = Top
+        Margins.Left = 15.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Position.X = 15.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 294.000000000000000000
+        Size.Height = 327.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF979797
+        XRadius = 10.000000000000000000
+        YRadius = 10.000000000000000000
+        object rctTopCard3: TRectangle
+          Align = Bottom
+          Corners = [BottomLeft, BottomRight]
+          Fill.Color = xFF434343
+          Margins.Left = 1.000000000000000000
+          Margins.Right = 1.000000000000000000
+          Position.X = 1.000000000000000000
+          Position.Y = 286.000000000000000000
+          Size.Width = 292.000000000000000000
+          Size.Height = 41.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object spdBtnFinal: TSpeedButton
+            Align = Right
+            StyledSettings = [Family, Size, Style]
+            IconTintColor = claWhite
+            Position.X = 136.000000000000000000
+            Size.Width = 156.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Concluir Arrum'#231#227'o '
+            TextSettings.FontColor = claWhite
+          end
+        end
+        object rect_andar: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 28.000000000000000000
+          Position.Y = 181.000000000000000000
+          Size.Width = 110.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label9: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 105.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE LADO'
+            TabOrder = 0
+          end
+          object ShadowEffect12: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtAndar: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 4
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 100.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'LADO'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            object btn_limpa_andar: TSpeedButton
+              Align = Right
+              Position.X = 68.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_andarClick
+            end
+          end
+        end
+        object rect_apto: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 150.000000000000000000
+          Position.Y = 178.000000000000000000
+          Size.Width = 110.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label10: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 105.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE NR PALETE'
+            TabOrder = 0
+          end
+          object ShadowEffect13: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtApto: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 5
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 100.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'NR PALETE'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            object btn_limpa_apto: TSpeedButton
+              Align = Right
+              Position.X = 68.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_aptoClick
+            end
+          end
+        end
+        object rect_galpao: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 148.000000000000000000
+          Position.Y = 6.000000000000000000
+          Size.Width = 110.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label17: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 105.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE ARMAZ'#201'M'
+            TabOrder = 0
+          end
+          object ShadowEffect9: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtGalpao: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 1
+            ReturnKeyType = Next
+            MaxLength = 1
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 100.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'ARMAZ'#201'M'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            object btn_limpa_galpao: TSpeedButton
+              Align = Right
+              Position.X = 68.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_galpaoClick
+            end
+          end
+        end
+        object rect_numero: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 150.000000000000000000
+          Position.Y = 93.000000000000000000
+          Size.Width = 110.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label8: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 105.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE QUADRA'
+            TabOrder = 0
+          end
+          object ShadowEffect11: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtNumero: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 3
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 100.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'QUADRA'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            object btn_limpa_num: TSpeedButton
+              Align = Right
+              Position.X = 68.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_numClick
+            end
+          end
+        end
+        object rect_rua: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 29.000000000000000000
+          Position.Y = 95.000000000000000000
+          Size.Width = 110.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object Label7: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 105.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE GALP'#195'O'
+            TabOrder = 0
+          end
+          object ShadowEffect10: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edtRua: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 2
+            ReturnKeyType = Next
+            MaxLength = 3
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 100.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'GALP'#195'O'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            object btn_limpa_rua: TSpeedButton
+              Align = Right
+              Position.X = 68.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_ruaClick
+            end
+          end
+        end
+        object rect_qtd_movimento: TRectangle
+          Align = Scale
+          Fill.Color = xFFDBDEC9
+          HitTest = False
+          Position.X = 32.000000000000000000
+          Position.Y = 6.000000000000000000
+          Size.Width = 110.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 25.000000000000000000
+          YRadius = 25.000000000000000000
+          object lbl_qtd_movimento: TLabel
+            Align = Top
+            StyledSettings = [Family, Style, FontColor]
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 105.000000000000000000
+            Size.Height = 29.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 9.000000000000000000
+            TextSettings.HorzAlign = Center
+            Text = 'QTD MOVIMENTA'#199#195'O'
+            TabOrder = 0
+          end
+          object ShadowEffect1: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+          object edt_qtd_movimento: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 1
+            ReturnKeyType = Next
+            MaxLength = 1
+            TextSettings.Font.Family = 'Century Gothic'
+            Position.X = 5.000000000000000000
+            Position.Y = 33.000000000000000000
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 100.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'QTD.'
+            StyledSettings = [Style, FontColor]
+            CharCase = ecUpperCase
+            object btn_limpa_qtd: TSpeedButton
+              Align = Right
+              Position.X = 68.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 32.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'cleareditbutton'
+              Text = 'X'
+              OnClick = btn_limpa_qtdClick
+            end
+          end
+        end
+      end
+    end
+  end
+end

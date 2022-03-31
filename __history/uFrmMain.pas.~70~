@@ -1,0 +1,885 @@
+unit uFrmMain;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.TabControl,
+  FMX.Layouts, FMX.Objects, FMX.Effects, FMX.StdCtrls,
+  FMX.Controls.Presentation, FMX.Edit, UntLib, System.Actions, FMX.ActnList,
+  FMX.DialogService, AnonThread, uLoading, Notificacao,
+   U_TJSONMaps,
+  System.Sensors, System.Permissions
+  {$IFDEF ANDROID}
+   ,IdURI, Androidapi.Jni.GraphicsContentViewText,  Androidapi.Jni.Net, Androidapi.Helpers
+  {$ENDIF ANDROID}
+  , System.Sensors.Components,DelphiSelfUpdate,FMX.VirtualKeyboard,FMX.Platform,
+  uVersao;
+
+type
+  TFrmMain = class(TForm)
+    lytMain: TLayout;
+    tbcMain: TTabControl;
+    tbiLogin: TTabItem;
+    tbiMain: TTabItem;
+    lytNavegacao: TLayout;
+    lytLogin: TLayout;
+    rect_fundo_login: TRectangle;
+    Image5: TImage;
+    Rectangle3: TRectangle;
+    lytBoxLogin: TLayout;
+    tbiPrincipal: TTabItem;
+    Image1: TImage;
+    Rectangle1: TRectangle;
+    lytPrincipal: TLayout;
+    lytBoxMenu: TLayout;
+    rect_fundo: TRectangle;
+    lblVersao: TLabel;
+    lytPerfil: TLayout;
+    lblMenuMotorista: TLabel;
+    lblMenudata: TLabel;
+    lyt_botoes: TLayout;
+    lytFoto: TLayout;
+    cirFoto: TCircle;
+    rectFundoBranco: TRectangle;
+    lytLoginCentral: TLayout;
+    btn_login: TRectangle;
+    lbl_acessar: TLabel;
+    ShadowEffect1: TShadowEffect;
+    lyt_login: TLayout;
+    rec_login: TRectangle;
+    Path1: TPath;
+    EdtCpf: TEdit;
+    lyt_rodape: TLayout;
+    Image4: TImage;
+    rect_ini_lista: TRectangle;
+    Image2: TImage;
+    Label7: TLabel;
+    rect_config: TRectangle;
+    Image7: TImage;
+    Label12: TLabel;
+    actList: TActionList;
+    chgTabAct: TChangeTabAction;
+    lblMensagem: TLabel;
+    StyleBook1: TStyleBook;
+    Path2: TPath;
+    Localizador: TLocationSensor;
+    rect_update: TRectangle;
+    Layout10: TLayout;
+    Layout11: TLayout;
+    Image8: TImage;
+    img_seta: TImage;
+    Label17: TLabel;
+    lbl_texto: TLabel;
+    Layout12: TLayout;
+    rect_botao: TRectangle;
+    btn_update: TSpeedButton;
+    Rectangle6: TRectangle;
+    SpeedButton1: TSpeedButton;
+    lblTituloInicio: TLabel;
+    ShadowEffect2: TShadowEffect;
+    rect_desconectar: TRectangle;
+    Image9: TImage;
+    Label4: TLabel;
+    Image10: TImage;
+    rect_ini_carr: TRectangle;
+    Image3: TImage;
+    Label1: TLabel;
+    VertScrollBox1: TVertScrollBox;
+    rect_arrumacao: TRectangle;
+    img_arrumacao: TImage;
+    lbl_arrumacao: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure btn_loginClick(Sender: TObject);
+    procedure rect_ini_listaClick(Sender: TObject);
+    procedure EdtCpfChangeTracking(Sender: TObject);
+    procedure EdtCpfChange(Sender: TObject);
+    procedure FormSaveState(Sender: TObject);
+    procedure LocalizadorLocationChanged(Sender: TObject; const OldLocation,
+      NewLocation: TLocationCoord2D);
+    procedure FormShow(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure btn_updateClick(Sender: TObject);
+    procedure EdtCpfCanFocus(Sender: TObject; var ACanFocus: Boolean);
+    procedure EdtCpfEnter(Sender: TObject);
+    procedure EdtCpfKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure rect_configClick(Sender: TObject);
+    procedure Rectangle10Click(Sender: TObject);
+    procedure ckbCelularChange(Sender: TObject);
+    procedure rect_desconectarClick(Sender: TObject);
+    procedure Image10Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure rect_ini_carrClick(Sender: TObject);
+    procedure rect_arrumacaoClick(Sender: TObject);
+  private
+    { Private declarations }
+     versao_app, versao_server : string;
+     VUpdate : TSelfUpdateDelphi;
+    procedure Logar;
+
+    function  ValidaCampos:Boolean;
+    function  ValidaInternet:Boolean;
+    procedure ManterdadosLogin;
+    procedure IniciaServiço;
+
+
+
+  public
+    { Public declarations }
+
+     TApiMapas : TJSONMapsIntegracao;
+     motorista,motoristaCPF :string;
+     vLocalizacao :boolean;
+     Pedido : integer;
+     Origem : String;
+     TipoSaida : String;
+     UltVetor  : integer;
+     {$IFDEF ANDROID}
+
+    FAccess_Coarse_Location, FAccess_Fine_Location : string;
+    PermissaoCamera, PermissaoReadStorage, PermissaoWriteStorage,
+    PermissaoFine_Location, PermissaoCoarse_Location: string;
+    {$ENDIF}
+
+    {$IFDEF ANDROID}
+
+
+    procedure DisplayRationale(Sender: TObject;
+      const APermissions: TArray<string>; const APostRationaleProc: TProc);
+    procedure LocationPermissionRequestResult(Sender: TObject;
+      const APermissions: TArray<string>;
+      const AGrantResults: TArray<TPermissionStatus>);
+
+     //localizacao versao app
+       function GetVersaoApp:Boolean;
+
+   {$ENDIF}
+
+
+    procedure MensagemTost(sMensagem: String);
+    function  VerificaPermissaoCamera:Boolean;
+
+    procedure AtivarLocalizacao;
+    //controle de versao
+    procedure OnFinishUpdate;
+    procedure EscondeTeclado(Obj :TFmxObject);
+    function VerificaCarEspeciais(Caracter:String):Boolean;
+  end;
+
+var
+  FrmMain: TFrmMain;
+
+implementation
+
+{$R *.fmx}
+
+uses uFrmNotas,System.IOUtils
+     {$IFDEF ANDROID}
+    , Androidapi.Jni.NetWork, Androidapi.JNI.JavaTypes, Androidapi.JNI.Os
+      {$ENDIF}
+     , uDMLocal, uDmRest, Constantes, uFrmConfig,
+  uFrmAtividades, UFrmConfere, uFrmInformativo, uFrmNotasSel, uFrmListaPedidos,
+  uFrmArrumacao;
+
+
+
+{$IFDEF ANDROID}
+procedure TFrmMain.DisplayRationale(Sender: TObject;
+  const APermissions: TArray<string>; const APostRationaleProc: TProc);
+var
+  I: Integer;
+  RationaleMsg: string;
+begin
+  for I := 0 to High(APermissions) do
+  begin
+    if (APermissions[I] = FAccess_Coarse_Location) or (APermissions[I] = FAccess_Fine_Location) then
+     Begin
+      RationaleMsg := 'O app precisa de acesso ao GPS';
+       vLocalizacao := false;
+     End else
+     vLocalizacao := true;
+  end;
+
+  TDialogService.ShowMessage(RationaleMsg,
+    procedure(const AResult: TModalResult)
+    begin
+      APostRationaleProc;
+    end)
+end;
+
+procedure TFrmMain.LocationPermissionRequestResult
+  (Sender: TObject; const APermissions: TArray<string>;
+const AGrantResults: TArray<TPermissionStatus>);
+var
+         x : integer;
+begin
+  if (Length(AGrantResults) = 2) and
+    (AGrantResults[0] = TPermissionStatus.Granted) and
+    (AGrantResults[1] = TPermissionStatus.Granted) then
+      //  LocationSensor.Active := true
+      vLocalizacao:=true
+  else
+  begin
+    vLocalizacao:=false;
+    TDialogService.ShowMessage
+      ('Não é possível acessar o GPS porque o app não possui acesso')
+  end;
+
+end;
+
+function TFrmMain.GetVersaoApp: Boolean;
+Var PkgInfo :JPackageInfo;
+Begin
+  result:=false;
+  versao_app :='0.0';
+  try
+  PkgInfo := SharedActivity.getPackageManager.getPackageInfo(SharedActivity.getPackageName,0);
+  versao_app := JStringToString(PkgInfo.versionName);
+  versao_server :='0.0';
+  result :=true;
+  Except
+  result:=false;
+  end
+
+End;
+
+{$ENDIF}
+
+procedure TfrmMain.AtivarLocalizacao;
+begin
+{$IFDEF ANDROID}
+  PermissionsService.RequestPermissions([PermissaoCoarse_Location,
+                                         PermissaoFine_Location],
+                                         LocationPermissionRequestResult,
+                                         DisplayRationale);
+{$ENDIF}
+{$IFDEF IOS}
+  LocationSensor.Active := True;
+{$ENDIF}
+end;
+
+procedure TFrmMain.btn_loginClick(Sender: TObject);
+begin
+
+  if not ValidaCampos  then
+  Begin
+    TDialogService.ShowMessage('Preencha os campos antes de Continuar!');
+    Abort
+  End;
+
+  if not ValidaInternet then
+  Begin
+   TDialogService.ShowMessage('Aparelho sem conexão com a Internet!');
+   lblMensagem.Text := 'Trabalhando OffLine';
+  End else
+  Begin
+   lblMensagem.Text := 'Bem Vindo!';
+   if not DmLocal.ValidaMotLocal(EdtCpf.Text) then
+   Begin
+
+   TAnonymousThread<Boolean>.Create(
+    function: Boolean
+    begin
+      Result := DmRest.ValidaConferente(EdtCpf.Text);
+    end,
+    procedure(Result: Boolean)
+    begin
+      TLoading.Hide;
+      if Result then
+      begin
+        Logar;
+      end else
+      TDialogService.ShowMessage('Motorista não encontrado, verifique os dados informados! ');
+    end,
+    procedure(AException: Exception)
+    begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Valida Conferente! ' +
+      AException.Message);
+    end);
+
+   End else
+   Begin
+    // AtivarLocalizacao;
+    lblMenuMotorista.Text := motorista;
+    lblMenudata.Text      := FormatDateTime('dd/mm/yy',now);
+    TLibery.MudarAba(tbiPrincipal,Self);
+   End;
+
+
+  End;
+
+
+
+end;
+
+procedure TFrmMain.btn_updateClick(Sender: TObject);
+var
+ url : string;
+begin
+  {$IFDEF ANDROID}
+   url:= C_LINKINFO;
+   VUpdate.Atualizar(url,'stwMob_Entregas.apk');
+  {$ENDIF}
+end;
+
+procedure TFrmMain.ckbCelularChange(Sender: TObject);
+begin
+ UsaCelular := FrmConfig.ckbCelular.IsChecked;
+end;
+
+procedure TFrmMain.EdtCpfCanFocus(Sender: TObject; var ACanFocus: Boolean);
+var
+  FService: IFMXVirtualKeyboardService;
+begin
+ { TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(FService));
+  if (FService <> nil) then
+  begin
+    FService.HideVirtualKeyboard;
+   // EdtCpf.SetFocus;
+  end;}
+
+end;
+
+procedure TFrmMain.EdtCpfChange(Sender: TObject);
+begin
+  {$IFDEF MSWINDOWS}
+   DmLocal.MaskText(Sender as TEdit,'999.999.999-99');
+  {$ENDIF}
+end;
+
+procedure TFrmMain.EdtCpfChangeTracking(Sender: TObject);
+begin
+  {$IFNDEF MSWINDOWS}
+   EscondeTeclado(EdtCpf);
+   DmLocal.MaskText(Sender as TEdit,'999.999.999-99');
+  {$ENDIF}
+end;
+
+procedure TFrmMain.EdtCpfEnter(Sender: TObject);
+begin
+ EscondeTeclado(EdtCpf);
+end;
+procedure TFrmMain.EdtCpfKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if(Key = 13)then
+  Begin
+   DmLocal.MaskText(Sender as TEdit,'999.999.999-99');
+   btn_login.OnClick(Sender);
+  end
+
+end;
+
+procedure TFrmMain.EscondeTeclado(Obj :TFmxObject);
+ var
+  FService: IFMXVirtualKeyboardService;
+begin
+  {$IFNDEF MSWINDOWS}
+  if not UsaCelular then
+  Begin
+   TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(FService));
+   if (FService <> nil) then
+    begin
+    FService.HideVirtualKeyboard;
+   end;
+  end else
+  Begin
+  TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(FService));
+   if (FService <> nil) then
+    begin
+    FService.ShowVirtualKeyboard(Obj);
+   end;
+  End;
+  {$ENDIF}
+end;
+
+
+procedure TFrmMain.FormCreate(Sender: TObject);
+begin
+  tbcMain.TabPosition:= TTabPosition.None;
+  tbcMain.ActiveTab  := tbiLogin;
+
+  TLibery.ActiveForm := nil;
+  TLibery.LayoutMain := lytNavegacao;
+  TLibery.ActionMenu := actList;
+  TLibery.ActMudarAba := chgTabAct;
+
+
+  Dmlocal.VerificaConfiguracao;
+
+
+
+
+  {$IFDEF ANDROID}
+   VUpdate:= TSelfUpdateDelphi.Create(FrmMain);
+    if not GetVersaoApp then
+     lblversao.Text := 'Versão ' + 'erro na versão';
+
+     lblVersao.Text := 'Versão.:' + versao_app;
+  {$ENDIF}
+
+
+end;
+
+procedure TFrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+  Shift: TShiftState);
+ {$IFDEF ANDROID}
+var
+   FService  : IFMXVirtualKeyboardService;
+   Formulario:string;
+ {$ENDIF ANDROID}
+begin
+  {$IFDEF ANDROID}
+
+       if (Key = vkHardwareBack) then
+       begin
+           TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(FService));
+
+           if (FService <> nil) and (TVirtualKeyboardState.Visible in FService.VirtualKeyboardState) then
+           begin
+               // Botao Back pressionado apenas fecha
+           end else
+           begin
+               if tbcMain.ActiveTab = tbiLogin then
+               begin
+                   Key := 0;
+                   tbcMain.ActiveTab := tbiLogin;
+               end;
+
+              { if tbcMain.ActiveTab = tbiNovoUsuario then
+               begin
+                   Key := 0;
+                   tbcMain.ActiveTab := tbiLogin;
+               end; }
+
+               if tbcMain.ActiveTab = tbiPrincipal then
+               begin
+                   Key := 0;
+                   tbcMain.ActiveTab := tbiLogin;
+               end;
+
+               Formulario := TLibery.NomeForm;
+
+               if tbcMain.ActiveTab = tbiMain then
+               begin
+                   Key := 0;
+                   FrmMain.lytNavegacao.Controls.Clear;
+                   TLibery.ActiveForm.DisposeOf;
+                   TLibery.ActiveForm:=nil;
+
+                   if  Pos('FrmNotas',Formulario) >0  then
+                   Begin
+                    tbcMain.ActiveTab := tbiPrincipal;
+                   end else
+                   if  Pos('FrmSelNotas',Formulario)>0 then
+                   Begin
+                     TLibery.OpenForm(TFrmNotas,FrmMain.lytNavegacao);
+                     TLibery.MudarAba(FrmMain.tbiMain,self);
+                   end else
+                   if Pos('FrmAtividades',Formulario)>0 then
+                   Begin
+                     TLibery.OpenForm(TFrmSelNotas,FrmMain.lytNavegacao);
+                     TLibery.MudarAba(FrmMain.tbiMain,self);
+                   end else
+                   if  Pos('FrmInformativo',Formulario)>0 then
+                   Begin
+                     TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+                     TLibery.MudarAba(FrmMain.tbiMain,self);
+                   end else
+                   if  Pos('FrmConfere',Formulario)>0 then
+                   Begin
+                     TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+                     TLibery.MudarAba(FrmMain.tbiMain,self);
+                   end else
+                   if Pos('FrmConfig',Formulario)>0 then
+                   Begin
+                     tbcMain.ActiveTab := tbiLogin;
+                   end else
+                   tbcMain.ActiveTab := tbiPrincipal;
+               end;
+
+          end;
+        end;
+
+  {$ENDIF ANDROID}
+
+end;
+
+procedure TFrmMain.FormSaveState(Sender: TObject);
+ var
+  Dados: TBinaryWriter;
+begin
+  SaveState.Stream.Clear;
+  Dados := TBinaryWriter.Create(SaveState.Stream);
+  try
+    Dados.Write(edtCpf.Text);
+  finally
+    Dados.Free;
+  end;
+end;
+
+procedure TFrmMain.FormShow(Sender: TObject);
+var retorno:string;
+begin
+   if not (FileExists(GetHomePath + PathDelim + 'config.ini')) then
+   Begin
+    TLibery.OpenForm(TFrmConfig,FrmMain.lytNavegacao);
+    TLibery.MudarAba(tbiMain,Sender);
+   End else
+   Begin
+
+   //Verificando Versão
+    TAnonymousThread<Boolean>.Create(
+    function: Boolean
+    begin
+       if VUpdate.VerificarAtualizacao(C_LINKTEXT,
+       TSelfUpdateDelphi.ObterVersaoAtualApp,Retorno) then
+       Result:=true else
+       Result:=false;
+    end,
+    procedure(Result: Boolean)
+    begin
+      if Result then
+      begin
+       OnFinishUpdate;
+       try
+        //  DMLocal.ExecutaScriptVersao(VUpdate.ScriptDaVersao);
+        if TVersao.Executar(versao_server) then
+          FrmMain.MensagemTost('Script executado com Sucesso') else
+          FrmMain.MensagemTost('Erro na execução do script de Atualização');
+       except
+       exit
+       end;
+      end
+      else
+      Begin
+        //Verificando se Motorista já existe
+       DmLocal.AbreTBL_Mot;
+       {if DmLocal.QryUsuario.RecordCount=1 then
+        Begin
+         motorista     := DmLocal.qryUsuarioNOME.AsString;
+         motoristaCPF  := DmLocal.qryUsuariocpf.AsString;
+
+         Self.ManterdadosLogin;
+
+
+
+         lblMenuMotorista.Text := motorista;
+         lblMenudata.Text      := FormatDateTime('dd/mm/yy',now);
+
+         FrmMain.IniciaServiço;
+
+         ;
+        End else
+        if DmLocal.QryUsuario.RecordCount >1  then
+        FrmMain.EdtCpf.Text:= DmLocal.qryUsuariocpf.AsString; }
+
+
+      FrmMain.rect_update.Visible:=false;
+      end;
+
+    end,
+    procedure(AException: Exception)
+    begin
+      TDialogService.ShowMessage('Erro no processamento da thread Valida Conferente! ' +
+      AException.Message);
+    end);
+
+
+   End;
+
+end;
+
+
+
+procedure TFrmMain.Image10Click(Sender: TObject);
+begin
+  TLibery.OpenForm(TFrmConfig,nil);
+  TLibery.MudarAba(tbiMain,Sender);
+end;
+
+procedure TFrmMain.IniciaServiço;
+{$IFDEF ANDROID}
+var
+     Intent: JIntent;
+     //LIntentService: TIntentServiceHelper;
+{$ENDIF}
+begin
+  //   LIntentService := TIntentServiceHelper.Create('ServicoAndroid', 0, '' +'|' + '' +'|' + DmLocal.CalculaQtdPedido.ToString);
+ //    TAndroidHelper.Activity.startService(LIntentService.Intent);
+
+
+    // TLocalServiceConnection.StartService('ServicoAndroid');
+end;
+
+procedure TFrmMain.LocalizadorLocationChanged(Sender: TObject;
+  const OldLocation, NewLocation: TLocationCoord2D);
+Var
+ NLocalizacao : TLocationCoord2D;
+begin
+    //lbl_latitude.Text:= floattostr(NewLocation.Latitude);
+   // lbl_long.Text:= floattostr(NewLocation.Longitude);
+    Localizador.Active := False;
+   try
+     NLocalizacao                := NewLocation;
+     TApiMapas.MinhaLocLatitude  := NewLocation.Latitude;
+     TApiMapas.MinhaLocLongitude := NewLocation.Longitude;
+
+
+
+     TApiMapas.SetGeoLocalizacao(Localizador, NLocalizacao );
+
+   //  lbl_endereco.Text:= TApiMapas.minhaLocEndereco;
+   //  lbl_bairro.Text  := TApiMapas.minhaLocBairro;
+   //  lbl_cidade.text  := TApiMapas.minhaLocCidade;
+   //  DMLocal.GravaLocalizacao(TApiMapas.MinhaLocLatitude,TApiMapas.MinhaLocLongitude,motoristaCPF,lbl_endereco.Text,lbl_bairro.Text,lbl_cidade.Text);
+   except
+    exit
+   end;
+
+end;
+
+procedure TFrmMain.Logar();
+begin
+  Self.ManterdadosLogin;
+
+
+ // AtivarLocalizacao;
+  lblMenuMotorista.Text := motorista;
+  lblMenudata.Text      := FormatDateTime('dd/mm/yy',now);
+  TLibery.MudarAba(tbiPrincipal,Self);
+end;
+
+procedure TFrmMain.rect_ini_carrClick(Sender: TObject);
+begin
+  TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Recebendos Pedidos de Saída...');
+            TLibery.ActiveForm := nil;
+            DmLocal.QryFila.Close;
+            DmLocal.QryAtv.Close;
+            DmLocal.QryNotas.Close;
+          End);
+      End,
+      procedure()
+      Begin
+      //Processo Principal
+       FrmMain.Origem :='PEDIDO';
+       DmRest.RecebePedidos;
+      End,
+      procedure()
+      Begin
+       //Processo Completo
+        TLoading.Hide;
+        FrmMain.lytNavegacao.Controls.Clear;
+        TLibery.ActiveForm.DisposeOf;
+        TLibery.ActiveForm:=nil;
+        TLibery.OpenForm(TFrmListaPedidos,FrmMain.lytNavegacao);
+        TLibery.MudarAba(FrmMain.tbiMain,Sender);
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        TDialogService.ShowMessage('Erro no processamento da thread Pedidos de Saída! ' +
+        AException);
+      End,
+      True
+    );
+end;
+
+procedure TFrmMain.rect_ini_listaClick(Sender: TObject);
+begin
+
+   TLoading.Show(FrmMain,'Sincronizando Fila ...');
+    TAnonymousThread<Boolean>.Create(
+    function: Boolean
+    begin
+      FrmMain.Origem:='FILA';
+      Result := DmRest.BuscaEntradas('');
+    end,
+    procedure(Result: Boolean)
+    begin
+      TLoading.Hide;
+      TLibery.OpenForm(TFrmNotas,nil);
+      TLibery.MudarAba(tbiMain,Sender);
+    end,
+    procedure(AException: Exception)
+    begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Sincronizando Fila! ' +
+      AException.Message);
+    end);
+end;
+
+
+procedure TFrmMain.SpeedButton1Click(Sender: TObject);
+begin
+
+ DmLocal.AbreTBL_Mot;
+       if DmLocal.QryUsuario.RecordCount=1 then
+        Begin
+         motorista     := DmLocal.qryUsuarioNOME.AsString;
+         motoristaCPF  := DmLocal.qryUsuariocpf.AsString;
+
+         Self.ManterdadosLogin;
+
+
+
+         lblMenuMotorista.Text := motorista;
+         lblMenudata.Text      := FormatDateTime('dd/mm/yy',now);
+
+
+
+         TLibery.MudarAba(tbiPrincipal,self);
+        End else
+        if DmLocal.QryUsuario.RecordCount >1  then
+        Begin
+        FrmMain.EdtCpf.Text:= DmLocal.qryUsuariocpf.AsString;
+        EdtCpf.SetFocus;
+        End;
+
+
+
+
+ rect_update.Visible:=false;
+
+end;
+
+function TFrmMain.ValidaCampos: Boolean;
+begin
+  if (edtCPF.Text = '') then
+  begin
+     result:=false;
+  end
+  else
+  if Length(edtCPF.Text)<14 then
+  Begin
+    result:=false;
+  End
+  else
+  result := true;
+end;
+
+function TFrmMain.ValidaInternet: Boolean;
+begin
+   {$IFDEF ANDROID}
+     if not IsConnected then
+     result := false
+     else
+     result := true;
+   {$ElSE}
+     result := true;
+   {$ENDIF}
+end;
+
+function TFrmMain.VerificaCarEspeciais(Caracter: String): Boolean;
+ const especiais = '!@/,$.';
+  Var str :string;
+begin
+  result:=false;
+  Str := Caracter;
+  if (Pos(Str,especiais)<>0) or (Str = '''') Then
+   begin
+   result:=true
+   end;
+end;
+
+function TFrmMain.VerificaPermissaoCamera :Boolean;
+begin
+
+  Result := True;
+end;
+
+procedure TFrmMain.ManterdadosLogin;
+var
+  DadosSalvos: TBinaryReader;
+  caminho: System.IOUtils.TPath;
+begin
+
+  SaveState.StoragePath := caminho.GetHomePath;
+
+
+  if SaveState.Stream.Size > 0 then
+  begin
+    DadosSalvos := TBinaryReader.Create(SaveState.Stream);
+    try
+      edtcpf.Text := DadosSalvos.ReadString;
+    finally
+      DadosSalvos.Free;
+    end;
+  end;
+
+end;
+
+procedure TFrmMain.MensagemTost(sMensagem: String);
+begin
+  TThread.CreateAnonymousThread(
+    procedure
+    begin
+      // sleep(3000); // Acesso ao banco... acesso WS...
+
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          TLoading.Hide;
+
+          TMensagem.ToastMessage(frmMain, sMensagem, TAlignLayout.Top);
+
+        end);
+
+    end).Start;
+end;
+
+procedure TFrmMain.OnFinishUpdate;
+begin
+        rect_update.Visible := true;
+        img_seta.Position.Y := 0;
+        img_seta.Opacity := 0;
+       // lbl_titulo.Opacity := 0;
+        lbl_texto.Opacity := 0;
+        rect_botao.Opacity := 0;
+
+        rect_update.BringToFront;
+        rect_update.AnimateFloat('Margins.Top', 0, 0.8, TAnimationType.InOut, TInterpolationType.Circular);
+
+        img_seta.AnimateFloatDelay('Position.Y', 50, 0.5, 1, TAnimationType.Out, TInterpolationType.Back);
+        img_seta.AnimateFloatDelay('Opacity', 1, 0.4, 0.9);
+
+       // lbl_titulo.AnimateFloatDelay('Opacity', 1, 0.7, 1.3);
+        lbl_texto.AnimateFloatDelay('Opacity', 1, 0.7, 1.6);
+        rect_botao.AnimateFloatDelay('Opacity', 1, 0.7, 1.9);
+end;
+
+procedure TFrmMain.Rectangle10Click(Sender: TObject);
+begin
+  TLibery.MudarAba(tbiPrincipal,Sender);
+end;
+
+procedure TFrmMain.rect_desconectarClick(Sender: TObject);
+begin
+  EdtCpf.Text:='';
+  TLibery.MudarAba(tbiLogin,Sender);
+end;
+
+procedure TFrmMain.rect_arrumacaoClick(Sender: TObject);
+begin
+  TLibery.OpenForm(TFrmArrumacao,nil);
+  TLibery.MudarAba(tbiMain,Sender);
+end;
+
+procedure TFrmMain.rect_configClick(Sender: TObject);
+begin
+  TLibery.OpenForm(TFrmConfig,nil);
+  TLibery.MudarAba(tbiMain,Sender);
+end;
+
+end.

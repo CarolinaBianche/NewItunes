@@ -1,0 +1,271 @@
+unit uFrmOcorrencia;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation,FMX.MediaLibrary.Actions,FMX.Surfaces,
+  FMX.DialogService,System.Permissions, FMX.ScrollBox, FMX.Memo, FMX.ListBox,
+  System.Actions, FMX.ActnList, FMX.StdActns, System.Rtti,
+  System.Bindings.Outputs, Fmx.Bind.Editors, Data.Bind.EngExt,
+  Fmx.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope;
+
+type
+  TFrmOcorrencia = class(TFrmTemplate)
+    lyt_conteudo: TLayout;
+    lyt_motivo: TLayout;
+    rec_motivo: TRectangle;
+    lblmotivo: TLabel;
+    Layout14: TLayout;
+    Path5: TPath;
+    Layout15: TLayout;
+    cbxOcorrencia: TComboBox;
+    Layout16: TLayout;
+    Rectangle4: TRectangle;
+    Label2: TLabel;
+    memObservacao: TMemo;
+    rec_informacao: TRectangle;
+    Label3: TLabel;
+    lytFinalizar: TLayout;
+    rct_finalizarPonto: TRectangle;
+    Label11: TLabel;
+    ActionList1: TActionList;
+    actListTirarFoto: TTakePhotoFromCameraAction;
+    BindSourceDB1: TBindSourceDB;
+    BindingsList1: TBindingsList;
+    LinkListControlToField1: TLinkListControlToField;
+    lyt_img_recb: TLayout;
+    rctFoto: TRectangle;
+    Label6: TLabel;
+    imgFoto: TImage;
+    Rectangle1: TRectangle;
+    btnFoto: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure rct_finalizarPontoClick(Sender: TObject);
+    procedure btnFotoClick(Sender: TObject);
+    procedure actListTirarFotoDidFinishTaking(Image: TBitmap);
+  private
+    { Private declarations }
+     {$IFDEF ANDROID}
+   // vUri : String;
+   // vIntent : JIntent;
+
+      PermissaoCamera, PermissaoReadStorage, PermissaoWriteStorage :string;
+
+      procedure TakePicturePermissionRequestResult(Sender: TObject;
+      const APermissions: TArray<string>;
+      const AGrantResults: TArray<TPermissionStatus>);
+      procedure DisplayMessageCamera(Sender: TObject;
+      const APermissions: TArray<string>; const APostProc: TProc);
+    function ValidaCampos: boolean;
+   {$ENDIF ANDROID}
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmOcorrencia: TFrmOcorrencia;
+
+implementation
+
+{$R *.fmx}
+
+uses AnonThread, Notificacao, uDMLocal, uDmRest, uFrmAtividades,
+  uFrmInformativo, uFrmMain, uFrmRomaneios
+   {$IFDEF ANDROID}
+    , Androidapi.Helpers, Androidapi.JNI.JavaTypes, Androidapi.JNI.Os,Androidapi.JNI.GraphicsContentViewText
+ {$ENDIF}, uLoading, uFrmEntregue, UntLib;
+
+{$IFDEF ANDROID}
+
+procedure TfrmOcorrencia.TakePicturePermissionRequestResult(Sender: TObject;
+const APermissions: TArray<string>;
+const AGrantResults: TArray<TPermissionStatus>);
+begin
+  // 3 Permissoes: CAMERA, READ_EXTERNAL_STORAGE e WRITE_EXTERNAL_STORAGE
+
+  if (Length(AGrantResults) = 3) and
+    (AGrantResults[0] = TPermissionStatus.Granted) and
+    (AGrantResults[1] = TPermissionStatus.Granted) and
+    (AGrantResults[2] = TPermissionStatus.Granted) then
+    actListTirarFoto.Execute
+  else
+    TDialogService.ShowMessage('Você não tem permissão para tirar fotos');
+end;
+
+
+procedure TFrmOcorrencia.actListTirarFotoDidFinishTaking(Image: TBitmap);
+var
+   Surf: TBitmapSurface;
+   MS :TMemoryStream;
+begin
+  MS := TMemoryStream.Create();
+  try
+    MS.Position := 0;
+    Surf := TBitmapSurface.Create;
+    try
+      Surf.Assign(Image);
+      // use the codec to save Surface to stream
+      if not TBitmapCodecManager.SaveToStream(
+                       MS,
+                       Surf,
+                       '.jpg') then
+        raise EBitmapSavingFailed.Create(
+              'Error saving Bitmap to png');
+    finally
+      Surf.Free;
+      imgFoto.Bitmap.Assign(Image);
+    end;
+
+  finally
+   if DMLocal.QryBaixasCOMPROVANTE.IsNull then
+     Begin
+      DMLocal.QryBaixas.Edit;
+      DMLocal.QryBaixasComprovante.loadfromStream(MS);
+      DMLocal.QryBaixas.Post;
+
+     End;
+
+  end;
+end;
+
+procedure TFrmOcorrencia.btnFotoClick(Sender: TObject);
+begin
+  inherited;
+   {$IFDEF ANDROID}
+   PermissionsService.RequestPermissions([PermissaoCamera,
+                                          PermissaoReadStorage, PermissaoWriteStorage],
+                                          TakePicturePermissionRequestResult,
+                                          DisplayMessageCamera);
+   {$ENDIF}
+end;
+
+procedure TFrmOcorrencia.DisplayMessageCamera(Sender: TObject;
+  const APermissions: TArray<string>; const APostProc: TProc);
+begin
+   TDialogService.ShowMessage
+    ('O app precisa acessar a câmera e as fotos do seu dispositivo',
+    procedure(const AResult: TModalResult)
+    begin
+      APostProc;
+    end);
+end;
+
+{$ENDIF}
+
+
+procedure TFrmOcorrencia.FormCreate(Sender: TObject);
+begin
+  inherited;
+  lbl_titulo.Text    := 'ENTREGA NÃO REALIZADA';
+  lblInfoTexto.Text  := 'CLIENTE : ' + DmLocal.QryAtv.FieldByName('NOME_CLIENTE').asstring;
+
+  {$IFDEF ANDROID}
+  PermissaoCamera := JStringToString(TJManifest_permission.JavaClass.CAMERA);
+  PermissaoReadStorage := JStringToString
+    (TJManifest_permission.JavaClass.READ_EXTERNAL_STORAGE);
+  PermissaoWriteStorage := JStringToString
+    (TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE);
+  {$ENDIF}
+end;
+
+
+function TFrmOcorrencia.ValidaCampos: boolean;
+begin
+
+
+  if imgFoto.Bitmap.IsEmpty then
+  Begin
+   TLoading.Hide;
+   TDialogService.ShowMessage('Preencha a Assinatura do Cliente');
+   result:= false;
+   Abort ;
+  End;
+
+  result:=true;
+
+end;
+
+
+procedure TFrmOcorrencia.rct_finalizarPontoClick(Sender: TObject);
+begin
+  inherited;
+
+  if not ValidaCampos then
+  Begin
+  TDialogService.ShowMessage('Preencha os Campos antes de Continuar');
+  abort
+  End;
+
+
+  TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmOcorrencia,'Realizando a  Baixa...');
+          DmLocal.QryBaixas.Edit;
+          DmLocal.QryBaixasRecebedor.asstring         := '';
+          DMLocal.QryBaixasRG_RECEBEDOR.asstring      := '';
+          DmLocal.QryBaixasEFETIVADO.AsString         := 'NAO';
+          if cbxOcorrencia.ItemIndex=-1 then
+          DmLocal.QryBaixasCOD_OCORRENCIA.AsString := '0' else
+          DmLocal.QryBaixasCOD_OCORRENCIA.AsString := DMRest.memOcorrenciacodigo.AsInteger.ToString;
+
+          if (DmLocal.QryBaixasTIPO_DOCUMENTO.AsString='CT') or (DmLocal.QryBaixasTIPO_DOCUMENTO.AsString='NF') then
+          DmLocal.QryBaixasMOTIVO.AsString := 'ENTREGA NAO REALIZADA ' + memObservacao.lines.Text else
+          IF  DmLocal.QryBaixasTIPO_DOCUMENTO.AsString='OC' then
+          DmLocal.QryBaixasMOTIVO.AsString := 'COLETA NAO REALIZADA '  + memObservacao.lines.Text;
+
+
+          DmLocal.QryBaixasINTEGRADO.AsString          := 'N';
+
+
+          DMLocal.QryBaixasQtd_Coletada.AsInteger      := 0;
+          DmLocal.QryBaixasQTD_ENTREGUE.AsInteger      := 0;
+
+          DmLocal.QryBaixasVOLUMES.AsString            := DmLocal.QryAtv.FieldByName('VOLUMES').AsString;
+
+          DmLocal.QryBaixasLONGITUDE.AsFloat           := 0;//FrmPrincipal.TApiMapas.Latitude.ToDouble;
+          DmLocal.QryBaixasLATITUDE.AsFloat            := 0;//FrmPrincipal.TApiMapas.Longitude.ToDouble;
+
+          DmLocal.QryBaixas.Post;
+        End
+
+      );
+    End,
+    procedure()
+    Begin
+    //Processo Principal
+       DmLocal.BaixarNotas;
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      imgFoto.Bitmap := nil;
+      TMensagem.ToastMessage(frmEntregue, 'Finalizado com Sucesso', TAlignLayout.Bottom);
+      if DmLocal.RomFinalizado then
+      TLibery.OpenForm(TFrmRomaneios,FrmMain.lytNavegacao)
+      else
+      TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+      FrmMain.Show;
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Carregar Atividades! ' +
+      AException);
+    End,
+    True
+  );
+
+
+end;
+
+end.

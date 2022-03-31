@@ -1,0 +1,255 @@
+object DmRest: TDmRest
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 401
+  Width = 615
+  object rstRequest: TRESTRequest
+    Accept = 'application/json;charset=UTF-8'
+    AcceptEncoding = 'gzip'
+    HandleRedirects = False
+    Client = rstClient
+    Params = <>
+    Response = rstResponse
+    Timeout = 500
+    SynchronizedEvents = False
+    Left = 121
+    Top = 35
+  end
+  object rstClient: TRESTClient
+    Params = <>
+    SynchronizedEvents = False
+    Left = 58
+    Top = 100
+  end
+  object rstResponse: TRESTResponse
+    Left = 170
+    Top = 108
+  end
+  object rstAdapter: TRESTResponseDataSetAdapter
+    Dataset = memRest
+    FieldDefs = <>
+    Response = rstResponse
+    Left = 112
+    Top = 160
+  end
+  object memRest: TFDMemTable
+    FieldDefs = <>
+    IndexDefs = <>
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    StoreDefs = True
+    Left = 64
+    Top = 224
+  end
+  object memRomaneio: TFDMemTable
+    Active = True
+    FieldDefs = <
+      item
+        Name = 'id'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'id.fil_romaneio'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'id.romaneio'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'veiculo'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'cpfMotorista'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'nomeMotorista'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'prevSaida'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'qtdEntregas'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'qtdColetas'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'documento'
+        DataType = ftWideString
+        Size = 255
+      end>
+    IndexDefs = <
+      item
+        Name = 'idxRomaneio'
+        DescFields = 'id.romaneio'
+        Fields = 'id.romaneio'
+        Options = [ixDescending]
+      end>
+    Indexes = <
+      item
+        Active = True
+        Name = 'idxRomaneio'
+        Fields = 'id.romaneio'
+        DescFields = 'id.romaneio'
+        Options = [soDescending]
+      end>
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired]
+    UpdateOptions.CheckRequired = False
+    StoreDefs = True
+    Left = 140
+    Top = 224
+    object memRomaneioid: TWideStringField
+      FieldName = 'id'
+      Size = 255
+    end
+    object memRomaneioidfil_romaneio: TWideStringField
+      FieldName = 'id.fil_romaneio'
+      Size = 255
+    end
+    object memRomaneioidromaneio: TWideStringField
+      FieldName = 'id.romaneio'
+      Size = 255
+    end
+    object memRomaneioveiculo: TWideStringField
+      FieldName = 'veiculo'
+      Size = 255
+    end
+    object memRomaneiocpfMotorista: TWideStringField
+      FieldName = 'cpfMotorista'
+      Size = 255
+    end
+    object memRomaneionomeMotorista: TWideStringField
+      FieldName = 'nomeMotorista'
+      Size = 255
+    end
+    object memRomaneioprevSaida: TWideStringField
+      FieldName = 'prevSaida'
+      Size = 255
+    end
+    object memRomaneioqtdEntregas: TWideStringField
+      FieldName = 'qtdEntregas'
+      Size = 255
+    end
+    object memRomaneioqtdColetas: TWideStringField
+      FieldName = 'qtdColetas'
+      Size = 255
+    end
+    object memRomaneiodocumento: TWideStringField
+      FieldName = 'documento'
+      Size = 255
+    end
+  end
+  object rstClientOcorrencia: TRESTClient
+    Accept = 'application/json;charset=UTF-8'
+    AcceptCharset = 'UTF-8, *;q=0.8'
+    BaseURL = 
+      'http://portalallisson.ddns.com.br/mobile-newroute/viagens/ocorre' +
+      'ncias'
+    Params = <>
+    RaiseExceptionOn500 = False
+    Left = 64
+    Top = 320
+  end
+  object rstRequestOcorrencia: TRESTRequest
+    AcceptEncoding = 'gzip'
+    Client = rstClientOcorrencia
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body'
+        Options = [poDoNotEncode]
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Response = rstResponseOcorrencia
+    SynchronizedEvents = False
+    Left = 176
+    Top = 320
+  end
+  object rstResponseOcorrencia: TRESTResponse
+    ContentType = 'application/json'
+    Left = 296
+    Top = 320
+  end
+  object rstAdapterOcorrencia: TRESTResponseDataSetAdapter
+    Dataset = memOcorrencia
+    FieldDefs = <>
+    Response = rstResponseOcorrencia
+    Left = 416
+    Top = 320
+  end
+  object memOcorrencia: TFDMemTable
+    FieldDefs = <>
+    IndexDefs = <>
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired]
+    UpdateOptions.CheckRequired = False
+    StoreDefs = True
+    Left = 528
+    Top = 320
+    object memOcorrenciacodigo: TWideStringField
+      FieldName = 'codigo'
+      Size = 255
+    end
+    object memOcorrenciadescricao: TWideStringField
+      FieldName = 'descricao'
+      Size = 255
+    end
+  end
+  object ResponseMapa: TRESTResponse
+    ContentType = 'application/json'
+    Left = 452
+    Top = 168
+  end
+  object RequestMapa: TRESTRequest
+    AcceptEncoding = 'gzip'
+    Client = ClienteMapa
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body'
+        Options = [poDoNotEncode]
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Response = ResponseMapa
+    SynchronizedEvents = False
+    Left = 452
+    Top = 104
+  end
+  object ClienteMapa: TRESTClient
+    Accept = 'application/json;charset=UTF-8'
+    AcceptCharset = 'UTF-8, *;q=0.8'
+    BaseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+    Params = <>
+    RaiseExceptionOn500 = False
+    Left = 452
+    Top = 40
+  end
+end

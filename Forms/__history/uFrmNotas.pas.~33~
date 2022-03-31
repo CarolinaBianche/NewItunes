@@ -1,0 +1,583 @@
+unit uFrmNotas;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Controls.Presentation, FMX.Objects, FMX.Layouts, FMX.Effects,UntLib,uLoading,
+  FMX.Gestures,FMX.DialogService, FMX.Edit, FMX.ScrollBox, FMX.Memo, AnonThread,
+  FMX.Memo.Types, FMX.DateTimeCtrls, FMX.ListBox;
+
+type
+  TFrmNotas = class(TFrmTemplate)
+    Layout4: TLayout;
+    Circle1: TCircle;
+    lbl_ind: TLabel;
+    Circle2: TCircle;
+    lbl_dis: TLabel;
+    rctDisponivel: TRectangle;
+    rctIndisponivel: TRectangle;
+    rctCard: TRectangle;
+    LinTop: TLine;
+    img_pendente: TImage;
+    LinRod: TLine;
+    lytEsqCard: TLayout;
+    lytBoxCard: TLayout;
+    lytTopCard: TLayout;
+    lblRomaneio: TLabel;
+    lblNumRomaneio: TLabel;
+    lytRodCard: TLayout;
+    lblStatus: TLabel;
+    Label1: TLabel;
+    imgVisualizar: TImage;
+    Label2: TLabel;
+    lytImgVisualizar: TLayout;
+    lytRomaneio: TLayout;
+    gstManager: TGestureManager;
+    imgVisu: TImage;
+    imgEx: TImage;
+    imgArg: TImage;
+    rct_disponivel: TRectangle;
+    Memo1: TMemo;
+    lyt_confirma: TLayout;
+    rct_confirmar: TRectangle;
+    lbl_confirmar: TLabel;
+    lyt_Topo: TLayout;
+    Rectangle1: TRectangle;
+    spd_close_dispo: TSpeedButton;
+    Label13: TLabel;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    RadioButton3: TRadioButton;
+    RadioButton4: TRadioButton;
+    lytVeiculo: TLayout;
+    lblPlaca: TLabel;
+    lblVeiculo: TLabel;
+    lytCliente: TLayout;
+    lblTxtNota: TLabel;
+    lbl_dt_entrada: TLabel;
+    Label6: TLabel;
+    lblPlaca2: TLabel;
+    lblCondominio: TLabel;
+    Label4: TLabel;
+    rctFiltroEd: TRectangle;
+    lytDireita: TLayout;
+    btnLimparFiltro: TSpeedButton;
+    Rectangle2: TRectangle;
+    btnFecharFiltro: TSpeedButton;
+    lytClient: TLayout;
+    ComboBox1: TComboBox;
+    edt_busca_nota: TEdit;
+    Layout13: TLayout;
+    chbxData: TCheckBox;
+    Data1: TDateEdit;
+    Data2: TDateEdit;
+    Label3: TLabel;
+    lbl_nota: TLabel;
+    rctFiltros: TRectangle;
+    Layout6: TLayout;
+    Label5: TLabel;
+    Var1: TLabel;
+    Var2: TLabel;
+    Var3: TLabel;
+    spdAddFil: TSpeedButton;
+    Rectangle3: TRectangle;
+    btnPesquisaFiltro: TSpeedButton;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure speBtnAtualizarClick(Sender: TObject);
+    procedure RadioButton1Click(Sender: TObject);
+    procedure RadioButton2Click(Sender: TObject);
+    procedure RadioButton3Click(Sender: TObject);
+    procedure RadioButton4Click(Sender: TObject);
+    procedure rct_confirmarClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnPesquisaFiltroClick(Sender: TObject);
+    procedure spdAddFilClick(Sender: TObject);
+    procedure btnFecharFiltroClick(Sender: TObject);
+    procedure edt_busca_notaChangeTracking(Sender: TObject);
+    procedure edt_busca_notaEnter(Sender: TObject);
+    procedure btnLimparFiltroClick(Sender: TObject);
+  private
+    { Private declarations }
+
+
+    procedure OnSelecionarRomaneio(Sender :TObject);
+    procedure TapSelecionaRomaneio(Sender: TObject; const Point: TPointF);
+    procedure AbreAtividades(Romaneio:integer);
+    procedure ValidaBusca;
+
+
+  public
+    { Public declarations }
+    sTipo:string;
+    procedure CarregaRom(Sender:TObject);
+  end;
+
+var
+  FrmNotas: TFrmNotas;
+
+implementation
+
+{$R *.fmx}
+
+uses uDMLocal, uFrmMain, uFrmAtividades, uDmRest, uFrmNotasSel,
+  uFrmListaPedidos;
+
+procedure TFrmNotas.AbreAtividades(Romaneio:integer);
+begin
+
+
+end;
+
+procedure TFrmNotas.btnFecharFiltroClick(Sender: TObject);
+begin
+  inherited;
+  edt_busca_nota.Text:='';
+  rctFiltroEd.Visible:=false;
+  if vertLista.Margins.Top >190 then
+  vertLista.Margins.Top := vertLista.Margins.Top -168 else
+  vertLista.Margins.Top := 190;
+end;
+
+procedure TFrmNotas.btnLimparFiltroClick(Sender: TObject);
+begin
+ Var1.Text := EmptyStr;
+ Var2.Text := EmptyStr;
+ Var3.Text := EmptyStr;
+ edt_busca_nota.Text := EmptyStr;
+ ComboBox1.ItemIndex := -1 ;
+ chbxData.IsChecked  := false;
+ Data1.DateTime:=now;
+ Data2.DateTime:=now;
+end;
+
+procedure TFrmNotas.btnPesquisaFiltroClick(Sender: TObject);
+begin
+   ValidaBusca;
+   self.CarregaRom(Sender);
+   self.btnFecharFiltro.OnClick(Sender);
+end;
+
+procedure TFrmNotas.CarregaRom(Sender:TObject);
+begin
+ TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Carregando Notas ...');
+          vertLista.Visible:=false;
+          vertLista.BeginUpdate;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+          DMLocal.QryFila.DisableControls;
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao : Single;
+     Qtd      : Integer;
+    Begin
+    //Processo Principal
+      DMLocal.BuscarNotas(FrmMain.motoristaCPF,FrmMain.Campo,FrmMain.Filtro,FrmMain.Data1,FrmMain.Data2);
+      DmLocal.QryFila.First;
+
+      rctCard.Visible  := false;
+      LPosicao         := 8;
+
+
+
+      while not DMLocal.QryFila.Eof do
+      Begin
+
+        //Povoando os Cards
+        lblNumRomaneio.Text := DmLocal.QryFilaTipo.asstring;
+
+        rctCard.Tag         := DmLocal.QryFilaNR_ENTRADA.AsInteger;
+
+        lblPlaca.Text       := DmLocal.QryFilaVeiculo.asstring;
+        lblPlaca2.Text      := DmLocal.QryFilaCarreta.asstring;
+        lblTxtNota.Text     := DmLocal.QryFilaNR_ENTRADA.AsInteger.ToString;
+        lblCondominio.Text  := ' '+ DmLocal.QryFilaUND_ARMAZEN.AsString+' - '+ DmLocal.QryFilaCONDOMINIO.AsString;
+        lbl_dt_entrada.Text := FormatDateTime('dd/mm/yy hh:mm:ss',DmLocal.QryFilaDATA_ENTRADA.AsDateTime);
+
+       // Adicionado esse filtro para só apararecer as DESCARGAS
+       if DmLocal.QryFilaTIPO.AsString = 'DESCARGA' then
+        Begin
+
+          if DmLocal.QryFILASTATUS.asstring='N' then
+          Begin
+          LinTOP.Stroke.Color := $FF434343;
+          LinROD.Stroke.Color := $FF434343;
+          lblStatus.Text      := 'aguardando...';
+          img_pendente.Bitmap :=  imgArg.Bitmap;
+
+          End
+          else
+          if DmLocal.QryFilaSTATUS.asstring='V' then
+          Begin
+          LinTOP.Stroke.Color := $FF1D609F;
+          LinROD.Stroke.Color := $FF1D609F;
+          lblStatus.Text      := 'visualizado...';
+          img_pendente.Bitmap :=  imgVisu.Bitmap;
+          End else
+          if DmLocal.QryFILASTATUS.asstring='E' then
+          Begin
+          LinTOP.Stroke.Color := $FFFFAD26;
+          LinROD.Stroke.Color := $FFFFAD26;
+          lblStatus.Text      := 'execução...';
+          img_pendente.Bitmap := imgEx.Bitmap;
+          End ;
+
+         //Clonando
+         DmLocal.SetFrameClone(rctCard,LFrame,vertLista,LPosicao,OnSelecionarRomaneio,TapSelecionaRomaneio,'ROM');
+        End;
+        DMLocal.QryFila.Next;
+      End;
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      VertLista.EndUpdate;
+      VertLista.ScrollTo(0,0);
+      VertLista.Visible := true;
+      DmLocal.QryFila.EnableControls;
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Valida Motrista! ' +
+      AException);
+    End,
+    True
+  );
+end;
+
+procedure TFrmNotas.edt_busca_notaChangeTracking(Sender: TObject);
+begin
+  frmMain.EscondeTeclado(edt_busca_nota);
+end;
+
+procedure TFrmNotas.edt_busca_notaEnter(Sender: TObject);
+begin
+  frmMain.EscondeTeclado(edt_busca_nota);
+end;
+
+procedure TFrmNotas.FormActivate(Sender: TObject);
+begin
+  inherited;
+  if DmLocal.QryPontoSTATUS.AsString='P' then
+  Begin
+  lbl_dis.Text :='Pausa';
+  Circle2.Fill.Color := $FF434343;
+  End;
+end;
+
+procedure TFrmNotas.FormCreate(Sender: TObject);    
+begin
+  inherited;
+
+  lbl_titulo.Text    := 'Fila de Processamento';
+  lblInfoTexto.Text  := FrmMain.motorista;
+  rctCard.Visible    := false;
+  CarregaRom(speBtnAtualizar);
+end;
+
+
+procedure TFrmNotas.FormShow(Sender: TObject);
+begin
+  inherited;
+  CarregaRom(Self);
+end;
+
+procedure TFrmNotas.OnSelecionarRomaneio(Sender: TObject);
+
+begin
+ {$IFDEF MSWINDOWS}
+   DmLocal.QryFila.Locate('NR_ENTRADA', TRectangle(Sender).Tag ,[]);
+   if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+  Begin
+    TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Recebendos Notas da Entrada...');
+            TLibery.ActiveForm := nil;
+            DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+
+          End);
+      End,
+      procedure()
+      Begin
+      //Processo Principal
+       DmRest.RecebeNotasEntrada(DmLocal.QryFilaUND_ARMAZEN.AsString,DmLocal.QryFilaNR_ENTRADA.AsInteger.ToString);
+      End,
+      procedure()
+      Begin
+       //Processo Completo
+        TLoading.Hide;
+        FrmMain.lytNavegacao.Controls.Clear;
+        TLibery.ActiveForm.DisposeOf;
+        TLibery.ActiveForm:=nil;
+        TLibery.OpenForm(TFrmSelNotas,FrmMain.lytNavegacao);
+        TLibery.MudarAba(FrmMain.tbiMain,Sender);
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        TDialogService.ShowMessage('Erro no processamento da thread Valida Motrista! ' +
+        AException);
+      End,
+      True
+    );
+  End else
+  if DmLocal.QryFilaTIPO.AsString='CARGA' then
+  Begin
+    TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Recebendos Pedidos de Saída...');
+            TLibery.ActiveForm := nil;
+            DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+
+          End);
+      End,
+      procedure()
+      Begin
+      //Processo Principal
+       DmRest.RecebePedidos;
+      End,
+      procedure()
+      Begin
+       //Processo Completo
+        TLoading.Hide;
+        FrmMain.lytNavegacao.Controls.Clear;
+        TLibery.ActiveForm.DisposeOf;
+        TLibery.ActiveForm:=nil;
+        TLibery.OpenForm(TFrmListaPedidos,FrmMain.lytNavegacao);
+        TLibery.MudarAba(FrmMain.tbiMain,Sender);
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        TDialogService.ShowMessage('Erro no processamento da thread Valida Motrista! ' +
+        AException);
+      End,
+      True
+    );
+  End;
+
+
+ {$ENDIF}
+end;
+
+
+procedure TFrmNotas.RadioButton1Click(Sender: TObject);
+begin
+  inherited;
+  sTipo :='Inicia';
+  Memo1.Text :='Seu dia será iniciado.Clique em Confirmar';
+
+end;
+
+procedure TFrmNotas.RadioButton2Click(Sender: TObject);
+begin
+  inherited;
+  sTipo :='Pausa';
+  Memo1.Text :='Seu dia será Pausado.Adicione uma Observação';
+
+end;
+
+procedure TFrmNotas.RadioButton3Click(Sender: TObject);
+begin
+  inherited;
+   sTipo :='Retorno';
+   Memo1.Text :='Seu dia será retomado.Clique em Confirmar';
+end;
+
+procedure TFrmNotas.RadioButton4Click(Sender: TObject);
+begin
+  inherited;
+  sTipo :='Termino';
+  Memo1.Text :='Seu dia será Terminado,você ficará indisponível.Clique em Confirmar';
+end;
+
+procedure TFrmNotas.rct_confirmarClick(Sender: TObject);
+begin
+  inherited;
+  TLoading.Show(FrmMain,'Aguarde ...enviando ao servidor :'+sTipo);
+  DmLocal.IniciaDia(FrmMain.motoristaCPF,sTipo,'');
+  rct_disponivel.Visible:=false;
+  TLoading.Hide;
+
+  vertLista.Visible:=true;
+  CarregaRom(speBtnAtualizar);
+end;
+
+procedure TFrmNotas.spdAddFilClick(Sender: TObject);
+begin
+  inherited;
+  rctFiltroEd.Visible:=true;
+  Data1.DateTime:=now;
+  Data2.DateTime:=now;
+  ComboBox1.SetFocus;
+  if vertLista.Margins.Top =190 then
+  vertLista.Margins.Top := vertLista.Margins.Top + 168;
+end;
+
+procedure TFrmNotas.speBtnAtualizarClick(Sender: TObject);
+begin
+  inherited;
+  CarregaRom(Self);
+
+end;
+
+procedure TFrmNotas.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  FrmMain.lytNavegacao.Controls.Clear;
+  TLibery.ActiveForm.DisposeOf;
+  TLibery.ActiveForm:=nil;
+  TLibery.MudarAba(FrmMain.tbiPrincipal,Sender);
+end;
+
+procedure TFrmNotas.TapSelecionaRomaneio(Sender: TObject;
+  const Point: TPointF);
+begin
+ {$IFDEF ANDROID}
+ DmLocal.QryFila.Locate('NR_ENTRADA', TRectangle(Sender).Tag ,[]);
+ if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+  Begin
+    TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Recebendos Notas da Entrada...');
+            TLibery.ActiveForm := nil;
+            DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+
+          End);
+      End,
+      procedure()
+      Begin
+      //Processo Principal
+       DmRest.RecebeNotasEntrada(DmLocal.QryFilaUND_ARMAZEN.AsString,DmLocal.QryFilaNR_ENTRADA.AsInteger.ToString);
+      End,
+      procedure()
+      Begin
+       //Processo Completo
+        TLoading.Hide;
+        FrmMain.lytNavegacao.Controls.Clear;
+        TLibery.ActiveForm.DisposeOf;
+        TLibery.ActiveForm:=nil;
+        TLibery.OpenForm(TFrmSelNotas,FrmMain.lytNavegacao);
+        TLibery.MudarAba(FrmMain.tbiMain,Sender);
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        TDialogService.ShowMessage('Erro no processamento da thread Recebe Notas! ' +
+        AException);
+      End,
+      True
+    );
+  End else
+  if DmLocal.QryFilaTIPO.AsString='CARGA' then
+  Begin
+    TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Recebendos Pedidos de Saída...');
+            TLibery.ActiveForm := nil;
+            DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+
+          End);
+      End,
+      procedure()
+      Begin
+      //Processo Principal
+       DmRest.RecebePedidos;
+      End,
+      procedure()
+      Begin
+       //Processo Completo
+        TLoading.Hide;
+        FrmMain.lytNavegacao.Controls.Clear;
+        TLibery.ActiveForm.DisposeOf;
+        TLibery.ActiveForm:=nil;
+        TLibery.OpenForm(TFrmListaPedidos,FrmMain.lytNavegacao);
+        TLibery.MudarAba(FrmMain.tbiMain,Sender);
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        TDialogService.ShowMessage('Erro no processamento da thread Recebe Pedidos! ' +
+        AException);
+      End,
+      True
+    );
+  End;
+
+
+
+
+
+ {$ENDIF}
+end;
+
+procedure TFrmNotas.ValidaBusca;
+begin
+  Frmmain.Campo  := '';
+  Frmmain.Filtro := '';
+  FrmMain.Data1  := '';
+  FrmMain.Data2  := '';
+
+  case ComboBox1.ItemIndex of
+   -1 : FrmMain.Campo := '';
+    0 : FrmMain.Campo := 'NRONOTA';
+    1 : FrmMain.Campo := 'NR_ENTRADA';
+    2 : FrmMain.Campo := 'CONDOMINIO;';
+  end;
+
+  FrmMain.Filtro := edt_busca_nota.Text;
+
+  if chbxData.IsChecked then
+  Begin
+    FrmMain.Data1 := Self.Data1.Text;
+    FrmMain.Data2 := Self.Data2.Text
+  End;
+
+  Var1.Text      := FrmMain.Campo;
+  Var2.Text      := FrmMain.Filtro;
+
+
+end;
+
+end.

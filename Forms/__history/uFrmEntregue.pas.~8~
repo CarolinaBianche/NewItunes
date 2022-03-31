@@ -1,0 +1,284 @@
+unit uFrmEntregue;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.Edit,
+  System.Actions, FMX.ActnList, FMX.StdActns, FMX.MediaLibrary.Actions,FMX.Surfaces,
+  FMX.DialogService,System.Permissions;
+
+type
+  TFrmEntregue = class(TFrmTemplate)
+    Layout2: TLayout;
+    rctAssintatura: TRectangle;
+    Label15: TLabel;
+    img_Assinatura: TImage;
+    lyt_img_recb: TLayout;
+    rctFoto: TRectangle;
+    Label6: TLabel;
+    imgFoto: TImage;
+    lyt_recebedor: TLayout;
+    rec_login: TRectangle;
+    EdtNome: TEdit;
+    lyt_recebedor_doc: TLayout;
+    Rectangle10: TRectangle;
+    EdtRG: TEdit;
+    lytFinalizar: TLayout;
+    rct_finalizarPonto: TRectangle;
+    Label11: TLabel;
+    lytFotoAssinatura: TLayout;
+    btnFoto: TButton;
+    btnAssintatura: TButton;
+    Rectangle1: TRectangle;
+    ActionList1: TActionList;
+    actListTirarFoto: TTakePhotoFromCameraAction;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure btnAssintaturaClick(Sender: TObject);
+    procedure btnFotoClick(Sender: TObject);
+    procedure actListTirarFotoDidFinishTaking(Image: TBitmap);
+    procedure rct_finalizarPontoClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    {$IFDEF ANDROID}
+   // vUri : String;
+   // vIntent : JIntent;
+
+      PermissaoCamera, PermissaoReadStorage, PermissaoWriteStorage :string;
+
+      procedure TakePicturePermissionRequestResult(Sender: TObject;
+      const APermissions: TArray<string>;
+      const AGrantResults: TArray<TPermissionStatus>);
+      procedure DisplayMessageCamera(Sender: TObject;
+      const APermissions: TArray<string>; const APostProc: TProc);
+   {$ENDIF ANDROID}
+  end;
+
+var
+  FrmEntregue: TFrmEntregue;
+
+implementation
+
+{$R *.fmx}
+
+uses AnonThread, Constantes, uDMLocal, uDmRest, uFrmInformativo, uFrmMain,
+  uLoading, UntLib
+  {$IFDEF ANDROID}
+    , Androidapi.Helpers, Androidapi.JNI.JavaTypes, Androidapi.JNI.Os,Androidapi.JNI.GraphicsContentViewText
+ {$ENDIF}
+, uFrmAssinatura, uFrmAtividades, Notificacao, uFrmRomaneios;
+
+procedure TFrmEntregue.btnAssintaturaClick(Sender: TObject);
+begin
+  inherited;
+  if not Assigned(FrmAssinatura) then
+   application.CreateForm(TFrmAssinatura,FrmAssinatura);
+
+  FrmAssinatura.Show;
+end;
+
+procedure TFrmEntregue.btnFotoClick(Sender: TObject);
+begin
+  inherited;
+   {$IFDEF ANDROID}
+   PermissionsService.RequestPermissions([PermissaoCamera,
+                                          PermissaoReadStorage, PermissaoWriteStorage],
+                                          TakePicturePermissionRequestResult,
+                                          DisplayMessageCamera);
+   {$ENDIF}
+end;
+
+{$IFDEF ANDROID}
+
+procedure TfrmEntregue.TakePicturePermissionRequestResult(Sender: TObject;
+const APermissions: TArray<string>;
+const AGrantResults: TArray<TPermissionStatus>);
+begin
+  // 3 Permissoes: CAMERA, READ_EXTERNAL_STORAGE e WRITE_EXTERNAL_STORAGE
+
+  if (Length(AGrantResults) = 3) and
+    (AGrantResults[0] = TPermissionStatus.Granted) and
+    (AGrantResults[1] = TPermissionStatus.Granted) and
+    (AGrantResults[2] = TPermissionStatus.Granted) then
+    actListTirarFoto.Execute
+  else
+    TDialogService.ShowMessage('Você não tem permissão para tirar fotos');
+end;
+
+
+procedure TFrmEntregue.DisplayMessageCamera(Sender: TObject;
+  const APermissions: TArray<string>; const APostProc: TProc);
+begin
+   TDialogService.ShowMessage
+    ('O app precisa acessar a câmera e as fotos do seu dispositivo',
+    procedure(const AResult: TModalResult)
+    begin
+      APostProc;
+    end);
+end;
+
+{$ENDIF}
+
+procedure TFrmEntregue.FormCreate(Sender: TObject);
+begin
+  inherited;
+  lbl_titulo.Text    := 'ENTREGA REALIZADA';
+  lblInfoTexto.Text  := 'CLIENTE : ' + DmLocal.QryAtv.FieldByName('NOME_CLIENTE').asstring;
+
+  {$IFDEF ANDROID}
+  PermissaoCamera := JStringToString(TJManifest_permission.JavaClass.CAMERA);
+  PermissaoReadStorage := JStringToString
+    (TJManifest_permission.JavaClass.READ_EXTERNAL_STORAGE);
+  PermissaoWriteStorage := JStringToString
+    (TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE);
+  {$ENDIF}
+end;
+
+procedure TFrmEntregue.rct_finalizarPontoClick(Sender: TObject);
+var
+   Surf: TBitmapSurface;
+   MSAssinatura : TMemoryStream;
+begin
+
+  //if not ValidaCampos then
+  //TDialogService.ShowMessage('Preencha os Campos antes de Continuar');
+
+  MSAssinatura := TMemoryStream.Create();
+  try
+   // FrmOcorrencia.Position := 0;
+    Surf := TBitmapSurface.Create;
+    try
+      Surf.Assign(img_assinatura.Bitmap);
+      // use the codec to save Surface to stream
+      if not TBitmapCodecManager.SaveToStream(MSAssinatura,
+                       Surf,
+                       '.jpg') then
+        raise EBitmapSavingFailed.Create(
+              'Error saving Bitmap to png');
+    finally
+      Surf.Free;
+    end;
+
+  finally
+
+  end;
+
+
+  TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmEntregue,'Realizando a  Baixa...');
+          DmLocal.QryBaixas.Edit;
+          DmLocal.QryBaixasRecebedor.asstring         := EdtNome.Text;
+          DMLocal.QryBaixasRG_RECEBEDOR.asstring      := EdtRG.text;
+          DmLocal.QryBaixasAssinatura.loadfromStream(MSAssinatura);
+          DmLocal.QryBaixasEFETIVADO.AsString         := 'SIM';
+          DmLocal.QryBaixasCOD_OCORRENCIA.AsString    := '0';
+          if (DmLocal.QryBaixasTIPO_DOCUMENTO.AsString='CT') or (DmLocal.QryBaixasTIPO_DOCUMENTO.AsString='NF') then
+          DmLocal.QryBaixasMOTIVO.AsString := 'ENTREGA REALIZADA NORMALMENTE' else
+          IF  DmLocal.QryBaixasTIPO_DOCUMENTO.AsString='OC' then
+          DmLocal.QryBaixasMOTIVO.AsString := 'COLETA REALIZADA NORMALMENTE';
+
+
+          DmLocal.QryBaixasINTEGRADO.AsString          := 'N';
+
+
+          DMLocal.QryBaixasQtd_Coletada.AsInteger      := 0;
+          DmLocal.QryBaixasQTD_ENTREGUE.AsInteger      := 0;
+
+          DmLocal.QryBaixasVOLUMES.AsString            := DmLocal.QryAtv.FieldByName('VOLUMES').AsString;
+
+          DmLocal.QryBaixasLONGITUDE.AsFloat           := 0;//FrmPrincipal.TApiMapas.Latitude.ToDouble;
+          DmLocal.QryBaixasLATITUDE.AsFloat            := 0;//FrmPrincipal.TApiMapas.Longitude.ToDouble;
+
+          DmLocal.QryBaixas.Post;
+        End
+
+      );
+    End,
+    procedure()
+    Begin
+    //Processo Principal
+       DmLocal.BaixarNotas;
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      TMensagem.ToastMessage(frmEntregue, 'Finalizado com Sucesso', TAlignLayout.Bottom);
+      if DmLocal.RomFinalizado then
+      TLibery.OpenForm(TFrmRomaneios,FrmMain.lytNavegacao)
+      else
+      TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+      FrmMain.Show;
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Carregar Atividades! ' +
+      AException);
+    End,
+    True
+  );
+
+
+
+
+
+
+
+end;
+
+procedure TFrmEntregue.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+end;
+
+procedure TFrmEntregue.actListTirarFotoDidFinishTaking(
+  Image: TBitmap);
+var
+   Surf: TBitmapSurface;
+   MS :TMemoryStream;
+begin
+  MS := TMemoryStream.Create();
+  try
+    MS.Position := 0;
+    Surf := TBitmapSurface.Create;
+    try
+      Surf.Assign(Image);
+      // use the codec to save Surface to stream
+      if not TBitmapCodecManager.SaveToStream(
+                       MS,
+                       Surf,
+                       '.jpg') then
+        raise EBitmapSavingFailed.Create(
+              'Error saving Bitmap to png');
+    finally
+      Surf.Free;
+      imgFoto.Bitmap.Assign(Image);
+    end;
+
+  finally
+   if DMLocal.QryBaixasCOMPROVANTE.IsNull then
+     Begin
+      DMLocal.QryBaixas.Edit;
+      DMLocal.QryBaixasComprovante.loadfromStream(MS);
+      DMLocal.QryBaixas.Post;
+
+     End;
+
+  end;
+end;
+
+end.

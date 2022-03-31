@@ -1,0 +1,182 @@
+unit uFrmGPS;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.Maps,FMX.MediaLibrary.Actions,FMX.Surfaces,
+  FMX.DialogService,System.Generics.Collections
+  {$IFDEF ANDROID}
+   ,IdURI, Androidapi.Jni.GraphicsContentViewText,  Androidapi.Jni.Net, Androidapi.Helpers
+  {$ENDIF ANDROID},System.Permissions;
+
+type
+  TFrmGPS = class(TFrmTemplate)
+    Layout9: TLayout;
+    MapView1: TMapView;
+    RoundRect1: TRoundRect;
+    lbl_distancia: TLabel;
+    Circle3: TCircle;
+    Layout10: TLayout;
+    Rectangle16: TRectangle;
+    Label12: TLabel;
+    img_casa: TImage;
+    img_localizacao: TImage;
+    procedure FormCreate(Sender: TObject);
+    procedure Rectangle16Click(Sender: TObject);
+  private
+    minha_pos :TMapCoordinate;
+    FMarkers : TList<TMapMarker>;
+
+   {$IFDEF ANDROID}
+
+
+    vUri : String;
+    vIntent : JIntent;
+   {$ENDIF ANDROID}
+
+
+    procedure Limpar_Carros();
+    procedure Add_Motorista(posicao: TMapCoordinate; nome, dist,
+      idEntrega: string);
+    procedure IniciaGPS(Documento: string; Romaneio: integer);
+
+    { Private declarations }
+  public
+    { Public declarations }
+
+  end;
+
+var
+  FrmGPS: TFrmGPS;
+
+implementation
+
+{$R *.fmx}
+
+uses Notificacao, U_TJSONMaps, uDMLocal, uDmRest, uFrmMain, uLoading, UntLib;
+
+
+
+
+procedure TFrmGPS.FormCreate(Sender: TObject);
+var posicao :TMapCoordinate;
+begin
+  inherited;
+  lbl_titulo.Text    := 'ROTA ';
+  lblInfoTexto.Text  := 'CLIENTE : ' + DmLocal.QryAtv.FieldByName('NOME_CLIENTE').asstring;
+  FrmMain.AtivarLocalizacao;
+
+   MapView1.MapType := TMapType.Normal;
+   img_casa.Visible := false;
+   img_localizacao.Visible := false;
+   FMarkers := TList<TMapMarker>.Create;
+
+   // Centralizar o mapa em SP...
+   posicao.Latitude := -23.561973;
+   posicao.Longitude := -46.656010;
+   MapView1.Location := posicao;
+
+   // Zoom...
+   MapView1.Zoom := 15;
+
+   IniciaGPS(DmLocal.QryAtv.FieldByName('NR_DOCUMENTO').AsString,DmLocal.QryAtv.FieldByName('ROMANEIO').AsInteger);
+end;
+
+
+procedure TFrmGPS.Add_Motorista(posicao: TMapCoordinate; nome,
+  dist,idEntrega: string);
+var
+        marcador : TMapMarkerDescriptor;
+begin
+        // Criar o marcador...
+        marcador := TMapMarkerDescriptor.Create(posicao, nome);
+        marcador.Title := IdEntrega;
+        marcador.Snippet := dist;
+        marcador.Visible := true;
+
+        if dist='1'then
+        marcador.Icon := img_localizacao.Bitmap else
+        marcador.Icon := img_casa.Bitmap;
+
+
+        // Direcao do carro...
+        marcador.Rotation := Random(360) + 1;
+
+
+        // Adiciona marcador no lista e no mapa...
+        FMarkers.Add(MapView1.AddMarker(marcador));
+end;
+
+
+procedure TFrmGPS.IniciaGPS(Documento: string; Romaneio: integer);
+var   posicao : TMapCoordinate;
+      marcador : TMapMarkerDescriptor;
+begin
+
+        Limpar_Carros;
+    // Obtem nova localizacao...
+        posicao.Latitude :=  FrmMain.TApiMapas.MinhaLocLatitude;
+        posicao.Longitude := FrmMain.TApiMapas.MinhaLocLongitude;
+
+        Add_Motorista(posicao,FrmMain.Motorista,'1','0');
+
+
+
+       FrmMain.TApiMapas.Logradouro := DmLocal.QryAtv.FieldByName('ENDERECO').asstring;
+       FrmMain.TApiMapas.Cidade     := DmLocal.QryAtv.FieldByName('CIDADE').asstring;
+       FrmMain.TApiMapas.Bairro     := DmLocal.QryAtv.FieldByName('Bairro').AsString;
+       FrmMain.TApiMapas.Numero     := DmLocal.QryAtv.FieldByName('Numero').AsString;
+       FrmMain.TApiMapas.UF         := DmLocal.QryAtv.FieldByName('ESTADO').asstring;
+       FrmMain.TApiMapas.GetLatLog( tsString );
+
+   //   posicao.Latitude  :=  FrmMain.TApiMapas.Latitude.ToDouble ;
+   //   posicao.Longitude :=  FrmMain.TApiMapas.Longitude.ToDouble;
+
+     Add_Motorista(posicao,'',''+' '+ ''+' '+ '','0');
+
+      MapView1.Location := posicao;
+      // Zoom...
+      MapView1.Zoom := 9;
+
+      minha_pos := posicao;
+
+       // Animacao(false);
+
+end;
+
+
+
+procedure TFrmGPS.Limpar_Carros;
+var
+        Marker: TMapMarker;
+begin
+        for Marker in FMarkers do
+                Marker.Remove;
+          FMarkers.Clear;
+end;
+
+procedure TFrmGPS.Rectangle16Click(Sender: TObject);
+begin
+  inherited;
+   {$IFDEF ANDROID}
+      vUri := 'geo://0,0?q=' + StringReplace(DmLocal.QryAtv.FieldByName('Endereco').AsString
+                                             + '' + DmLocal.QryAtv.FieldByName('Cidade').AsString + ' ' +
+                                              DmLocal.QryAtv.FieldByName('ESTADO').AsString , '-',',',[rfReplaceAll]);
+     //  vUri := 'https://waze.com/ul?q='+ StringReplace(Endereco.text, '-',',',[rfReplaceAll]);
+
+      try
+
+        vIntent := TJIntent.JavaClass.init(TJIntent.JavaClass.ACTION_VIEW,
+                                           TJnet_Uri.JavaClass.parse(StringToJString(TIdURI.URLDecode(vUri))));
+
+        TAndroidHelper.Activity.startActivity(vIntent);
+      except on E: Exception do
+        ShowMessage(e.Message);
+      end;
+
+    {$ENDIF ANDROID}
+end;
+
+end.

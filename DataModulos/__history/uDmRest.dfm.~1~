@@ -1,0 +1,5 @@
+object DmRest: TDmRest
+  OldCreateOrder = False
+  Height = 375
+  Width = 493
+end

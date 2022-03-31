@@ -1,0 +1,1796 @@
+unit uDMLocal;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Controls.Presentation, FMX.Objects, FMX.Layouts, FMX.Effects,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
+  FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
+  FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
+  FireDAC.Stan.ExprFuncs, FireDAC.FMXUI.Wait, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client,System.IOUtils,FMX.Edit,System.MaskUtils, UntLib,System.Json,
+  Constantes,IniFiles;
+
+type
+  TDMLocal = class(TDataModule)
+    ConexLocal: TFDConnection;
+    FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
+    QryFila: TFDQuery;
+    QryAux: TFDQuery;
+    QryAtv: TFDQuery;
+    QryPonto: TFDQuery;
+    QryPontoMOTORISTA: TStringField;
+    QryPontoDATA: TDateTimeField;
+    QryPontoHORA_INICIO: TTimeField;
+    QryPontoHORA_FIM: TTimeField;
+    QryPontoTOTAL_HORAS_ATIVO: TDateTimeField;
+    QryPontoTOTAL_HORAS_PARADO: TDateTimeField;
+    QryPontoSTATUS: TStringField;
+    QryPontoULTIMA_ALTERACAO: TDateField;
+    QryPontoOBSERVACAO: TWideStringField;
+    QryBaixas: TFDQuery;
+    QryBaixasTIPO_DOCUMENTO: TStringField;
+    QryBaixasFIL_ORIG: TStringField;
+    QryBaixasNR_DOCUMENTO: TIntegerField;
+    QryBaixasSERIE: TWideStringField;
+    QryBaixasFIL_ROMANEIO: TStringField;
+    QryBaixasROMANEIO: TIntegerField;
+    QryBaixasCOD_OCORRENCIA: TStringField;
+    QryBaixasMOTIVO: TStringField;
+    QryBaixasRECEBEDOR: TStringField;
+    QryBaixasRG_RECEBEDOR: TStringField;
+    QryBaixasOBSERVACAO: TStringField;
+    QryBaixasLONGITUDE: TFloatField;
+    QryBaixasLATITUDE: TFloatField;
+    QryBaixasEFETIVADO: TStringField;
+    QryBaixasINTEGRADO: TStringField;
+    QryBaixasCOMPROVANTE: TBlobField;
+    QryBaixasdestinatario: TStringField;
+    QryBaixasQTD_COLETADA: TFloatField;
+    QryBaixasQTD_ENTREGUE: TFloatField;
+    QryBaixasTIPO: TStringField;
+    QryBaixasASSINATURA: TBlobField;
+    QryBaixasVOLUMES: TFloatField;
+    QryBaixasTIPO_LANCAMENTO: TStringField;
+    Qry_Pedidos: TFDQuery;
+    Qry_PedidosCLIENTE_CNPJ: TStringField;
+    Qry_PedidosNROPEDIDO: TIntegerField;
+    Qry_PedidosPEDIDO_FILIAL: TStringField;
+    Qry_PedidosINICIO: TDateTimeField;
+    Qry_PedidosFIM: TDateTimeField;
+    QryItens: TFDQuery;
+    MemItens: TFDMemTable;
+    MemRateio: TFDMemTable;
+    MemRateioQTD_TOTAL: TIntegerField;
+    MemRateioQTD_EMBALAGEM: TIntegerField;
+    MemRateioQTD_PALETES: TIntegerField;
+    QryConfig: TFDQuery;
+    QryConfigUSA_CELULAR: TBooleanField;
+    QryFilaNRONOTA: TFloatField;
+    QryFilaDATA_ENTRADA: TDateTimeField;
+    QryFilaVEICULO: TStringField;
+    QryFilaCARRETA: TStringField;
+    QryFilaMOTORISTA: TStringField;
+    QryFilaCLIENTE_NOME: TStringField;
+    QryFilaCLIENTE_CNPJ: TStringField;
+    QryFilaDOCA: TStringField;
+    QryFilaTIPO: TStringField;
+    QryFilaSTATUS: TStringField;
+    QryFilaINTEGRADO: TBooleanField;
+    QryFilaUND_ARMAZEN: TStringField;
+    QryFilaNR_ENTRADA: TIntegerField;
+    QryFilaFALAR_COM: TStringField;
+    QryFilaCONDOMINIO: TStringField;
+    QryFilaDATA_INICIO: TDateTimeField;
+    QryFilaDATA_TERMINO: TDateTimeField;
+    QryFilaDATA_SAIDA: TDateTimeField;
+    QryNotas: TFDQuery;
+    QryNotasNRENTRADA: TIntegerField;
+    QryNotasUNDENTRADA: TStringField;
+    QryNotasNRNOTA: TIntegerField;
+    QryNotasNRSERIE: TStringField;
+    QryNotasCNPJ: TStringField;
+    QryNotasSTATUS: TStringField;
+    QryItensFILIAL: TStringField;
+    QryItensCNPJ: TStringField;
+    QryItensRESPONSAVEL: TStringField;
+    QryItensLOTE: TStringField;
+    QryItensSERIE: TStringField;
+    QryItensNRONOTA: TFloatField;
+    QryItensDESCRICAO: TStringField;
+    QryItensNROPEDIDO: TIntegerField;
+    QryItensSEQUENCIA: TFloatField;
+    QryItensTIPO: TStringField;
+    QryItensPESO: TFloatField;
+    QryItensUNIDADE: TStringField;
+    QryItensRATEIO: TBooleanField;
+    QryItensATIVO: TBooleanField;
+    QryItensSTATUS: TStringField;
+    QryItensGALPAO: TStringField;
+    QryItensNUMERO: TStringField;
+    QryItensRUA: TStringField;
+    QryItensANDAR: TStringField;
+    QryItensAPTO: TStringField;
+    QryItensCONFERIDO: TBooleanField;
+    QryItensNR_ENTRADA: TIntegerField;
+    QryItensDCA: TStringField;
+    QryItensVLR_UNITARIO: TCurrencyField;
+    QryItensVLR_TOTAL: TCurrencyField;
+    QryItensConf: TFDQuery;
+    StringField1: TStringField;
+    StringField2: TStringField;
+    StringField3: TStringField;
+    StringField4: TStringField;
+    StringField5: TStringField;
+    FloatField1: TFloatField;
+    StringField6: TStringField;
+    IntegerField2: TIntegerField;
+    FloatField2: TFloatField;
+    StringField7: TStringField;
+    FloatField3: TFloatField;
+    StringField8: TStringField;
+    BooleanField1: TBooleanField;
+    BooleanField2: TBooleanField;
+    StringField9: TStringField;
+    StringField10: TStringField;
+    StringField11: TStringField;
+    StringField12: TStringField;
+    StringField13: TStringField;
+    StringField14: TStringField;
+    BooleanField3: TBooleanField;
+    IntegerField6: TIntegerField;
+    StringField15: TStringField;
+    CurrencyField1: TCurrencyField;
+    CurrencyField2: TCurrencyField;
+    QryItensVLR_UNI_RATEADO: TCurrencyField;
+    QryItensPESO_UNI_RATEADO: TFloatField;
+    MemItensFILIAL: TStringField;
+    MemItensCNPJ: TStringField;
+    MemItensRESPONSAVEL: TStringField;
+    MemItensLOTE: TStringField;
+    MemItensSERIE: TStringField;
+    MemItensNRONOTA: TFloatField;
+    MemItensDESCRICAO: TStringField;
+    MemItensNROPEDIDO: TIntegerField;
+    MemItensSEQUENCIA: TFloatField;
+    MemItensQTD_LIDA: TIntegerField;
+    MemItensQTD_TOTAL: TIntegerField;
+    MemItensTIPO: TStringField;
+    MemItensPESO: TFloatField;
+    MemItensUNIDADE: TStringField;
+    MemItensRATEIO: TBooleanField;
+    MemItensATIVO: TBooleanField;
+    MemItensSTATUS: TStringField;
+    MemItensGALPAO: TStringField;
+    MemItensNUMERO: TStringField;
+    MemItensRUA: TStringField;
+    MemItensANDAR: TStringField;
+    MemItensAPTO: TStringField;
+    MemItensQTD_PALETES: TIntegerField;
+    MemItensCONFERIDO: TBooleanField;
+    MemItensNR_ENTRADA: TIntegerField;
+    MemItensDCA: TStringField;
+    MemItensVLR_UNITARIO: TCurrencyField;
+    MemItensVLR_TOTAL: TCurrencyField;
+    MemItensVLR_UNI_RATEADO: TCurrencyField;
+    MemItensPESO_UNI_RATEADO: TFloatField;
+    QryItensSERIE_PRODUTO: TStringField;
+    MemItensQTD_EMBALAGEM: TIntegerField;
+    MemItensSERIE_PRODUTO: TStringField;
+    QryItensPESO_BRUTO: TFloatField;
+    MemItensPESO_BRUTO: TFloatField;
+    QryItensID_INTERNO: TIntegerField;
+    MemItensID_INTERNO: TIntegerField;
+    QryItensNOME_CLIENTE: TStringField;
+    MemItensFINALIZADOR: TStringField;
+    MemItensNOME_CLIENTE: TStringField;
+    QryAux2: TFDQuery;
+    QryNotasNOME_CLIENTE: TStringField;
+    MemRateioLOTE: TStringField;
+    MemRateioSERIE: TStringField;
+    MemRateioUQtd: TIntegerField;
+    MemRateioUQtdEmb: TIntegerField;
+    MemRateioUQtdPal: TIntegerField;
+    QryUsuario: TFDQuery;
+    QryUsuarioNOME: TStringField;
+    QryUsuarioCPF: TStringField;
+    Qry_PedidosCLIENTE: TStringField;
+    Qry_PedidosSTATUS: TStringField;
+    Qry_PedidosData_Emissao: TDateTimeField;
+    Qry_PedidosESPECIE: TStringField;
+    QryItensid_entrada_prod: TIntegerField;
+    QryItensCODIGO: TStringField;
+    MemItensCODIGO: TStringField;
+    QryItensConfCODIGO: TStringField;
+    QryItensConfVLR_UNI_RATEADO: TCurrencyField;
+    QryItensConfPESO_UNI_RATEADO: TFloatField;
+    QryItensConfSERIE_PRODUTO: TStringField;
+    QryItensConfPESO_BRUTO: TFloatField;
+    QryItensConfID_INTERNO: TIntegerField;
+    QryItensConfNOME_CLIENTE: TStringField;
+    QryItensConfid_entrada_prod: TIntegerField;
+    QryItensQTD_LIDA: TFloatField;
+    QryItensQTD_TOTAL: TFloatField;
+    QryItensConfQTD_LIDA: TFloatField;
+    QryItensConfQTD_TOTAL: TFloatField;
+    Qry_PedidosQDT_TOTAL: TFloatField;
+    QryItensQTD_EMBALAGEM: TIntegerField;
+    QryItensQTD_PALETES: TIntegerField;
+    QryItensConfQTD_EMBALAGEM: TIntegerField;
+    QryItensConfQTD_PALETES: TIntegerField;
+    QryItensConfINTEGRADO: TBooleanField;
+    QryItensFINALIZADOR: TIntegerField;
+    QryItensINTEGRADO: TBooleanField;
+    QryItensConfFINALIZADOR: TIntegerField;
+    procedure ConexLocalBeforeConnect(Sender: TObject);
+  private
+    procedure Habilita(estado: string);
+    function ImageBase64(Tipo: string): String;
+    { Private declarations }
+  public
+    { Public declarations }
+    var RomFinalizado :Boolean;
+
+    procedure MaskText(const AEdit :TEdit ; const Mask:string);
+    function  LimpaString(sString, sSujeiras : String) : String;
+
+    //API
+    procedure AlimentaApi;
+
+     //Ligado ao Motorista
+    function  ValidaMotLocal(CPF:String):Boolean;
+    procedure IntegraMotorista(CPF, Nome: String);
+    procedure IniciaDia(motorista, tipo, obs: string);
+    procedure VerificaPonto(Motorista:string);
+    procedure AbreTBL_Mot;
+
+    // Ligado a montagem do Frame
+    procedure SetFrameClone(ARectBase : TRectangle; var AClone: TRectangle; AScroll:TVertScrollBox;
+     var APosition : Single; MClick:TNotifyEvent; MTap:TTapEvent;Tipo:string);overload;
+    procedure LimparLista(Sender :TObject;AVertScroll : TVertScrollBox; ARectBase:String);
+
+    //Buscas Realizadas no Banco Local
+      //Itens Rateio
+      procedure AtualizaRateio;
+      function  Ratear:Boolean;
+      procedure AtualizaEndereco;
+      procedure InseriItens(Pedido: integer; Filial,Item: string);
+      function  BuscaItemLido(Codigo:integer): boolean;
+      procedure FinalizaNota;
+      function  VerificaConferencia:Boolean;
+      procedure AtualizaProd;
+      procedure AtualizaStatusItem(ID:Integer;Tipo,Finalizador:String);
+
+      procedure AtualizaStatus(Tipo,Baixa:string);
+
+     //Notas
+      procedure BaixaAtividade;
+      function  ConsultarNotas(Entrada:integer;Unidade:string): Boolean;
+      function  ConsultarNotasEntrada(Entrada,Nota:integer;Unidade,CNPJ:string): Boolean;
+      procedure BuscarNotas(Conferente:string);
+      procedure BuscarNotasEntrada(UND:string;Entrada:Integer);
+      function  VerificaNotasEmAberto(NR_ENTRADA:Integer):Boolean;
+
+      //Itens   (DESCARGA)
+      function  LancaQuintoVetor(QtdPaletes:Integer;Apart,Lote,Serie:String;Itens,Embalagens:Integer;Galpao,Numero,Rua,Andar:string;
+                                 out QdtRatItens,QtdRatEmbalagens,QtdRatPaletes:integer) :Boolean;
+      function  LancaSemVetor(QtdPaletes:Integer; Apart,Lote,Serie:String;Itens,Embalagens:Integer;Galpao,Numero,Rua,Andar:string;
+                                 out QdtRatItens,QtdRatEmbalagens,QtdRatPaletes:integer) :Boolean;
+      function  ConsultaItens(CNPJ:string;Nota:integer;Serie,Filial,Responsavel,Lote,produto:string):Boolean;
+      procedure BuscaItens(Pedido: integer; Filial, Tipo: string);
+      procedure BuscaItensConferidos(Pedido: integer; Filial, Tipo: string);
+      function  LocalizaItem(ID_PRODUTO:integer) :Boolean;
+      function  GerarID:integer;
+      function  AnulaFinalizador(NRONOTA:INTEGER;CODIGO:STRING):Boolean;
+      function  RestauraFinalizador(NRONOTA:INTEGER;CODIGO:STRING):Boolean;
+      procedure PreparaParaEnvio(NRONOTA,NRENTRADA:INTEGER);
+
+      //Itens Pedido (CARGA)
+      function  ConsultaItensPedido(Filial:string;Pedido:integer;Tipo:string;Sequencia:Integer):Boolean;
+
+      //Baixas
+      function  AlimentaBaixa(sFil_Romaneio, sNroRomaneio, sDocumento,
+      sFilial, sNroCTe, sSerie, sTipo: String):Boolean;
+      procedure FinalizaBaixa;
+      function  EnviaNota:Boolean;
+
+      //Pedidos
+      function  ExistePedido(NroNota: integer; Cliente: string): Boolean;
+      function  BuscaPedido(Filial:String;NroPedido:Integer):Boolean;
+      function  FinalizaPedido(NroPedido:integer):Boolean;
+
+      function  LancaPedido(NroNota: integer; CNPJ: string): boolean;
+      function  DevolveItens(NroNota,NrEntrada: integer):boolean;
+      function  FinalizaEntrada:Boolean;
+      function  ExisteItensNaoSincronizados : Boolean;
+
+      //Configuracao
+      procedure VerificaConfiguracao;
+      Function  GravaConfiguracao :Boolean;
+
+
+      //Excluir Depois de Baixado
+      Procedure DeletarEntradas;
+      Procedure DeletarPedidos;
+      Procedure DeletarItens;
+      Procedure DeletarNotas;
+
+      //Servico de Notificacao
+      Function CalculaQtdPedido:integer;
+
+
+  end;
+
+var
+  DMLocal: TDMLocal;
+
+implementation
+
+{%CLASSGROUP 'FMX.Controls.TControl'}
+
+uses uFrmNotas, uFrmMain, U_TJSONMaps,System.StrUtils, System.NetEncoding,
+  System.JSON.Types,
+  System.JSON.Writers, uDmRest, uFrmInformativo, uLoading;
+
+{$R *.dfm}
+
+{ TDMLocal }
+
+procedure TDMLocal.AlimentaApi;
+var ini :TIniFile;
+begin
+  {$IFDEF ANDROID}
+  ini := TIniFile.Create (GetHomePath + PathDelim + 'config.ini');
+  C_BASEURL := ini.ReadString('API','caminho','');
+  ini.DisposeOf;
+  {$ELSE}
+   //Fora Peterson
+   //C_BASEURL :='http://portal.allisson.com.br:9001/';
+   //Local   Peterson
+   //C_BASEURL :='http://192.168.192.36:8081/';
+   //Fora - Servidor
+   C_BASEURL :='http://portalallisson.ddns.com.br/armazem-api/';
+  {$ENDIF}
+end;
+
+
+function TDMLocal.ImageBase64(Tipo: string): String;
+var
+  StreamIn: TStream;
+  StreamOut: TStringStream;
+  sts: String;
+begin
+  Result := '';
+
+  if tipo='COMPROVANTE' then
+  Begin
+  if DMLocal.QryBaixasCOMPROVANTE.IsNull then
+    Exit;
+    StreamIn := DMLocal.QryBaixas.CreateBlobStream
+    (DMLocal.QryBaixasCOMPROVANTE, bmRead);
+    StreamOut := TStringStream.Create;
+  End else
+  if tipo='ASSINATURA' then
+  BEGIN
+    if DMLocal.QryBaixasASSINATURA.IsNull then
+    Exit;
+    StreamIn := DMLocal.QryBaixas.CreateBlobStream
+    (DMLocal.QryBaixasASSINATURA, bmRead);
+    StreamOut := TStringStream.Create;
+  END;
+
+  TNetEncoding.Base64.Encode(StreamIn, StreamOut);
+  StreamOut.Position := 0;
+
+  sts := StreamOut.DataString;
+
+  sts    := StringReplace(sts, #10, ' ', [rfReplaceAll]);
+  result := StringReplace(sts, #13, ' ', [rfReplaceAll]);
+
+end;
+
+procedure TDMLocal.IniciaDia(motorista, tipo, obs: string);
+begin
+   //tipo=Inicia ; tipo=Pausa ;tipo=retorno ;tipo=Termino
+  if Tipo='Inicia' then
+  Begin
+  QryPonto.Insert;
+  QryPontoMOTORISTA.AsString := motorista;
+  QryPontoSTATUS.AsString:= 'I';
+  QryPontoDATA.AsDateTime := now;
+  QryPontoHORA_INICIO.AsDateTime:=now;
+  TLibery.MudarAba(FrmMain.tbiPrincipal,Self);
+
+  End;
+  if Tipo='Pausa' then
+  Begin
+   QryPonto.Edit;
+   QryPontoSTATUS.AsString:='P';
+   QryPontoOBSERVACAO.AsString := obs;
+   TLibery.MudarAba(FrmMain.tbiPrincipal,Self);
+  End;
+  if Tipo='Retorno' then
+  Begin
+    QryPonto.Edit;
+    QryPontoSTATUS.AsString:='I';
+    TLibery.MudarAba(FrmMain.tbiPrincipal,Self);
+  End;
+  if Tipo='Termino' then
+  Begin
+    QryPonto.Edit;
+    QryPontoSTATUS.AsString:='T';
+    QryPonto.SQL.Add('update TBL_PONTO');
+    QryPontoHORA_FIM.AsDateTime:=now;
+    TLibery.MudarAba(FrmMain.tbiPrincipal,Self);
+  End;
+
+  Try
+  QryPontoULTIMA_ALTERACAO.AsDateTime:=now ;
+  QryPonto.Post;
+  Except
+  exit
+  End;
+
+end;
+
+procedure TDMLocal.IntegraMotorista(CPF, Nome: String);
+var QryI :TFDQuery;
+begin
+
+   QryI := TFDQuery.Create(Self);
+   QryI.Connection := ConexLocal;
+
+
+   QryI.Active := false;
+   QryI.SQL.Clear;
+   QryI.SQL.Add('Insert Into TBL_CONFERENTE');
+   QryI.SQL.Add('(NOME,CPF)');
+   QryI.SQL.Add('values (:Nome,:CPF)');
+   QryI.ParamByName('CPF').AsString := CPF;
+   QryI.ParamByName('Nome').AsString := Nome;
+   QryI.ExecSQL;
+   QryI.Active:= false;
+   QryI.DisposeOf;
+   QryI := nil;
+   //Passo parametros para o FormPrincipal - proxima funcção FrmPrincipal.Logar
+   FrmMain.motorista:=Nome;
+   FrmMain.motoristaCPF:=CPF;
+end;
+
+
+procedure TDMLocal.AbreTBL_Mot;
+begin
+  QryUsuario.Close;
+  QryUsuario.SQL.Clear;
+  QryUsuario.SQL.Add('SELECT * FROM TBL_CONFERENTE');
+  QryUsuario.Open();
+  QryUsuario.Last;
+end;
+
+function TDMLocal.AlimentaBaixa(sFil_Romaneio, sNroRomaneio, sDocumento,
+  sFilial, sNroCTe, sSerie, sTipo: String):Boolean;
+begin
+ Try
+  with QryBaixas do
+  begin
+    Active:=False;
+    SQL.Clear;
+    SQL.Add('SELECT  TIPO_DOCUMENTO,FIL_ORIG,NR_DOCUMENTO,SERIE,FIL_ROMANEIO, ');
+    SQL.Add('ROMANEIO,COD_OCORRENCIA,MOTIVO,RECEBEDOR,RG_RECEBEDOR,           ');
+    SQL.Add('OBSERVACAO,LONGITUDE,LATITUDE,EFETIVADO,COMPROVANTE,INTEGRADO,QTD_COLETADA,QTD_ENTREGUE,');
+    SQL.Add('DESTINATARIO,TIPO,ASSINATURA,VOLUMES,QTD_COLETADA,QTD_ENTREGUE,TIPO_LANCAMENTO          ');
+    SQL.Add('FROM TBL_MOBILEDOCS ');
+    SQL.Add('WHERE');
+    SQL.Add('TIPO_DOCUMENTO       =:TIPO_DOCUMENTO');
+    SQL.Add('AND    FIL_ORIG      =:FIL_ORIG '     );
+    SQL.Add('AND   NR_DOCUMENTO   =:NR_DOCUMENTO'  );
+    SQL.Add('AND   SERIE          =:SERIE        ' );
+    SQL.Add('AND FIL_ROMANEIO     =:FIL_ROMANEIO ' );
+    SQL.Add('AND     ROMANEIO     =:ROMANEIO     ' );
+    SQL.Add('AND     TIPO         =:TIPO         ' );
+    ParamByName('TIPO_DOCUMENTO').AsString := sDocumento;
+    ParamByName('FIL_ORIG').AsString := sFilial;
+    ParamByName('NR_DOCUMENTO').AsString := sNroCTe;
+    ParamByName('SERIE').AsString := sSerie;
+    ParamByName('FIL_ROMANEIO').AsString := sFil_Romaneio;
+    ParamByName('ROMANEIO').AsString := sNroRomaneio;
+    ParamByName('TIPO').AsString := sTipo;
+    Active:=True;
+  end;
+   if QryBaixas.IsEmpty then
+   Begin
+       QryBaixas.Append;
+       QryBaixasTIPO_DOCUMENTO.AsString:= QryAtv.FieldByName('DOCUMENTO').AsString;
+       QryBaixasFIL_ORIG.AsString      := QryAtv.FieldByName('FIL_ORIG').AsString;
+       QryBaixasNR_DOCUMENTO.AsInteger := QryAtv.FieldByName('NR_DOCUMENTO').AsInteger;
+       QryBaixasSERIE.asString         := QryAtv.FieldByName('SERIE').AsString;
+       QryBaixasFIL_ROMANEIO.AsString  := QryAtv.FieldByName('FIL_ROMANEIO').AsString;
+       QryBaixasROMANEIO.AsInteger     := QryAtv.FieldByName('ROMANEIO').AsInteger;
+       QryBaixasVolumes.asfloat        := QryAtv.FieldByName('VOLUMES').AsFloat;
+       QryBaixasdestinatario.AsString  := QryAtv.FieldByName('CGC_CLIENTE').AsString;
+       QryBaixasTIPO.AsString          := QryAtv.FieldByName('REVERSA').AsString;
+       QryBaixas.Post;
+   End;
+   Result := True;
+ Except
+   Result := False;
+ End;
+
+end;
+
+
+
+function TDMLocal.AnulaFinalizador(NRONOTA: INTEGER; CODIGO: STRING): Boolean;
+begin
+  result := true;
+  Try
+    QryAux.Close;
+    QryAux.SQL.Clear;
+    QryAux.SQL.Add('Update TBL_PEDIDOITENS');
+    QryAux.SQL.Add('SET FINALIZADOR=''F'' ');
+    QryAux.SQL.Add('WHERE NRONOTA=:NT AND CODIGO=:COD AND FINALIZADOR=''T'' ');
+    QRyAux.ParamByName('NT').AsInteger := NRONOTA;
+    QryAux.ParamByName('COD').AsString := CODIGO;
+    QryAux.ExecSQL;
+  except
+   result := false;
+  End;
+end;
+
+procedure TDmLocal.InseriItens(Pedido: integer; Filial,Item: string);
+begin
+    QryItens.Locate('ID_ENTRADA_PROD',Item);
+
+    QryItens.Edit;
+    if FrmMain.TipoSaida='PL' then
+     Begin
+      QryItensQTD_LIDA.AsInteger := QryItensQTD_LIDA.AsInteger + 1;
+      if QryItensQTD_PALETES.AsInteger <  QryItensQTD_LIDA.AsInteger  then
+       QryItensQTD_LIDA.AsInteger := QryItensQTD_LIDA.AsInteger -1 ;
+       if QryItensQTD_LIDA.AsInteger = QryItensQTD_PALETES.AsInteger then
+       Begin
+       QryItensSTATUS.AsString:='F' ;
+       QryItensCONFERIDO.AsBoolean :=true;
+       End;
+     End else
+    if FrmMain.TipoSaida='EM' then
+     Begin
+      QryItensQTD_LIDA.AsInteger := QryItensQTD_LIDA.AsInteger + 1;
+      if QryItensQTD_EMBALAGEM.AsInteger <  QryItensQTD_LIDA.AsInteger  then
+       QryItensQTD_LIDA.AsInteger := QryItensQTD_LIDA.AsInteger -1 ;
+       if QryItensQTD_LIDA.AsInteger = QryItensQTD_EMBALAGEM.AsInteger then
+       Begin
+       QryItensSTATUS.AsString:='F' ;
+       QryItensCONFERIDO.AsBoolean :=true;
+       End;
+     End else
+    if FrmMain.TipoSaida='UN' then
+     Begin
+      QryItensQTD_LIDA.AsInteger := QryItensQTD_LIDA.AsInteger + 1;
+      if QryItensQTD_TOTAL.AsInteger <  QryItensQTD_LIDA.AsInteger  then
+      QryItensQTD_LIDA.AsInteger := QryItensQTD_LIDA.AsInteger -1 ;
+
+      if QryItensQTD_LIDA.AsInteger = QryItensQTD_TOTAL.AsInteger then
+       Begin
+       QryItensSTATUS.AsString:='F' ;
+       QryItensCONFERIDO.AsBoolean :=true;
+       End;
+
+     End;
+
+
+   if QryItens.State in [dsInsert,dsEdit] then
+    QryItens.Post;
+
+end;
+
+
+function TDmLocal.BuscaItemLido(Codigo: integer): boolean;
+begin
+  QryItens.Active := false;
+  QryItens.SQL.Clear;
+  QryItens.SQL.Add('SELECT * FROM TBL_PEDIDOITENS');
+  QryItens.SQL.Add('WHERE NROPEDIDO=:PED AND ID_ENTRADA_PROD=:PROD AND STATUS=''N'' ');
+  QryItens.ParamByName('PED').AsInteger  := FrmMAin.Pedido;
+  QryItens.ParamByName('PROD').AsInteger := Codigo;
+  QryItens.Active := True;
+
+  if QryItensid_entrada_prod.AsInteger= Codigo then
+  result:=true
+  else
+  result:=false;
+
+End;
+
+
+procedure TDMLocal.AtualizaEndereco;
+begin
+  QryItens.Edit;
+  QryItensGALPAO.AsString     := MemItensGALPAO.AsString;
+  QryItensNUMERO.AsString     := MemItensNUMERO.AsString;
+  QryItensRUA.AsString        := MemItensRUA.AsString;
+  QryItensANDAR.AsString      := MemItensANDAR.AsString;
+  QryItensAPTO.AsString       := MemItensAPTO.AsString;
+  QryItensLote.asstring       := MemItensLote.asstring;
+  QryItensSerie.asstring      := MemItensSerie.asstring;
+  QryItensTIPO.AsString       := MemItensTIPO.AsString;
+  QryItensCONFERIDO.AsBoolean := true;
+  QryItens.Post;
+end;
+
+procedure TDMLocal.AtualizaProd;
+begin
+  QryItens.Edit;
+  QryItensCONFERIDO.AsBoolean := true;
+  QryItens.Post;
+end;
+
+procedure TDMLocal.AtualizaRateio;
+begin
+  DmLocal.QryItens.Edit;
+  DmLocal.QryItensATIVO.Value  := false;
+  DmLocal.QryItensSTATUS.Value := 'R';
+  DmLocal.QryItens.Post;
+end;
+
+procedure TDMLocal.AtualizaStatus(Tipo,Baixa:String);
+begin
+  //Baixa - Nota - Entrada
+
+   if QryFilaTIPO.AsString='DESCARGA' then
+    Begin
+     if Baixa = 'Nota' then
+      Begin
+       QryNotas.Edit;
+       QryNotasSTATUS.AsString:=Tipo;
+       QryNotas.Post;
+      End else
+     if Baixa = 'Entrada' then
+      Begin
+       QryFila.Edit;
+       QryFilaStatus.AsString:=Tipo;
+       QryFila.Post;
+      End;
+    End else
+    if (QryFilaTIPO.AsString='CARGA') or (FrmMain.Origem='PEDIDO') then
+    Begin
+     Qry_Pedidos.Edit;
+     Qry_PedidosSTATUS.AsString   := Tipo;
+     if Tipo='E' then
+     Qry_PedidosINICIO.AsDateTime := now;
+
+     if Tipo='F' then
+     Qry_PedidosFIM.AsDateTime := now;
+
+     Qry_Pedidos.Post;
+    End;
+
+
+end;
+
+
+
+procedure TDMLocal.AtualizaStatusItem(ID: Integer; Tipo,Finalizador: String);
+begin
+
+
+ QryAux.Active :=false;
+ QryAux.SQL.Clear;
+ QryAux.SQL.Add('update TBL_PEDIDOITENS');
+ QryAux.SQL.Add('set STATUS=:STS, FINALIZADOR=:FINAL');
+ QryAux.SQL.Add('where ID_INTERNO=:ID');
+ QryAUx.ParamByName('ID').AsInteger   := ID;
+ QryAUx.ParamByName('FINAL').asstring := Finalizador;
+ QryAux.ParamByName('STS').AsString   := Tipo;
+ QryAUx.ExecSQL;
+
+end;
+
+procedure TDMLocal.BaixaAtividade;
+begin
+  QryAtv.Edit;
+  QryAtv.FieldByName('FINALIZADO').AsString :='S';
+  QryAtv.FieldByName('STATUS').AsString     :='F';
+  QryAtv.Post;
+end;
+
+function TDMLocal.EnviaNota: Boolean;
+var JsonObj : TJSONObject;
+    X: TMemoField;
+begin
+
+ Try
+  result := true;
+  while not QryItensConf.Eof  do
+   Begin
+
+    jsonObj := TJSONObject.Create;
+    try
+      jsonObj.AddPair('und_armazem',DmLocal.QryItensConf.FieldByName('Filial').AsString);
+      jsonObj.AddPair('cnpj',DmLocal.QryItensConf.FieldByName('CNPJ').AsString);
+      jsonObj.AddPair('responsavel',DmLocal.QryItensConf.FieldByName('RESPONSAVEL').AsString);
+      jsonObj.AddPair('lote', DmLocal.QryItensConf.FieldByName('LOTE').AsString);
+      jsonObj.AddPair('serie',DmLocal.QryItensConf.FieldByName('SERIE').AsString);
+      jsonObj.AddPair('nota', DmLocal.QryItensConf.FieldByName('NRONOTA').asinteger.ToString);
+      jsonObj.AddPair('produto',DmLocal.QryItensConf.FieldByName('CODIGO').AsString);
+      jsonObj.AddPair('serie_produto', DmLocal.QryItensConf.FieldByName('SERIE_PRODUTO').AsString);
+      jsonObj.AddPair('qtd_mov',DmLocal.QryItensConf.FieldByName('QTD_TOTAL').AsInteger.ToString );
+      jsonObj.AddPair('vlr_mov',StringReplace(FloatToStr(DmLocal.QryItensConf.FieldByName('VLR_TOTAL').AsFloat),',','.',[rfReplaceAll]) );
+      jsonObj.AddPair('qtd_embalagem',DmLocal.QryItensConf.FieldByName('QTD_EMBALAGEM').AsInteger.ToString);
+      jsonObj.AddPair('qtd_pallet', DmLocal.QryItensConf.FieldByName('QTD_PALETES').AsInteger.ToString);
+      jsonObj.AddPair('dca',DmLocal.QryItensConf.FieldByName('DCA').AsString );
+      jsonObj.AddPair('galpao', DmLocal.QryItensConf.FieldByName('GALPAO').AsString );
+      jsonObj.AddPair('rua', DmLocal.QryItensConf.FieldByName('RUA').AsString );
+      jsonObj.AddPair('numero', DmLocal.QryItensConf.FieldByName('NUMERO').AsString);
+      jsonObj.AddPair('andar', DMLocal.QryItensConf.FieldByName('ANDAR').AsString);
+      jsonObj.AddPair('apartamento',DmLocal.QryItensConf.FieldByName('APTO').AsString);
+      jsonObj.AddPair('peso_bruto', StringReplace(FloatToStr(DMLocal.QryItensConf.FieldByName('Peso').AsFloat),',','.',[rfReplaceAll]));
+      jsonObj.AddPair('peso_liquido',StringReplace(FloatToStr(DMLocal.QryItensConf.FieldByName('Peso').AsFloat),',','.',[rfReplaceAll]));
+      jsonObj.AddPair('peso_bruto_unidade',StringReplace(FormatFloat('#0.00',DmLocal.QryItensConf.FieldByName('PESO_UNI_RATEADO').AsFloat),',','.',[rfReplaceAll]));
+      jsonObj.AddPair('peso_liquido_unidade',StringReplace(FormatFloat('#0.00',DmLocal.QryItensConf.FieldByName('PESO_UNI_RATEADO').AsFloat),',','.',[rfReplaceAll]));
+      jsonObj.AddPair('operador',(Copy(FrmMain.motorista,0,20)) );
+
+      if QryItensConfFINALIZADOR.AsInteger = 0 then
+        jsonObj.AddPair('finalizado','F') else
+        jsonObj.AddPair('finalizado','T');
+
+      //integrando Banco Remoto
+      if DMRest.LancarCarga(jsonObj.ToString) then
+      Begin
+       QryItensConf.Edit;
+       QryItensConfINTEGRADO.AsBoolean:= True;
+       QryItensConf.Post;
+      End else
+      Begin
+       QryItensConf.Edit;
+       QryItensConfINTEGRADO.AsBoolean:= False;
+       QryItensConf.Post;
+
+      End;
+    finally
+      jsonObj.Free;
+    end;
+    QryItensConf.Next;
+   End;
+ Except
+  result := false
+ End;
+
+end;
+
+
+
+
+function TDmLocal.ExistePedido(NroNota: integer; Cliente: string): Boolean;
+begin
+  With Qry_Pedidos do
+  Begin
+    Active :=False;
+    SQL.Clear;
+
+    SQL.Add('SELECT * FROM TBL_PEDIDOS ');
+    Active := True;
+    if IsEmpty then
+    result := false else
+    result := true;
+  End;
+end;
+
+
+procedure TDmLocal.BuscaItens(Pedido:integer;Filial,Tipo:string);
+begin
+ if (Tipo='CARGA') or (FrmMain.Origem='PEDIDO') then
+ Begin
+  with qryItens do
+  begin
+     Close;
+     SQL.Clear;
+
+     SQL.Add('Select * from TBL_PEDIDOITENS');
+     SQL.Add('WHERE ');
+     SQL.Add('NROPEDIDO=:NRO AND ATIVO=TRUE AND CONFERIDO=FALSE');
+
+    // SQL.Add('GROUP BY CODIGO');
+
+     ParamByName('NRO').AsInteger := Pedido;
+     Open;
+  end;
+ End else
+ if Tipo='DESCARGA' then
+ Begin
+  with qryItens do
+  begin
+     Close;
+     SQL.Clear;
+
+     SQL.Add('Select * from TBL_PEDIDOITENS');
+     SQL.Add('WHERE ');
+     SQL.Add('NRONOTA=:NRONOTA and FILIAL=:CNPJ AND ATIVO=TRUE AND CONFERIDO=FALSE');
+
+     ParamByName('NRONOTA').AsInteger := Pedido;
+     ParamByName('CNPJ').AsString     := Filial;
+
+     Open;
+  end;
+ End;
+
+
+end;
+
+procedure TDmLocal.BuscaItensConferidos(Pedido:integer;Filial,Tipo:string);
+begin
+ if (Tipo='CARGA') or (FrmMain.Origem='PEDIDO') then
+ Begin
+  with QryItensConf do
+  begin
+     Close;
+     SQL.Clear;
+
+     SQL.Add('Select * from TBL_PEDIDOITENS');
+     SQL.Add('WHERE ');
+     SQL.Add('NROPEDIDO=:NRO AND ATIVO=TRUE AND CONFERIDO=TRUE');
+
+     //SQL.Add('GROUP BY CODIGO');
+
+     ParamByName('NRO').AsInteger := Pedido;
+     Open;
+  end;
+ End else
+ if Tipo='DESCARGA' then
+ Begin
+  with QryItensConf do
+  begin
+     Close;
+     SQL.Clear;
+
+     SQL.Add('Select * from TBL_PEDIDOITENS');
+     SQL.Add('WHERE ');
+     SQL.Add('NRONOTA=:NRONOTA and FILIAL=:CNPJ AND ATIVO=TRUE AND CONFERIDO=TRUE');
+
+     ParamByName('NRONOTA').AsInteger := Pedido;
+     ParamByName('CNPJ').AsString     := Filial;
+     SQL.Add('ORDER BY ID_INTERNO ASC');
+
+     Open;
+  end;
+ End;
+
+
+end;
+
+
+
+function TDMLocal.BuscaPedido(Filial: String; NroPedido: Integer): Boolean;
+begin
+   Qry_Pedidos.Close;
+
+   Qry_Pedidos.SQL.Clear;
+
+   Qry_Pedidos.SQL.Add('SELECT * FROM TBL_PEDIDOS');
+   Qry_Pedidos.SQL.Add('WHERE PEDIDO_FILIAL=:Fil AND NROPEDIDO=:PED AND FIM IS NULL');
+
+   Qry_Pedidos.ParamByName('Fil').AsString   := Filial;
+   Qry_Pedidos.ParamByName('PED').AsInteger  := NroPedido;
+
+   Qry_Pedidos.SQL.Add('ORDER BY NROPEDIDO');
+
+   Qry_Pedidos.Open;
+
+   if Qry_Pedidos.IsEmpty then
+    result := false
+    else
+    result:= true;
+
+end;
+
+function TDmLocal.LancaPedido(NroNota:integer;CNPJ:string): boolean;
+begin
+ Try
+  QryAux.Close;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('Insert into  TBL_PEDIDOS');
+  QryAux.SQL.Add('(NRONOTA,CLIENTE_CNPJ,NROPEDIDO,PEDIDO_FILIAL,INICIO)');
+  QryAux.SQL.Add('Values(:NOTA, :CNPJ,(Select (Max(NROPEDIDO)+1) as ped from TBL_PEDIDOS), :FIL, :INICIO )');
+  QryAux.ParamByName('NOTA').asinteger := NroNota;
+  QryAux.ParamByName('CNPJ').asstring  := CNPJ;
+  QryAux.ParamByName('INICIO').AsDateTime :=now;
+  QryAux.ParamByName('FIL').asstring  :='SP';
+
+  Try
+   Qryaux.ExecSQL;
+   result:=true;
+  Except
+   result:=false;
+  End;
+ Finally
+  QryAux.Close;
+ End;
+end;
+
+
+
+function TDMLocal.LancaQuintoVetor(QtdPaletes:integer;Apart,Lote,Serie:String;Itens,Embalagens:Integer;Galpao,Numero,Rua,Andar:string;
+                                 out QdtRatItens,QtdRatEmbalagens,QtdRatPaletes:integer): Boolean;
+var TotPL,APTO:integer;
+begin
+  result :=true;
+  Try
+     if  StrToIntDef(Apart,0)=0 then
+     APTO := 1
+     else
+     APTO := Apart.ToInteger;
+
+     for TotPL:= 1 to QtdPaletes do
+          Begin
+            with DMLocal do
+             Begin
+
+             MemItens.Insert;
+             MemItensNROPEDIDO.AsInteger            := 0;
+             MemItensID_INTERNO.AsInteger           := DmLocal.GerarID;
+             MemItensFILIAL.AsString                := QryItensFILIAL.AsString;
+             MemItensCNPJ.AsString                  := QryItensCNPJ.AsString;
+             MemItensRESPONSAVEL.AsString           := QryItensRESPONSAVEL.AsString;
+             if Lote = EmptyStr then
+             MemItensLOTE.AsString                  := 'SEM LOTE'
+             else
+             MemItensLOTE.AsString                  := Lote;
+
+             if Serie=EmptyStr then
+             MemItensSERIE.AsString                 := QryItensSERIE.AsString
+             else
+             MemItensSERIE.AsString                 := Serie;
+
+             MemItensNRONOTA.AsInteger              := QryItensNRONOTA.AsInteger;
+             MemItensCODIGO.AsString                := QryItensCODIGO.AsString;
+             MemItensDESCRICAO.AsString             := QryItensDESCRICAO.AsString;
+             MemItensQTD_LIDA.AsInteger             := 0;
+             MemItensQTD_TOTAL.AsInteger            := Itens;
+             MemItensQTD_PALETES.AsInteger          := 1;//QtdPaletes;
+             MemItensQTD_EMBALAGEM.AsInteger        := Embalagens;
+             MemItensGALPAO.AsString                := Galpao;
+             MemItensNUMERO.AsString                := Numero;
+             MemItensRUA.AsString                   := Rua;
+             MemItensANDAR.AsString                 := Andar;
+             MemItensAPTO.AsString                  := APTO.ToString;
+             MemItensTIPO.AsString                  := 'ENTRADA RATEADA';
+             MemItensNR_ENTRADA.AsInteger           := QryItensNR_ENTRADA.AsInteger;
+             MemItensPESO.AsFloat                   := QryItensPeso.AsFloat;
+             MemItensPESO_UNI_RATEADO.AsFloat       := QryItensPESO.AsFloat;
+             MemItensVLR_TOTAL.AsCurrency           := QryItensVLR_TOTAL.AsCurrency;
+             MemItensVLR_UNITARIO.AsCurrency        := QryItensVLR_UNITARIO.AsCurrency;
+             MemItensVLR_UNI_RATEADO.AsCurrency     := (QryItensVLR_UNITARIO.AsCurrency/Itens);
+
+             MemItens.Post;
+
+             QdtRatItens      :=  MemItensQTD_TOTAL.AsInteger;
+             QtdRatEmbalagens :=  MemItensQTD_EMBALAGEM.AsInteger;
+             QtdRatPaletes    :=  MemItensQTD_PALETES.AsInteger;
+             APTO := APTO + 1;
+
+            End;
+          End;
+     FrmMain.UltVetor := APTO;
+
+  except
+   result := false;
+  End;
+
+end;
+
+function TDMLocal.LancaSemVetor(QtdPaletes:Integer;Apart, Lote, Serie: String;
+  Itens, Embalagens: Integer; Galpao, Numero, Rua, Andar: string;
+  out QdtRatItens, QtdRatEmbalagens, QtdRatPaletes: integer): Boolean;
+begin
+  result:=true;
+  try
+            MemItens.Insert;
+            MemItensID_INTERNO.AsInteger           := DmLocal.GerarID;
+            MemItensNROPEDIDO.AsInteger            := 0;
+            MemItensFILIAL.AsString                := QryItensFILIAL.AsString;
+            MemItensRESPONSAVEL.AsString           := QryItensRESPONSAVEL.AsString;
+            MemItensCODIGO.AsString                := QryItensCODIGO.AsString;
+            MemItensDESCRICAO.AsString             := QryItensDESCRICAO.AsString;
+            MemItensQTD_LIDA.AsInteger             := 0;
+            MemItensQTD_TOTAL.AsInteger            := Itens;
+            MemItensQTD_PALETES.AsInteger          := QtdPaletes;
+            MemItensQTD_EMBALAGEM.AsInteger        := Embalagens;
+            MemItensGALPAO.AsString                := Galpao;
+            MemItensNUMERO.AsString                := Numero;
+            MemItensRUA.AsString                   := Rua;
+            MemItensANDAR.AsString                 := Andar;
+            MemItensAPTO.AsString                  := Apart;
+            MemItensTIPO.AsString                  := 'ENTRADA RATEADA';
+            MemItensNRONOTA.AsInteger              := QryItensNRONOTA.AsInteger;
+            MemItensCNPJ.AsString                  := QryItensCNPJ.AsString;
+
+            if Serie=EmptyStr then
+            MemItensSERIE.AsString                 := QryItensSERIE.AsString
+            else
+            MemItensSERIE.AsString                 := Serie;
+
+            if Lote = EmptyStr then
+            MemItensLOTE.AsString                  := 'SEM LOTE'else
+            MemItensLOTE.AsString                  := Lote;
+
+            MemItensNR_ENTRADA.AsInteger           := QryItensNR_ENTRADA.AsInteger;
+            MemItensPESO.AsFloat                   := QryItensPeso.AsFloat;
+            MemItensPESO_UNI_RATEADO.AsFloat       := QryItensPESO.AsFloat;
+            MemItensVLR_TOTAL.AsCurrency           := QryItensVLR_TOTAL.AsCurrency;
+            MemItensVLR_UNITARIO.AsCurrency        := QryItensVLR_UNITARIO.AsCurrency;
+            MemItensVLR_UNI_RATEADO.AsCurrency     := (QryItensVLR_UNITARIO.AsCurrency/itens);
+            MemItens.Post;
+
+             QdtRatItens      :=  MemItensQTD_TOTAL.AsInteger;
+             QtdRatEmbalagens :=  MemItensQTD_EMBALAGEM.AsInteger;
+             QtdRatPaletes    :=  MemItensQTD_PALETES.AsInteger;
+
+  except
+   result:=false;
+  end;
+
+end;
+
+procedure TDMLocal.BuscarNotas(Conferente:string);
+begin
+  QryFila.Active := False;
+  QryFila.SQL.Clear;
+  QryFila.SQL.Add('SELECT * FROM TBL_NOTASPORTARIA');
+  QryFila.SQL.Add('WHERE  INTEGRADO=FALSE AND STATUS<>''F'' ');
+  QryFila.SQL.Add('ORDER BY NR_ENTRADA ');
+  QryFila.Active := true;
+end;
+
+procedure TDMLocal.BuscarNotasEntrada(UND: string; Entrada: Integer);
+begin
+  QryNotas.Active := False;
+  QryNotas.SQL.Clear;
+  QryNotas.SQL.Add('SELECT * FROM TBL_NOTAS');
+  QryNotas.SQL.Add('WHERE   ');
+  QryNotas.SQL.Add('UNDENTRADA=:UND AND NRENTRADA=:ENTRADA');
+  QryNotas.SQL.Add('ORDER BY NRENTRADA ');
+  QryNotas.ParamByName('UND').AsString:= UND;
+  QryNotas.ParamByName('ENTRADA').AsInteger:= Entrada;
+  QryNotas.Active := true;
+end;
+
+function TDMLocal.CalculaQtdPedido: integer;
+begin
+  QryAux.Active := false;
+  QryAux.SQL.Clear;
+  QryAUx.SQL.Add('SELECT * FROM TBL_PEDIDOS');
+  QryAux.Active := True;
+  result := QryAux.RecordCount;
+
+  QryAux.Active := false;
+end;
+
+procedure TDMLocal.ConexLocalBeforeConnect(Sender: TObject);
+begin
+  {$IFDEF MSWINDOWS}
+   ConexLocal.Params.values['OpenMode'] := 'ReadWrite';
+   ConexLocal.Params.values['Database'] := 'C:\Mobile\database\stw_conferencia.db';
+  {$ELSE}
+   ConexLocal.Params.values['OpenMode'] := 'ReadWrite';
+   ConexLocal.Params.values['Database'] := TPath.Combine(TPath.GetDocumentsPath,'stw_conferencia.db');
+  {$ENDIF}
+end;
+
+procedure TDMLocal.LimparLista(Sender: TObject; AVertScroll: TVertScrollBox;
+  ARectBase: String);
+  var
+   I      : integer;
+   IFrame : TRectangle;
+begin
+  AVertScroll.BeginUpdate;
+  for I := Pred(AVertScroll.Content.ChildrenCount) downto 0 do
+  Begin
+   if (AVertScroll.Content.Children[I] is TRectangle) then
+    Begin
+     if not (TRectangle(AVertScroll.Content.Children[I]).Name = ARectBase)  then
+     Begin
+      IFrame := AVertScroll.Content.Children[I] as TRectangle;
+      IFrame.DisposeOf;
+      IFrame := nil;
+     End;
+    End;
+
+  End;
+  AVertScroll.EndUpdate;
+
+
+end;
+
+
+
+function TDMLocal.LimpaString(sString, sSujeiras: String): String;
+var sStrLimpa   : String;
+    iTamanho    : Integer;
+begin
+   sStrLimpa    := '';
+
+   for iTamanho := 1 to Length(sString) do
+      if Pos(Copy(sString, iTamanho, 1), sSujeiras) <= 0 then
+         sStrLimpa  := sStrLimpa + Copy(sString, iTamanho, 1);
+
+   Result       := sStrLimpa;
+end;
+
+function TDMLocal.LocalizaItem(ID_PRODUTO:Integer):Boolean;
+begin
+
+   with qryItens do
+    begin
+       Close;
+       SQL.Clear;
+
+       SQL.Add('Select * from TBL_PEDIDOITENS');
+       SQL.Add('WHERE ');
+       SQL.Add('ID_INTERNO=:ID AND ATIVO=TRUE');
+
+       ParamByName('ID').AsInteger := ID_PRODUTO;
+
+
+       Open;
+       First;
+       if IsEmpty then
+       result := false else
+       result := true;
+    end;
+
+
+end;
+
+procedure TDMLocal.MaskText(const AEdit: TEdit; const Mask: string);
+var LAux :string;
+begin
+ if AEdit.MaxLength <> Mask.Length then
+  AEdit.MaxLength := Mask.Length;
+
+  LAux := AEdit.Text.Replace('.','',[rfReplaceAll]);
+  LAux := LAux.Replace('-','',[rfReplaceAll]);
+  LAux := LAux.Replace('(','',[rfReplaceAll]);
+  LAux := LAux.Replace(')','',[rfReplaceAll]);
+  LAux := LAux.Replace('/','',[rfReplaceAll]);
+  LAux := FormatMaskText(Mask+';0;_',LAux).Trim;
+
+  for var I :Integer := Laux.Length-1 downto 0 do
+  if not CharInSet(Laux.Chars[I], ['0'..'9']) then
+   Delete(LAux, I+1,1)
+   else
+   break;
+
+  TEdit(AEdit).Text:= LAux;
+  TEdit(AEdit).GoToTextEnd;
+end;
+
+procedure TDMLocal.PreparaParaEnvio(NRONOTA, NRENTRADA: INTEGER);
+begin
+  with QryItensConf do
+  begin
+     Close;
+     SQL.Clear;
+
+     SQL.Add('SELECT * FROM TBL_PEDIDOITENS');
+     SQL.Add('WHERE ');
+     SQL.Add('ATIVO=TRUE AND CONFERIDO=TRUE AND INTEGRADO=FALSE');
+
+     ParamByName('NRONOTA').AsInteger := NRONOTA;
+     
+     SQL.Add('ORDER BY NRONOTA,FINALIZADOR');
+
+     Open;
+     First;
+  end;
+end;
+
+function TDMLocal.Ratear: Boolean;
+var cont,ID :integer;
+    Finalizado :string;
+begin
+    cont := 0;
+    DmLocal.MemItens.First;
+    try
+     while not DmLocal.MemItens.Eof do
+     Begin
+      cont:= cont +1 ;
+      ID  := DmLocal.GerarID;
+      DmLocal.QryItens.Append;
+      DmLocal.QryItensID_INTERNO.AsInteger        := ID;
+      DmLocal.QryItensNROPEDIDO.AsInteger         := 0;
+      DmLocal.QryItensFILIAL.AsString             := DmLocal.MemItensFILIAL.AsString;
+      DmLocal.QryItensCODIGO.AsString             := DmLocal.MemItensCODIGO.AsString;
+      DmLocal.QryItensDESCRICAO.AsString          := DmLocal.MemItensDESCRICAO.AsString;
+      DmLocal.QryItensQTD_LIDA.AsInteger          := DmLocal.MemItensQTD_LIDA.AsInteger;
+      DmLocal.QryItensQTD_TOTAL.AsInteger         := DmLocal.MemItensQTD_TOTAL.Asinteger;
+      DmLocal.QryItensTIPO.AsString               := DmLocal.MemItensTIPO.AsString;
+      DMLocal.QryItensNRONOTA.AsInteger           := DmLocal.MemItensNRONOTA.AsInteger;
+      DmLocal.QryItensCNPJ.AsString               := DmLocal.MemItensCNPJ.AsString;
+      DmLocal.QryItensPESO.AsFloat                := Dmlocal.MemItensPESO.AsFloat;
+      DmLocal.QryItensUNIDADE.AsString            := DmLocal.MemItensUNIDADE.AsString;
+      DmLocal.QryItensGALPAO.AsString             := DmLocal.MemItensGALPAO.AsString;
+      DmLocal.QryItensNUMERO.AsString             := DmLocal.MemItensNUMERO.AsString;
+      DmLocal.QryItensRUA.AsString                := DmLocal.MemItensRUA.AsString;
+      DmLocal.QryItensANDAR.AsString              := DmLocal.MemItensANDAR.AsString;
+      DmLocal.QryItensAPTO.AsString               := DmLocal.MemItensAPTO.AsString;
+      DMLocal.QryItensCONFERIDO.AsBoolean         := True;
+      DMLocal.QryItensRATEIO.Value                := true;
+      DmLocal.QryItensSTATUS.Value                := 'N';
+      DmLocal.QryItensRESPONSAVEL.Value           := DmLocal.MemItensRESPONSAVEL.AsString;
+      DmLocal.QryItensLOTE.Value                  := DmLocal.MemItensLOTE.AsString;
+      if DmLocal.MemItensSERIE.AsString='' then
+      DmLocal.QryItensSERIE.Value                 := '1'
+      else
+      DmLocal.QryItensSERIE.Value                 := DmLocal.MemItensSERIE.AsString;
+      DmLocal.QryItensNR_ENTRADA.Value            := DMLocal.MemItensNR_ENTRADA.Value;
+      DmLocal.QryItensVLR_TOTAL.AsCurrency        := DmLocal.MemItensVLR_TOTAL.AsCurrency;
+      DmLocal.QryItensVLR_UNITARIO.AsString       := DmLocal.MemItensVLR_UNITARIO.AsString;
+      DmLocal.QryItensPESO.AsFloat                := DmLocal.MemItensPESO.AsFloat;
+      Dmlocal.QryItensPESO_UNI_RATEADO.AsFloat    := DmLocal.MemItensPESO_UNI_RATEADO.AsFloat;
+      DmLocal.QryItensVLR_UNI_RATEADO.AsCurrency  := DmLocal.MemItensVLR_UNI_RATEADO.AsCurrency;
+      DmLocal.QryItensQTD_EMBALAGEM.AsInteger     := DmLocal.MemItensQTD_EMBALAGEM.AsInteger;
+      DmLocal.QryItensQTD_PALETES.Value           := DmLocal.MemItensQTD_PALETES.AsInteger;
+      DmLocal.QryItensDCA.AsString                := 'C';
+
+
+      Finalizado:='F';
+
+      DmLocal.QryItensFINALIZADOR.AsString        := Finalizado;
+
+      DmLocal.QryItens.Post;
+      // retirado para o estorno dos itens
+
+
+      {  if EnviarNotas(
+             DmLocal.MemItensFilial.AsString,DmLocal.MemItensCNPJ.AsString,DmLocal.MemItensRESPONSAVEL.AsString,
+             DmLocal.MemItensLOTE.AsString,
+             DmLocal.MemItensSERIE.AsString,DmLocal.MemItensNRONOTA.asinteger.ToString,
+             DmLocal.MemItensCODIGO.AsString,
+             DmLocal.MemItensSERIE_PRODUTO.AsString,
+             DmLocal.MemItensQTD_TOTAL.AsInteger.ToString,
+             StringReplace(FloatToStr(DmLocal.MemItensVLR_TOTAL.AsFloat),',','.',[rfReplaceAll]),
+             DmLocal.MemItensQTD_EMBALAGEM.AsInteger.ToString,
+             DmLocal.MemItensQTD_PALETES.AsInteger.ToString,
+             'C',
+             DmLocal.MemItensGALPAO.AsString,
+             DmLocal.MemItensRUA.AsString,
+             DmLocal.MemItensNUMERO.AsString,
+             DMLocal.MemItensANDAR.AsString,
+             DmLocal.MemItensAPTO.AsString,
+             StringReplace(FloatToStr(DMLocal.MemItensPeso.AsFloat),',','.',[rfReplaceAll]),
+             StringReplace(FloatToStr(DMLocal.MemItensPeso.AsFloat),',','.',[rfReplaceAll]),
+             StringReplace(FormatFloat('#0.00',DmLocal.MemItensPESO.AsFloat / DmLocal.MemItensQTD_TOTAL.AsInteger),',','.',[rfReplaceAll]),
+             StringReplace(FormatFloat('#0.00',DmLocal.MemItensPESO.AsFloat / DmLocal.MemItensQTD_TOTAL.AsInteger),',','.',[rfReplaceAll]),
+             (Copy(FrmMain.motorista,0,20)),
+             Finalizado
+
+           ) then
+            DmLocal.AtualizaStatusItem(ID,'F',Finalizado)
+           else
+            DmLocal.AtualizaStatusItem(ID,'E',Finalizado);
+                                                            }
+      DmLocal.AtualizaStatusItem(ID,'E',Finalizado);
+      DmLocal.MemItens.Next;
+     End;
+      result := true;
+    except
+      result := false;
+    end;
+end;
+
+function TDMLocal.RestauraFinalizador(NRONOTA: INTEGER;
+  CODIGO: STRING): Boolean;
+begin
+  result := true;
+
+  QryAux.Close;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('SELECT * FROM TBL_PEDIDOITENS');
+  QryAux.SQL.Add('WHERE NRONOTA=:NT AND CODIGO=:COD');
+  QryAux.ParamByName('NT').AsInteger := NRONOTA;
+  QryAUx.ParamByName('COD').AsString := CODIGO;
+  QryAux.Open();
+  QryAux.Last;
+
+  Try
+   QryAux.Edit;
+   QryAux.FieldByName('FINALIZADOR').AsString:='F';
+   QryAux.Post;
+  except
+   result := false;
+  End;
+
+  QryAUx.Close;
+end;
+
+procedure TDMLocal.SetFrameClone(ARectBase: TRectangle; var AClone: TRectangle;
+  AScroll: TVertScrollBox; var APosition: Single; MClick:TNotifyEvent; MTap:TTapEvent;Tipo:string);
+begin
+  AClone                 := TRectangle(ARectBase.Clone(AScroll));
+  AClone.Parent          := AScroll;
+  AClone.Name            := Tipo + ARectBase.Tag.ToString;
+  AClone.Position.Y      := APosition;
+  AClone.Position.X      := 4;
+  AClone.Height          := ARectBase.Height;
+  {$IFDEF MSWINDOWS}
+   AClone.Width          := AScroll.Width - 24;
+  {$ELSE}
+   AClone.Width          := AScroll.Width - 8;
+  {$ENDIF}
+  ARectBase.Opacity      := 1;
+  AClone.Visible         := True;
+  APosition              := APosition + ARectBase.Height + 4;
+  AClone.OnClick         := MClick;
+  AClone.OnTap           := MTap;
+end;
+
+
+function TDMLocal.ValidaMotLocal(CPF: String): Boolean;
+begin
+  QryAux.Active := false;
+  QryAux.SQL.Clear;
+  Qryaux.SQL.Add('Select * from TBL_CONFERENTE');
+  QryAux.SQL.Add('Where CPF=:CPF');
+  QryAux.ParamByName('CPF').AsString := CPF;
+  QryAux.Active := True;
+
+  if QryAux.IsEmpty then
+  result:= false
+  else
+  Begin
+  FrmMain.motorista    := QryAUx.FieldByName('NOME').AsString;
+  FrmMain.motoristaCPF := QryAUx.FieldByName('CPF').AsString;
+   //VerificaPonto(CPF);
+  result:= true;
+  End;
+
+end;
+
+function TDMLocal.VerificaConferencia: Boolean;
+begin
+  if QryFilaTIPO.AsString='DESCARGA' then
+  Begin
+    QryAux.Close;
+    QryAUx.SQL.Clear;
+    QryAUx.SQL.Add('SELECT * FROM TBL_PEDIDOITENS');
+    QryAux.SQL.Add('WHERE NRONOTA=:NOTA AND CNPJ=:CLIENTE AND STATUS=''N''  ');
+    QryAux.ParamByName('NOTA').AsInteger:= QryItensNRONOTA.AsInteger;
+    QryAux.ParamByName('CLIENTE').AsString := QryItensCNPJ.AsString;
+    QryAux.Open;
+    if QryAux.IsEmpty then
+    result := true else
+    result := false;
+    QryAux.Close;
+  End else
+  if (QryFilaTIPO.AsString='CARGA') or (FrmMain.Origem='PEDIDO') then
+  Begin
+    QryAux.Close;
+    QryAUx.SQL.Clear;
+    QryAUx.SQL.Add('SELECT * FROM TBL_PEDIDOITENS');
+    QryAux.SQL.Add('WHERE NROPEDIDO=:NOTA  AND STATUS=''N''  ');
+    QryAux.ParamByName('NOTA').AsInteger:= QryItensNROPEDIDO.AsInteger;
+    QryAux.Open;
+    if QryAux.IsEmpty then
+    result := true else
+    result := false;
+    QryAux.Close;
+  End;
+
+end;
+
+procedure TDMLocal.VerificaConfiguracao;
+begin
+  QryConfig.Active :=false;
+  QryConfig.SQL.Clear;
+  QryConfig.SQL.Add('Select * from TBL_CONFIGURACAO');
+  QryConfig.Active := True;
+  QryConfig.First;
+  UsaCelular := QryConfig.FieldByName('USA_CELULAR').AsBoolean;
+  QryConfig.Close;
+end;
+
+function TDMLocal.VerificaNotasEmAberto(NR_ENTRADA: Integer): Boolean;
+begin
+  QryAux.Active := false;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('Select * From TBL_NOTAS');
+  QryAux.SQL.Add('WHERE NRENTRADA=:ENT AND STATUS<>''F'' ');
+  QryAux.ParamByName('ENT').AsInteger := NR_ENTRADA;
+  QryAux.Active := true;
+
+  if QryAux.IsEmpty then
+  result := false else
+  result := true;
+
+end;
+
+procedure TDMLocal.VerificaPonto(Motorista: string);
+begin
+  QryPonto.Active:=false;
+  QryPonto.ParamByName('MOT').AsString := motorista;
+  QryPonto.Active:= true;
+  if QryPontoSTATUS.AsString='' then
+  Begin
+  QryPonto.Insert;
+  QryPontoMOTORISTA.AsString := motorista;
+  QryPontoDATA.AsDateTime:= now;
+  QryPontoHORA_INICIO.asDateTime:= Time;
+  QryPontoULTIMA_ALTERACAO.AsDateTime:=now;
+  QryPonto.Post;
+  End;
+  if QryPonto.IsEmpty then
+  Begin
+  QryPonto.Insert;
+  QryPontoMOTORISTA.AsString := motorista;
+  QryPontoDATA.AsDateTime:= now;
+  QryPontoHORA_INICIO.asDateTime:= Time;
+  QryPontoULTIMA_ALTERACAO.AsDateTime:=now;
+  QryPonto.Post;
+  End;
+
+
+end;
+
+
+function TDMLocal.ConsultaItens(CNPJ:string;Nota:integer;Serie,Filial,Responsavel,Lote,produto:string): Boolean;
+begin
+
+  with qryItens do
+  begin
+     Close;
+     SQL.Clear;
+
+     SQL.Add('Select * from TBL_PEDIDOITENS');
+     SQL.Add('WHERE ');
+     SQL.Add('NRONOTA=:NRONOTA and CNPJ=:CNPJ AND ');
+     SQL.ADD('SERIE=:SERIE AND FILIAL=:FILIAL AND RESPONSAVEL=:RESP AND CODIGO=:PROD');
+     SQL.ADD('AND (ATIVO=TRUE OR ATIVO=FALSE)');
+
+     ParamByName('NRONOTA').AsInteger := NOTA;
+     ParamByName('CNPJ').AsString     := CNPJ;
+     ParamByName('SERIE').asstring    := SERIE;
+     ParamByName('FILIAL').asstring   := FILIAL;
+     ParamByName('RESP').asstring     := RESPONSAVEL;
+     ParamByName('PROD').asstring     := PRODUTO;
+
+     Open;
+
+   if QryItens.IsEmpty then
+    result := false
+    else
+    result:= true;
+
+  end;
+
+end;
+
+function TDMLocal.ConsultaItensPedido(Filial: string; Pedido: integer;Tipo:string; Sequencia: Integer): Boolean;
+begin
+   with qryItens do
+  begin
+     Close;
+     SQL.Clear;
+
+     SQL.Add('Select * from TBL_PEDIDOITENS');
+     SQL.Add('WHERE ');
+     SQL.Add('NROPEDIDO=:PED and FILIAL=:FIL AND ');
+     SQL.ADD('SEQUENCIA=:SEQ ');
+     SQL.ADD('AND ATIVO=TRUE');
+
+     ParamByName('PED').AsInteger     := Pedido;
+     ParamByName('FIL').AsString      := Filial;
+     //ParamByName('DCA').asstring      := Tipo;
+     ParamByName('SEQ').AsInteger     := Sequencia;
+
+     Open;
+
+   if QryItens.IsEmpty then
+    result := false
+    else
+    result:= true;
+
+  end;
+
+end;
+
+function TDMLocal.ConsultarNotas(Entrada:integer;Unidade:string): Boolean;
+begin
+   QryFila.Close;
+
+   QryFila.SQL.Clear;
+
+   QryFila.SQL.Add('SELECT * FROM TBL_NOTASPORTARIA');
+   QryFila.SQL.Add('WHERE NR_ENTRADA=:ENT AND UND_ARMAZEN=:UND');
+
+   QryFila.ParamByName('ENT').AsInteger:= Entrada;
+   QryFila.ParamByName('UND').AsString := Unidade;
+
+   QryFila.SQL.Add('order by NR_ENTRADA, UND_ARMAZEN');
+
+   QryFila.Open;
+
+   if QryFila.IsEmpty then
+    result := false
+    else
+    result:= true;
+
+end;
+
+
+
+
+function TDMLocal.ConsultarNotasEntrada(Entrada, Nota: integer; Unidade,CNPJ: string): Boolean;
+begin
+   QryNotas.Close;
+
+   QryNotas.SQL.Clear;
+
+   QryNotas.SQL.Add('SELECT * FROM TBL_NOTAS');
+   QryNotas.SQL.Add('WHERE NRENTRADA=:ENT AND UNDENTRADA=:UND AND NRNOTA=:NOTA AND CNPJ=:CNPJ');
+
+   QryNotas.ParamByName('ENT').AsInteger   := Entrada;
+   QryNotas.ParamByName('NOTA').AsInteger  := Nota;
+   QryNotas.ParamByName('UND').AsString    := Unidade;
+   QryNotas.ParamByName('CNPJ').AsString   := CNPJ;
+
+   QryNotas.SQL.Add('order by NRENTRADA, UNDENTRADA');
+
+   QryNotas.Open;
+
+   if QryNotas.IsEmpty then
+    result := false
+    else
+    result:= true;
+
+end;
+
+
+
+procedure TDMLocal.DeletarEntradas;
+begin
+ try
+  QryAux.Active := False;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('Delete from TBL_NOTASPORTARIA WHERE STATUS=''F'' ');
+  QryAux.ExecSQL;
+  QryAux.Active := False;
+ except
+  exit
+ end;
+end;
+
+procedure TDMLocal.DeletarItens;
+begin
+ try
+  QryAux.Active := False;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('Delete from TBL_PEDIDOITENS WHERE CONFERIDO=TRUE OR STATUS=''R'' ');
+  QryAux.ExecSQL;
+  QryAux.Active := False;
+ except
+  exit
+ end;
+end;
+
+procedure TDMLocal.DeletarNotas;
+begin
+ try
+  QryAux.Active := false;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('Delete from TBL_NOTAS where Status=''F'' ');
+  QryAux.ExecSQL;
+  QryAux.Active := false;
+ except
+  exit
+ end;
+end;
+
+procedure TDMLocal.DeletarPedidos;
+begin
+ try
+  QryAux.Active := False;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('Delete from TBL_PEDIDOS WHERE Status=''F'' ');
+  QryAux.ExecSQL;
+  QryAux.Active := False;
+ except
+  exit
+ end;
+end;
+
+function  TDMLocal.DevolveItens(NroNota,NrEntrada: integer) :Boolean;
+begin
+
+ //Itens sem Rateio
+ try
+  QryAux.Active :=false;
+  QryAux.SQL.Clear;
+  QryAUx.SQL.Add('update TBL_PEDIDOITENS');
+  QryAux.SQL.Add('set Conferido=false,ATIVO=TRUE,GALPAO=NULL,NUMERO=NULL,RUA=NULL,ANDAR=NULL,APTO=NULL,STATUS=''N''  ');
+  QryAux.SQL.Add('where NRONOTA=:NOTA and NR_ENTRADA=:ENT');
+  QryAUx.ParamByName('NOTA').AsInteger := NRONota;
+  QryAux.ParamByName('ENT').AsInteger  := NrEntrada;
+  QryAux.ExecSQL;
+ except
+  result:=false;
+  exit
+ end;
+
+
+  //Com Rateio
+  Try
+  QryAux.Active :=false;
+  QryAux.SQL.Clear;
+  QryAUx.SQL.Add('delete from TBL_PEDIDOITENS');
+  QryAux.SQL.Add('where NRONOTA=:NOTA and NR_ENTRADA=:ENT AND RATEIO=TRUE');
+  QryAUx.ParamByName('NOTA').AsInteger := NRONota;
+  QryAux.ParamByName('ENT').AsInteger  := NrEntrada;
+  QryAux.ExecSQL;
+  except
+    result:=false;
+    exit
+  End;
+
+  result:=true;
+end;
+
+procedure TDMLocal.FinalizaBaixa;
+begin
+   QryBaixas.Edit;
+   QryBaixasINTEGRADO.AsString := 'S';
+   QryBaixas.Post;
+end;
+
+function TDMLocal.FinalizaEntrada: Boolean;
+begin
+ result := true;
+ Try
+ if DMRest.FinalizaServico then
+  Begin
+       DmLocal.AtualizaStatus('F','Entrada');
+       DmLocal.DeletarEntradas;
+       DmLocal.DeletarNotas;
+       DmLocal.DeletarItens;
+  End;
+ except
+  result := false;
+ End;
+
+
+end;
+
+
+function TDmLocal.ExisteItensNaoSincronizados : Boolean;
+Begin
+ try
+  QryAux.Active :=false;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('Select * from TBL_PEDIDOITENS');
+  QryAux.SQL.Add('where NR_ENTRADA=:NOTA AND NRONOTA=:NRNOTA AND CONFERIDO=FALSE and ATIVO=TRUE AND STATUS=''E'' ');
+  QryAux.ParamByName('Nota').AsInteger := QryFilaNR_ENTRADA.AsInteger;
+  QryAUx.ParamByName('NRNOTA').AsInteger := QryNotasNRNOTA.AsInteger;
+  QryAux.Active := True ;
+  if not  QryAux.IsEmpty then
+  result := true else
+  result := false;
+ except
+  result := false;
+ end;
+End;
+
+procedure TDMLocal.FinalizaNota;
+begin
+  QryFila.Edit;
+  QryFilaSTATUS.AsString := 'S' ;
+  QryFilaINTEGRADO.Value := True;
+
+
+  QryFila.Post;
+
+
+end;
+
+
+
+function TDMLocal.FinalizaPedido(NroPedido:integer): Boolean;
+begin
+ result:=true;
+ try
+
+    Qry_Pedidos.Edit;
+    Qry_PedidosFIM.AsDateTime := now;
+    Qry_Pedidos.Post;
+
+ except
+  result := false;
+ end;
+
+end;
+
+function TDMLocal.GerarID: integer;
+begin
+ try
+  QryAux.Active := false;
+  QryAux.SQL.Clear;
+  QryAux.SQL.Add('select (IFNULL(max(rowid),0) +1) as ID from TBL_PEDIDOITENS');
+  QryAUx.Active := true;
+  Result := QryAux.FieldByName('ID').AsInteger;
+
+  QryAUx.Active:= false;
+ except
+   exit
+ end;
+
+end;
+
+function TDMLocal.GravaConfiguracao: Boolean;
+begin
+  try
+   QryConfig.Active := false;
+   QryConfig.SQL.Clear;
+   QryConfig.SQL.Add('Select * from  TBL_CONFIGURACAO');
+   QryConfig.Active := false;
+   QryConfig.Open;
+   if QryConfig.IsEmpty then
+   QryConfig.Insert else
+   QryConfig.Edit;
+
+   QryConfigUSA_CELULAR.AsBoolean := UsaCelular;
+
+
+   try
+   QryConfig.Post;
+   Except
+    result := false;
+   end;
+  finally
+    result := true;
+  end;
+end;
+
+procedure TDMLocal.Habilita(estado: string);
+begin
+   if estado='Vazio' then
+   Begin
+
+    FrmNotas.rctIndisponivel.Visible:=true;
+    FrmNotas.rctDisponivel.Visible:=false;
+   End;
+   if estado='Inicia' then
+   Begin
+
+
+    FrmNotas.Memo1.Text:= 'Dia Iniciado - Estou Disponível';
+    FrmNotas.rctIndisponivel.Visible:=false;
+    FrmNotas.rctDisponivel.Visible:=true;
+   End;
+   if estado='Pausa' then
+   Begin
+
+     FrmNotas.Memo1.Text := 'Dia Pausado - Estou Indisponível';
+     FrmNotas.rctIndisponivel.Visible:=true;
+     FrmNotas.rctDisponivel.Visible:=false;
+    End else
+   if estado='Retorno' then
+    Begin
+
+      //Tipo := 'Retorno';
+      FrmNotas.Memo1.Text:= 'Dia Retomado - Estou Disponível';
+      FrmNotas.rctIndisponivel.Visible:=false;
+      FrmNotas.rctDisponivel.Visible:=true;
+    End;
+    if estado='Termino' then
+    Begin
+
+      //Tipo := 'Termino';
+      FrmNotas.Memo1.Text := 'Dia Terminado - Estou Indisponível';
+      FrmNotas.rctIndisponivel.Visible:=true;
+      FrmNotas.rctDisponivel.Visible:=false;
+    End;
+end;
+
+
+end.

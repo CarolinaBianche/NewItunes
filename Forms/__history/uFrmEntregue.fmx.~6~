@@ -1,0 +1,278 @@
+inherited FrmEntregue: TFrmEntregue
+  Caption = 'FrmTemplate1'
+  ClientHeight = 604
+  DesignerMasterStyle = 3
+  inherited lytGeral: TLayout
+    Size.Height = 604.000000000000000000
+    inherited rect_titulo: TRectangle
+      Size.Height = 70.994575500488280000
+      inherited lytBotoes: TLayout
+        inherited lbl_titulo: TLabel
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+        end
+        inherited speBtnMenu: TSpeedButton
+          OnClick = speBtnMenuClick
+        end
+      end
+    end
+    inherited vertLista: TVertScrollBox
+      Margins.Top = 150.000000000000000000
+      Size.Height = 454.000000000000000000
+      Viewport.Width = 324.000000000000000000
+      Viewport.Height = 454.000000000000000000
+      object Layout2: TLayout
+        Align = Top
+        Position.Y = 277.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 89.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 14
+        object rctAssintatura: TRectangle
+          Align = Contents
+          Fill.Color = claWhite
+          Margins.Top = 2.000000000000000000
+          Size.Width = 324.000000000000000000
+          Size.Height = 87.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFF2F2F2
+          Stroke.Thickness = 2.000000000000000000
+        end
+        object Label15: TLabel
+          Align = Top
+          StyledSettings = [Family, Style]
+          Opacity = 0.500000000000000000
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 10.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 314.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 10.000000000000000000
+          TextSettings.FontColor = xFF959595
+          Text = 'Assinatura do Cliente'
+          TabOrder = 1
+        end
+        object img_Assinatura: TImage
+          MultiResBitmap.Height = 80
+          MultiResBitmap.Width = 114
+          MultiResBitmap = <
+            item
+            end>
+          Align = Client
+          MarginWrapMode = Original
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Size.Width = 304.000000000000000000
+          Size.Height = 43.000000000000000000
+          Size.PlatformDefault = False
+          WrapMode = Stretch
+        end
+      end
+      object lyt_img_recb: TLayout
+        Align = Top
+        Position.Y = 120.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 157.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
+        object rctFoto: TRectangle
+          Align = Contents
+          Fill.Color = claWhite
+          Margins.Top = 2.000000000000000000
+          Size.Width = 324.000000000000000000
+          Size.Height = 155.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFFF2F2F2
+          Stroke.Thickness = 2.000000000000000000
+        end
+        object Label6: TLabel
+          Align = Top
+          StyledSettings = [Family, Style]
+          Opacity = 0.600000023841857900
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 10.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 314.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 10.000000000000000000
+          TextSettings.FontColor = xFF959595
+          Text = 'Comprovante'
+          TabOrder = 2
+        end
+        object imgFoto: TImage
+          MultiResBitmap = <
+            item
+            end>
+          Align = Client
+          MarginWrapMode = Original
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Size.Width = 304.000000000000000000
+          Size.Height = 111.000000000000000000
+          Size.PlatformDefault = False
+          WrapMode = Stretch
+        end
+      end
+      object lyt_recebedor: TLayout
+        Align = Top
+        Margins.Top = 20.000000000000000000
+        Position.Y = 80.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 10
+        object rec_login: TRectangle
+          Align = Contents
+          Fill.Color = claWhite
+          Locked = True
+          Size.Width = 324.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+        end
+        object EdtNome: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Client
+          StyleLookup = 'EdtCpfStyle1'
+          TabOrder = 2
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF959595
+          TextSettings.HorzAlign = Center
+          Margins.Top = 5.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Size.Width = 314.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          TextPrompt = 'Informe Recebedor'
+          StyledSettings = [Family, Style]
+        end
+      end
+      object lyt_recebedor_doc: TLayout
+        Align = Top
+        Margins.Top = 20.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 11
+        object Rectangle10: TRectangle
+          Align = Contents
+          Fill.Color = claWhite
+          Locked = True
+          Size.Width = 324.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+        end
+        object EdtRG: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Client
+          StyleLookup = 'EdtCpfStyle1'
+          TabOrder = 2
+          KeyboardType = NumberPad
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.FontColor = xFF959595
+          TextSettings.HorzAlign = Center
+          Margins.Top = 5.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Size.Width = 314.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          TextPrompt = 'Informe documento recebedor '
+          StyledSettings = [Family, Style]
+        end
+      end
+      object lytFinalizar: TLayout
+        Align = Bottom
+        Position.Y = 378.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 76.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 15
+        object rct_finalizarPonto: TRectangle
+          Align = Bottom
+          Fill.Color = xFFCC1616
+          Margins.Top = 10.000000000000000000
+          Position.Y = 32.000000000000000000
+          Size.Width = 324.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 4.000000000000000000
+          YRadius = 4.000000000000000000
+          object Label11: TLabel
+            Align = Client
+            StyledSettings = []
+            Locked = True
+            Size.Width = 324.000000000000000000
+            Size.Height = 44.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.Font.StyleExt = {00060000000000000004000000}
+            TextSettings.FontColor = claWhite
+            TextSettings.HorzAlign = Center
+            Text = 'Finalizar Entrega'
+          end
+        end
+      end
+      object lytFotoAssinatura: TLayout
+        Align = Top
+        Position.Y = 366.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 42.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object Rectangle1: TRectangle
+          Align = Contents
+          Fill.Color = xFFEFEFEF
+          Size.Width = 324.000000000000000000
+          Size.Height = 42.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          object btnAssintatura: TButton
+            Align = Right
+            IconTintColor = xFF434343
+            Margins.Right = 15.000000000000000000
+            Position.X = 261.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'composetoolbutton'
+            TabOrder = 0
+            Text = 'btnAssinatura'
+            OnClick = btnAssintaturaClick
+          end
+          object btnFoto: TButton
+            Align = Left
+            IconTintColor = xFF434343
+            Margins.Left = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'cameratoolbutton'
+            TabOrder = 1
+            Text = 'Take Photo'
+            OnClick = btnFotoClick
+          end
+        end
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 248
+    Top = 419
+    object actListTirarFoto: TTakePhotoFromCameraAction
+      Category = 'Media Library'
+      OnDidFinishTaking = actListTirarFotoDidFinishTaking
+    end
+  end
+end

@@ -1,0 +1,1038 @@
+object DMLocal: TDMLocal
+  OldCreateOrder = False
+  Height = 395
+  Width = 620
+  object ConexLocal: TFDConnection
+    Params.Strings = (
+      'Database=C:\mobile\database\stw_conferencia.db'
+      'DriverID=SQLite')
+    LoginPrompt = False
+    BeforeConnect = ConexLocalBeforeConnect
+    Left = 40
+    Top = 16
+  end
+  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
+    Left = 144
+    Top = 16
+  end
+  object QryFila: TFDQuery
+    Connection = ConexLocal
+    UpdateOptions.AssignedValues = [uvCheckUpdatable, uvAutoCommitUpdates]
+    SQL.Strings = (
+      'SELECT * FROM TBL_NOTASPORTARIA')
+    Left = 144
+    Top = 140
+    object QryFilaNRONOTA: TFloatField
+      FieldName = 'NRONOTA'
+      Origin = 'NRONOTA'
+    end
+    object QryFilaDATA_ENTRADA: TDateTimeField
+      FieldName = 'DATA_ENTRADA'
+      Origin = 'DATA_ENTRADA'
+    end
+    object QryFilaVEICULO: TStringField
+      FieldName = 'VEICULO'
+      Origin = 'VEICULO'
+    end
+    object QryFilaCARRETA: TStringField
+      FieldName = 'CARRETA'
+      Origin = 'CARRETA'
+    end
+    object QryFilaMOTORISTA: TStringField
+      FieldName = 'MOTORISTA'
+      Origin = 'MOTORISTA'
+      Size = 200
+    end
+    object QryFilaCLIENTE_NOME: TStringField
+      FieldName = 'CLIENTE_NOME'
+      Origin = 'CLIENTE_NOME'
+      Size = 200
+    end
+    object QryFilaCLIENTE_CNPJ: TStringField
+      FieldName = 'CLIENTE_CNPJ'
+      Origin = 'CLIENTE_CNPJ'
+    end
+    object QryFilaDOCA: TStringField
+      FieldName = 'DOCA'
+      Origin = 'DOCA'
+    end
+    object QryFilaTIPO: TStringField
+      FieldName = 'TIPO'
+      Origin = 'TIPO'
+    end
+    object QryFilaSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+    object QryFilaINTEGRADO: TBooleanField
+      FieldName = 'INTEGRADO'
+      Origin = 'INTEGRADO'
+      Required = True
+    end
+    object QryFilaUND_ARMAZEN: TStringField
+      FieldName = 'UND_ARMAZEN'
+      Origin = 'UND_ARMAZEN'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Size = 3
+    end
+    object QryFilaNR_ENTRADA: TIntegerField
+      FieldName = 'NR_ENTRADA'
+      Origin = 'NR_ENTRADA'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object QryFilaFALAR_COM: TStringField
+      FieldName = 'FALAR_COM'
+      Origin = 'FALAR_COM'
+    end
+    object QryFilaCONDOMINIO: TStringField
+      FieldName = 'CONDOMINIO'
+      Origin = 'CONDOMINIO'
+      Size = 50
+    end
+    object QryFilaDATA_INICIO: TDateTimeField
+      FieldName = 'DATA_INICIO'
+      Origin = 'DATA_INICIO'
+    end
+    object QryFilaDATA_TERMINO: TDateTimeField
+      FieldName = 'DATA_TERMINO'
+      Origin = 'DATA_TERMINO'
+    end
+    object QryFilaDATA_SAIDA: TDateTimeField
+      FieldName = 'DATA_SAIDA'
+      Origin = 'DATA_SAIDA'
+    end
+  end
+  object QryAux: TFDQuery
+    Connection = ConexLocal
+    Left = 448
+    Top = 16
+  end
+  object QryAtv: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'SELECT * FROM TBL_ATIVIDADES ')
+    Left = 16
+    Top = 136
+  end
+  object QryPonto: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'Select max(rowid),* from TBL_PONTO where MOTORISTA=:MOT'
+      'and Ultima_alteracao=date('#39'now'#39','#39'localtime'#39' )')
+    Left = 16
+    Top = 184
+    ParamData = <
+      item
+        Name = 'MOT'
+        ParamType = ptInput
+      end>
+    object QryPontoMOTORISTA: TStringField
+      FieldName = 'MOTORISTA'
+      Origin = 'MOTORISTA'
+    end
+    object QryPontoDATA: TDateTimeField
+      FieldName = 'DATA'
+      Origin = 'DATA'
+    end
+    object QryPontoHORA_INICIO: TTimeField
+      FieldName = 'HORA_INICIO'
+      Origin = 'HORA_INICIO'
+    end
+    object QryPontoHORA_FIM: TTimeField
+      FieldName = 'HORA_FIM'
+      Origin = 'HORA_FIM'
+    end
+    object QryPontoTOTAL_HORAS_ATIVO: TDateTimeField
+      FieldName = 'TOTAL_HORAS_ATIVO'
+      Origin = 'TOTAL_HORAS_ATIVO'
+    end
+    object QryPontoTOTAL_HORAS_PARADO: TDateTimeField
+      FieldName = 'TOTAL_HORAS_PARADO'
+      Origin = 'TOTAL_HORAS_PARADO'
+    end
+    object QryPontoSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      FixedChar = True
+      Size = 1
+    end
+    object QryPontoULTIMA_ALTERACAO: TDateField
+      FieldName = 'ULTIMA_ALTERACAO'
+      Origin = 'ULTIMA_ALTERACAO'
+    end
+    object QryPontoOBSERVACAO: TWideStringField
+      FieldName = 'OBSERVACAO'
+      Origin = 'OBSERVACAO'
+      Size = 500
+    end
+  end
+  object QryBaixas: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'SELECT  TIPO_DOCUMENTO,FIL_ORIG,NR_DOCUMENTO,SERIE,FIL_ROMANEIO,'
+      '    ROMANEIO,COD_OCORRENCIA,MOTIVO,RECEBEDOR,RG_RECEBEDOR,'
+      
+        '    OBSERVACAO,LONGITUDE,LATITUDE,EFETIVADO,COMPROVANTE,INTEGRAD' +
+        'O,QTD_COLETADA,QTD_ENTREGUE,'
+      
+        '    DESTINATARIO,TIPO,ASSINATURA,VOLUMES,QTD_COLETADA,QTD_ENTREG' +
+        'UE,TIPO_LANCAMENTO'
+      'FROM TBL_MOBILEDOCS'
+      'WHERE TIPO_DOCUMENTO =:TIPO_DOCUMENTO'
+      'AND    FIL_ORIG      =:FIL_ORIG'
+      'AND   NR_DOCUMENTO   =:NR_DOCUMENTO'
+      'AND   SERIE          =:SERIE'
+      'AND FIL_ROMANEIO     =:FIL_ROMANEIO'
+      'AND     ROMANEIO     =:ROMANEIO'
+      'AND     TIPO         =:TIPO')
+    Left = 17
+    Top = 234
+    ParamData = <
+      item
+        Name = 'TIPO_DOCUMENTO'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FIL_ORIG'
+        ParamType = ptInput
+      end
+      item
+        Name = 'NR_DOCUMENTO'
+        ParamType = ptInput
+      end
+      item
+        Name = 'SERIE'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FIL_ROMANEIO'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ROMANEIO'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TIPO'
+        ParamType = ptInput
+      end>
+    object QryBaixasTIPO_DOCUMENTO: TStringField
+      FieldName = 'TIPO_DOCUMENTO'
+      Origin = 'TIPO_DOCUMENTO'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Size = 2
+    end
+    object QryBaixasFIL_ORIG: TStringField
+      FieldName = 'FIL_ORIG'
+      Origin = 'FIL_ORIG'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Size = 3
+    end
+    object QryBaixasNR_DOCUMENTO: TIntegerField
+      FieldName = 'NR_DOCUMENTO'
+      Origin = 'NR_DOCUMENTO'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object QryBaixasSERIE: TWideStringField
+      FieldName = 'SERIE'
+      Origin = 'SERIE'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Size = 32767
+    end
+    object QryBaixasFIL_ROMANEIO: TStringField
+      FieldName = 'FIL_ROMANEIO'
+      Origin = 'FIL_ROMANEIO'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Size = 3
+    end
+    object QryBaixasROMANEIO: TIntegerField
+      FieldName = 'ROMANEIO'
+      Origin = 'ROMANEIO'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object QryBaixasCOD_OCORRENCIA: TStringField
+      FieldName = 'COD_OCORRENCIA'
+      Origin = 'COD_OCORRENCIA'
+      Size = 5
+    end
+    object QryBaixasMOTIVO: TStringField
+      FieldName = 'MOTIVO'
+      Origin = 'MOTIVO'
+      Size = 100
+    end
+    object QryBaixasRECEBEDOR: TStringField
+      FieldName = 'RECEBEDOR'
+      Origin = 'RECEBEDOR'
+      Size = 80
+    end
+    object QryBaixasRG_RECEBEDOR: TStringField
+      FieldName = 'RG_RECEBEDOR'
+      Origin = 'RG_RECEBEDOR'
+      Size = 18
+    end
+    object QryBaixasOBSERVACAO: TStringField
+      FieldName = 'OBSERVACAO'
+      Origin = 'OBSERVACAO'
+      Size = 100
+    end
+    object QryBaixasLONGITUDE: TFloatField
+      FieldName = 'LONGITUDE'
+      Origin = 'LONGITUDE'
+    end
+    object QryBaixasLATITUDE: TFloatField
+      FieldName = 'LATITUDE'
+      Origin = 'LATITUDE'
+    end
+    object QryBaixasEFETIVADO: TStringField
+      FieldName = 'EFETIVADO'
+      Origin = 'EFETIVADO'
+      Size = 3
+    end
+    object QryBaixasINTEGRADO: TStringField
+      FieldName = 'INTEGRADO'
+      Origin = 'INTEGRADO'
+      Size = 1
+    end
+    object QryBaixasCOMPROVANTE: TBlobField
+      FieldName = 'COMPROVANTE'
+      Origin = 'COMPROVANTE'
+    end
+    object QryBaixasdestinatario: TStringField
+      FieldName = 'destinatario'
+    end
+    object QryBaixasQTD_COLETADA: TFloatField
+      FieldName = 'QTD_COLETADA'
+    end
+    object QryBaixasQTD_ENTREGUE: TFloatField
+      FieldName = 'QTD_ENTREGUE'
+    end
+    object QryBaixasTIPO: TStringField
+      FieldName = 'TIPO'
+    end
+    object QryBaixasASSINATURA: TBlobField
+      FieldName = 'ASSINATURA'
+    end
+    object QryBaixasVOLUMES: TFloatField
+      FieldName = 'VOLUMES'
+    end
+    object QryBaixasTIPO_LANCAMENTO: TStringField
+      FieldName = 'TIPO_LANCAMENTO'
+    end
+  end
+  object Qry_Pedidos: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'SELECT * FROM TBL_PEDIDOS')
+    Left = 448
+    Top = 280
+    object Qry_PedidosCLIENTE_CNPJ: TStringField
+      FieldName = 'CLIENTE_CNPJ'
+      Origin = 'CLIENTE_CNPJ'
+    end
+    object Qry_PedidosNROPEDIDO: TIntegerField
+      FieldName = 'NROPEDIDO'
+      Origin = 'NROPEDIDO'
+      Required = True
+    end
+    object Qry_PedidosPEDIDO_FILIAL: TStringField
+      FieldName = 'PEDIDO_FILIAL'
+      Origin = 'PEDIDO_FILIAL'
+      Size = 10
+    end
+    object Qry_PedidosINICIO: TDateTimeField
+      FieldName = 'INICIO'
+      Origin = 'INICIO'
+    end
+    object Qry_PedidosFIM: TDateTimeField
+      FieldName = 'FIM'
+      Origin = 'FIM'
+    end
+    object Qry_PedidosCLIENTE: TStringField
+      FieldName = 'CLIENTE'
+      Origin = 'CLIENTE'
+      Size = 200
+    end
+    object Qry_PedidosSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      FixedChar = True
+      Size = 3
+    end
+    object Qry_PedidosData_Emissao: TDateTimeField
+      FieldName = 'Data_Emissao'
+      Origin = 'Data_Emissao'
+    end
+    object Qry_PedidosESPECIE: TStringField
+      FieldName = 'ESPECIE'
+      Origin = 'ESPECIE'
+    end
+    object Qry_PedidosQDT_TOTAL: TFloatField
+      FieldName = 'QDT_TOTAL'
+      Origin = 'QDT_TOTAL'
+    end
+  end
+  object QryItens: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'select * from TBL_PEDIDOITENS')
+    Left = 448
+    Top = 152
+    object QryItensFILIAL: TStringField
+      FieldName = 'FILIAL'
+      Origin = 'FILIAL'
+      Size = 10
+    end
+    object QryItensCNPJ: TStringField
+      FieldName = 'CNPJ'
+      Origin = 'CNPJ'
+      Size = 32767
+    end
+    object QryItensRESPONSAVEL: TStringField
+      FieldName = 'RESPONSAVEL'
+      Origin = 'RESPONSAVEL'
+      Size = 100
+    end
+    object QryItensLOTE: TStringField
+      FieldName = 'LOTE'
+      Origin = 'LOTE'
+      Size = 100
+    end
+    object QryItensSERIE: TStringField
+      FieldName = 'SERIE'
+      Origin = 'SERIE'
+      Size = 100
+    end
+    object QryItensNRONOTA: TFloatField
+      FieldName = 'NRONOTA'
+      Origin = 'NRONOTA'
+    end
+    object QryItensDESCRICAO: TStringField
+      FieldName = 'DESCRICAO'
+      Origin = 'DESCRICAO'
+      Size = 200
+    end
+    object QryItensNROPEDIDO: TIntegerField
+      FieldName = 'NROPEDIDO'
+      Origin = 'NROPEDIDO'
+    end
+    object QryItensSEQUENCIA: TFloatField
+      FieldName = 'SEQUENCIA'
+      Origin = 'SEQUENCIA'
+    end
+    object QryItensTIPO: TStringField
+      FieldName = 'TIPO'
+      Origin = 'TIPO'
+      Size = 32767
+    end
+    object QryItensPESO: TFloatField
+      FieldName = 'PESO'
+      Origin = 'PESO'
+    end
+    object QryItensUNIDADE: TStringField
+      FieldName = 'UNIDADE'
+      Origin = 'UNIDADE'
+      Size = 32767
+    end
+    object QryItensRATEIO: TBooleanField
+      FieldName = 'RATEIO'
+      Origin = 'RATEIO'
+    end
+    object QryItensATIVO: TBooleanField
+      FieldName = 'ATIVO'
+      Origin = 'ATIVO'
+    end
+    object QryItensSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Required = True
+    end
+    object QryItensGALPAO: TStringField
+      FieldName = 'GALPAO'
+      Origin = 'GALPAO'
+    end
+    object QryItensNUMERO: TStringField
+      FieldName = 'NUMERO'
+      Origin = 'NUMERO'
+    end
+    object QryItensRUA: TStringField
+      FieldName = 'RUA'
+      Origin = 'RUA'
+    end
+    object QryItensANDAR: TStringField
+      FieldName = 'ANDAR'
+      Origin = 'ANDAR'
+    end
+    object QryItensAPTO: TStringField
+      FieldName = 'APTO'
+      Origin = 'APTO'
+    end
+    object QryItensCONFERIDO: TBooleanField
+      FieldName = 'CONFERIDO'
+      Origin = 'CONFERIDO'
+      Required = True
+    end
+    object QryItensNR_ENTRADA: TIntegerField
+      FieldName = 'NR_ENTRADA'
+      Origin = 'NR_ENTRADA'
+    end
+    object QryItensDCA: TStringField
+      FieldName = 'DCA'
+      Origin = 'DCA'
+      FixedChar = True
+      Size = 3
+    end
+    object QryItensVLR_UNITARIO: TCurrencyField
+      FieldName = 'VLR_UNITARIO'
+      Origin = 'VLR_UNITARIO'
+    end
+    object QryItensVLR_TOTAL: TCurrencyField
+      FieldName = 'VLR_TOTAL'
+      Origin = 'VLR_TOTAL'
+    end
+    object QryItensVLR_UNI_RATEADO: TCurrencyField
+      FieldName = 'VLR_UNI_RATEADO'
+      Origin = 'VLR_UNI_RATEADO'
+    end
+    object QryItensPESO_UNI_RATEADO: TFloatField
+      FieldName = 'PESO_UNI_RATEADO'
+      Origin = 'PESO_UNI_RATEADO'
+    end
+    object QryItensSERIE_PRODUTO: TStringField
+      FieldName = 'SERIE_PRODUTO'
+      Origin = 'SERIE_PRODUTO'
+    end
+    object QryItensPESO_BRUTO: TFloatField
+      FieldName = 'PESO_BRUTO'
+      Origin = 'PESO_BRUTO'
+    end
+    object QryItensID_INTERNO: TIntegerField
+      FieldName = 'ID_INTERNO'
+      Origin = 'ID_INTERNO'
+    end
+    object QryItensNOME_CLIENTE: TStringField
+      FieldName = 'NOME_CLIENTE'
+      Origin = 'NOME_CLIENTE'
+      Size = 200
+    end
+    object QryItensid_entrada_prod: TIntegerField
+      FieldName = 'id_entrada_prod'
+      Origin = 'id_entrada_prod'
+    end
+    object QryItensCODIGO: TStringField
+      FieldName = 'CODIGO'
+      Origin = 'CODIGO'
+      Size = 50
+    end
+    object QryItensQTD_LIDA: TFloatField
+      FieldName = 'QTD_LIDA'
+      Origin = 'QTD_LIDA'
+    end
+    object QryItensQTD_TOTAL: TFloatField
+      FieldName = 'QTD_TOTAL'
+      Origin = 'QTD_TOTAL'
+    end
+    object QryItensQTD_EMBALAGEM: TIntegerField
+      FieldName = 'QTD_EMBALAGEM'
+      Origin = 'QTD_EMBALAGEM'
+    end
+    object QryItensQTD_PALETES: TIntegerField
+      FieldName = 'QTD_PALETES'
+      Origin = 'QTD_PALETES'
+    end
+    object QryItensFINALIZADOR: TIntegerField
+      FieldName = 'FINALIZADOR'
+      Origin = 'FINALIZADOR'
+    end
+    object QryItensINTEGRADO: TBooleanField
+      FieldName = 'INTEGRADO'
+      Origin = 'INTEGRADO'
+    end
+    object QryItensLOTE_NOVO: TStringField
+      FieldName = 'LOTE_NOVO'
+      Origin = 'LOTE_NOVO'
+    end
+  end
+  object MemItens: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 272
+    Top = 296
+    object MemItensFILIAL: TStringField
+      FieldName = 'FILIAL'
+      Origin = 'FILIAL'
+      Size = 10
+    end
+    object MemItensCNPJ: TStringField
+      FieldName = 'CNPJ'
+      Origin = 'CNPJ'
+      Size = 32767
+    end
+    object MemItensRESPONSAVEL: TStringField
+      FieldName = 'RESPONSAVEL'
+      Origin = 'RESPONSAVEL'
+      Size = 100
+    end
+    object MemItensLOTE: TStringField
+      FieldName = 'LOTE'
+      Origin = 'LOTE'
+      Size = 100
+    end
+    object MemItensSERIE: TStringField
+      FieldName = 'SERIE'
+      Origin = 'SERIE'
+      Size = 100
+    end
+    object MemItensNRONOTA: TFloatField
+      FieldName = 'NRONOTA'
+      Origin = 'NRONOTA'
+    end
+    object MemItensDESCRICAO: TStringField
+      FieldName = 'DESCRICAO'
+      Origin = 'DESCRICAO'
+      Size = 200
+    end
+    object MemItensNROPEDIDO: TIntegerField
+      FieldName = 'NROPEDIDO'
+      Origin = 'NROPEDIDO'
+    end
+    object MemItensSEQUENCIA: TFloatField
+      FieldName = 'SEQUENCIA'
+      Origin = 'SEQUENCIA'
+    end
+    object MemItensQTD_LIDA: TIntegerField
+      FieldName = 'QTD_LIDA'
+      Origin = 'QTD_LIDA'
+    end
+    object MemItensQTD_TOTAL: TIntegerField
+      FieldName = 'QTD_TOTAL'
+      Origin = 'QTD_TOTAL'
+    end
+    object MemItensTIPO: TStringField
+      FieldName = 'TIPO'
+      Origin = 'TIPO'
+      Size = 32767
+    end
+    object MemItensPESO: TFloatField
+      FieldName = 'PESO'
+      Origin = 'PESO'
+    end
+    object MemItensUNIDADE: TStringField
+      FieldName = 'UNIDADE'
+      Origin = 'UNIDADE'
+      Size = 32767
+    end
+    object MemItensRATEIO: TBooleanField
+      FieldName = 'RATEIO'
+      Origin = 'RATEIO'
+    end
+    object MemItensATIVO: TBooleanField
+      FieldName = 'ATIVO'
+      Origin = 'ATIVO'
+    end
+    object MemItensSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Required = True
+    end
+    object MemItensGALPAO: TStringField
+      FieldName = 'GALPAO'
+      Origin = 'GALPAO'
+    end
+    object MemItensNUMERO: TStringField
+      FieldName = 'NUMERO'
+      Origin = 'NUMERO'
+    end
+    object MemItensRUA: TStringField
+      FieldName = 'RUA'
+      Origin = 'RUA'
+    end
+    object MemItensANDAR: TStringField
+      FieldName = 'ANDAR'
+      Origin = 'ANDAR'
+    end
+    object MemItensAPTO: TStringField
+      FieldName = 'APTO'
+      Origin = 'APTO'
+    end
+    object MemItensQTD_PALETES: TIntegerField
+      FieldName = 'QTD_PALETES'
+      Origin = 'QTD_PALETES'
+    end
+    object MemItensCONFERIDO: TBooleanField
+      FieldName = 'CONFERIDO'
+      Origin = 'CONFERIDO'
+      Required = True
+    end
+    object MemItensNR_ENTRADA: TIntegerField
+      FieldName = 'NR_ENTRADA'
+      Origin = 'NR_ENTRADA'
+    end
+    object MemItensDCA: TStringField
+      FieldName = 'DCA'
+      Origin = 'DCA'
+      FixedChar = True
+      Size = 3
+    end
+    object MemItensQTD_EMBALAGEM: TIntegerField
+      FieldName = 'QTD_EMBALAGEM'
+      Origin = 'QTD_EMBALAGEM'
+    end
+    object MemItensSERIE_PRODUTO: TStringField
+      FieldName = 'SERIE_PRODUTO'
+      Origin = 'SERIE_PRODUTO'
+    end
+    object MemItensVLR_UNITARIO: TCurrencyField
+      FieldName = 'VLR_UNITARIO'
+      Origin = 'VLR_UNITARIO'
+    end
+    object MemItensVLR_TOTAL: TCurrencyField
+      FieldName = 'VLR_TOTAL'
+      Origin = 'VLR_TOTAL'
+    end
+    object MemItensVLR_UNI_RATEADO: TCurrencyField
+      FieldName = 'VLR_UNI_RATEADO'
+      Origin = 'VLR_UNI_RATEADO'
+    end
+    object MemItensPESO_BRUTO: TFloatField
+      FieldName = 'PESO_BRUTO'
+      Origin = 'PESO_BRUTO'
+    end
+    object MemItensID_INTERNO: TIntegerField
+      FieldName = 'ID_INTERNO'
+      Origin = 'ID_INTERNO'
+    end
+    object MemItensFINALIZADOR: TStringField
+      FieldName = 'FINALIZADOR'
+      Origin = 'FINALIZADOR'
+      FixedChar = True
+      Size = 32767
+    end
+    object MemItensNOME_CLIENTE: TStringField
+      FieldName = 'NOME_CLIENTE'
+      Origin = 'NOME_CLIENTE'
+      Size = 200
+    end
+    object MemItensPESO_UNI_RATEADO: TFloatField
+      FieldName = 'PESO_UNI_RATEADO'
+      Origin = 'PESO_UNI_RATEADO'
+    end
+    object MemItensCODIGO: TStringField
+      FieldName = 'CODIGO'
+      Size = 50
+    end
+    object MemItensLOTE_NOVO: TStringField
+      FieldName = 'LOTE_NOVO'
+    end
+  end
+  object MemRateio: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 216
+    Top = 296
+    object MemRateioQTD_EMBALAGEM: TIntegerField
+      FieldName = 'QTD_EMBALAGEM'
+      Origin = 'QTD_TOTAL'
+    end
+    object MemRateioQTD_PALETES: TIntegerField
+      FieldName = 'QTD_PALETES'
+    end
+    object MemRateioQTD_TOTAL: TIntegerField
+      FieldName = 'QTD_TOTAL'
+    end
+    object MemRateioLOTE: TStringField
+      FieldName = 'LOTE'
+    end
+    object MemRateioSERIE: TStringField
+      FieldName = 'SERIE'
+    end
+    object MemRateioUQtd: TIntegerField
+      FieldName = 'UQtd'
+    end
+    object MemRateioUQtdEmb: TIntegerField
+      FieldName = 'UQtdEmb'
+    end
+    object MemRateioUQtdPal: TIntegerField
+      FieldName = 'UQtdPal'
+    end
+  end
+  object QryConfig: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'SELECT * FROM TBL_CONFIGURACAO')
+    Left = 448
+    Top = 72
+    object QryConfigUSA_CELULAR: TBooleanField
+      FieldName = 'USA_CELULAR'
+      Origin = 'USA_CELULAR'
+    end
+  end
+  object QryNotas: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'SELECT * FROM TBL_NOTAS'
+      'WHERE UNDENTRADA=:UND AND NRENTRADA=:ENTRADA')
+    Left = 200
+    Top = 141
+    ParamData = <
+      item
+        Name = 'UND'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ENTRADA'
+        ParamType = ptInput
+      end>
+    object QryNotasNRENTRADA: TIntegerField
+      FieldName = 'NRENTRADA'
+      Origin = 'NRENTRADA'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object QryNotasUNDENTRADA: TStringField
+      FieldName = 'UNDENTRADA'
+      Origin = 'UNDENTRADA'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Size = 10
+    end
+    object QryNotasNRNOTA: TIntegerField
+      FieldName = 'NRNOTA'
+      Origin = 'NRNOTA'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object QryNotasNRSERIE: TStringField
+      FieldName = 'NRSERIE'
+      Origin = 'NRSERIE'
+      Size = 10
+    end
+    object QryNotasCNPJ: TStringField
+      FieldName = 'CNPJ'
+      Origin = 'CNPJ'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object QryNotasSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      FixedChar = True
+      Size = 32767
+    end
+    object QryNotasNOME_CLIENTE: TStringField
+      FieldName = 'NOME_CLIENTE'
+      Origin = 'NOME_CLIENTE'
+      Size = 200
+    end
+  end
+  object QryItensConf: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'select * from TBL_PEDIDOITENS')
+    Left = 448
+    Top = 208
+    object StringField1: TStringField
+      FieldName = 'FILIAL'
+      Origin = 'FILIAL'
+      Size = 10
+    end
+    object StringField2: TStringField
+      FieldName = 'CNPJ'
+      Origin = 'CNPJ'
+      Size = 32767
+    end
+    object StringField3: TStringField
+      FieldName = 'RESPONSAVEL'
+      Origin = 'RESPONSAVEL'
+      Size = 100
+    end
+    object StringField4: TStringField
+      FieldName = 'LOTE'
+      Origin = 'LOTE'
+      Size = 100
+    end
+    object StringField5: TStringField
+      FieldName = 'SERIE'
+      Origin = 'SERIE'
+      Size = 100
+    end
+    object FloatField1: TFloatField
+      FieldName = 'NRONOTA'
+      Origin = 'NRONOTA'
+    end
+    object StringField6: TStringField
+      FieldName = 'DESCRICAO'
+      Origin = 'DESCRICAO'
+      Size = 200
+    end
+    object IntegerField2: TIntegerField
+      FieldName = 'NROPEDIDO'
+      Origin = 'NROPEDIDO'
+    end
+    object FloatField2: TFloatField
+      FieldName = 'SEQUENCIA'
+      Origin = 'SEQUENCIA'
+    end
+    object StringField7: TStringField
+      FieldName = 'TIPO'
+      Origin = 'TIPO'
+      Size = 32767
+    end
+    object FloatField3: TFloatField
+      FieldName = 'PESO'
+      Origin = 'PESO'
+    end
+    object StringField8: TStringField
+      FieldName = 'UNIDADE'
+      Origin = 'UNIDADE'
+      Size = 32767
+    end
+    object BooleanField1: TBooleanField
+      FieldName = 'RATEIO'
+      Origin = 'RATEIO'
+    end
+    object BooleanField2: TBooleanField
+      FieldName = 'ATIVO'
+      Origin = 'ATIVO'
+    end
+    object StringField9: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Required = True
+    end
+    object StringField10: TStringField
+      FieldName = 'GALPAO'
+      Origin = 'GALPAO'
+    end
+    object StringField11: TStringField
+      FieldName = 'NUMERO'
+      Origin = 'NUMERO'
+    end
+    object StringField12: TStringField
+      FieldName = 'RUA'
+      Origin = 'RUA'
+    end
+    object StringField13: TStringField
+      FieldName = 'ANDAR'
+      Origin = 'ANDAR'
+    end
+    object StringField14: TStringField
+      FieldName = 'APTO'
+      Origin = 'APTO'
+    end
+    object BooleanField3: TBooleanField
+      FieldName = 'CONFERIDO'
+      Origin = 'CONFERIDO'
+      Required = True
+    end
+    object IntegerField6: TIntegerField
+      FieldName = 'NR_ENTRADA'
+      Origin = 'NR_ENTRADA'
+    end
+    object StringField15: TStringField
+      FieldName = 'DCA'
+      Origin = 'DCA'
+      FixedChar = True
+      Size = 3
+    end
+    object CurrencyField1: TCurrencyField
+      FieldName = 'VLR_UNITARIO'
+      Origin = 'VLR_UNITARIO'
+    end
+    object CurrencyField2: TCurrencyField
+      FieldName = 'VLR_TOTAL'
+      Origin = 'VLR_TOTAL'
+    end
+    object QryItensConfCODIGO: TStringField
+      FieldName = 'CODIGO'
+      Origin = 'CODIGO'
+      Size = 50
+    end
+    object QryItensConfVLR_UNI_RATEADO: TCurrencyField
+      FieldName = 'VLR_UNI_RATEADO'
+      Origin = 'VLR_UNI_RATEADO'
+    end
+    object QryItensConfPESO_UNI_RATEADO: TFloatField
+      FieldName = 'PESO_UNI_RATEADO'
+      Origin = 'PESO_UNI_RATEADO'
+    end
+    object QryItensConfSERIE_PRODUTO: TStringField
+      FieldName = 'SERIE_PRODUTO'
+      Origin = 'SERIE_PRODUTO'
+    end
+    object QryItensConfPESO_BRUTO: TFloatField
+      FieldName = 'PESO_BRUTO'
+      Origin = 'PESO_BRUTO'
+    end
+    object QryItensConfID_INTERNO: TIntegerField
+      FieldName = 'ID_INTERNO'
+      Origin = 'ID_INTERNO'
+    end
+    object QryItensConfNOME_CLIENTE: TStringField
+      FieldName = 'NOME_CLIENTE'
+      Origin = 'NOME_CLIENTE'
+      Size = 200
+    end
+    object QryItensConfid_entrada_prod: TIntegerField
+      FieldName = 'id_entrada_prod'
+      Origin = 'id_entrada_prod'
+    end
+    object QryItensConfQTD_LIDA: TFloatField
+      FieldName = 'QTD_LIDA'
+      Origin = 'QTD_LIDA'
+    end
+    object QryItensConfQTD_TOTAL: TFloatField
+      FieldName = 'QTD_TOTAL'
+      Origin = 'QTD_TOTAL'
+    end
+    object QryItensConfQTD_EMBALAGEM: TIntegerField
+      FieldName = 'QTD_EMBALAGEM'
+      Origin = 'QTD_EMBALAGEM'
+    end
+    object QryItensConfQTD_PALETES: TIntegerField
+      FieldName = 'QTD_PALETES'
+      Origin = 'QTD_PALETES'
+    end
+    object QryItensConfINTEGRADO: TBooleanField
+      FieldName = 'INTEGRADO'
+      Origin = 'INTEGRADO'
+    end
+    object QryItensConfFINALIZADOR: TIntegerField
+      FieldName = 'FINALIZADOR'
+      Origin = 'FINALIZADOR'
+    end
+    object QryItensConfLOTE_NOVO: TStringField
+      FieldName = 'LOTE_NOVO'
+      Origin = 'LOTE_NOVO'
+    end
+  end
+  object QryAux2: TFDQuery
+    Connection = ConexLocal
+    Left = 400
+    Top = 16
+  end
+  object QryUsuario: TFDQuery
+    Connection = ConexLocal
+    SQL.Strings = (
+      'SELECT * FROM TBL_CONFERENTE')
+    Left = 264
+    Top = 140
+    object QryUsuarioNOME: TStringField
+      FieldName = 'NOME'
+      Origin = 'NOME'
+      Size = 100
+    end
+    object QryUsuarioCPF: TStringField
+      FieldName = 'CPF'
+      Origin = 'CPF'
+    end
+  end
+end

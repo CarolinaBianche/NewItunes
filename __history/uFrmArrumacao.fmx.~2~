@@ -1,0 +1,19 @@
+inherited FrmArrumacao: TFrmArrumacao
+  Caption = 'FrmArrumacao'
+  DesignerMasterStyle = 3
+  inherited lytGeral: TLayout
+    inherited rect_titulo: TRectangle
+      inherited lytBotoes: TLayout
+        inherited lbl_titulo: TLabel
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+        end
+      end
+    end
+    inherited vertLista: TVertScrollBox
+      Margins.Top = 150.000000000000000000
+      Size.Height = 403.000000000000000000
+      Viewport.Width = 324.000000000000000000
+      Viewport.Height = 403.000000000000000000
+    end
+  end
+end

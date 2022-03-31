@@ -1,0 +1,1029 @@
+unit uFrmAtividades;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, AnonThread,
+  uDMLocal, uDmRest, uFrmMain, UntLib, Androidapi.JNI.Network, FMX.DialogService,
+  FMX.TabControl, FMX.ListBox, System.Actions, FMX.ActnList;
+
+type
+  TFrmAtividades = class(TForm)
+    rctCard: TRectangle;
+    lytEsqCard: TLayout;
+    LinTop: TLine;
+    lytBoxCard: TLayout;
+    lytTopCard: TLayout;
+    lytRomaneio: TLayout;
+    lblNumRomaneio: TLabel;
+    lblRomaneio: TLabel;
+    lytRodCard: TLayout;
+    rctTipoDoc: TRectangle;
+    imgEx: TImage;
+    lblAtividade: TLabel;
+    lblEnderecoCompleto: TLabel;
+    Label3: TLabel;
+    imgVis: TImage;
+    lblCliente: TLabel;
+    lblData: TLabel;
+    lblNota: TLabel;
+    lblPedido: TLabel;
+    lblnroPedido: TLabel;
+    rect_nv_pedido: TRectangle;
+    Layout12: TLayout;
+    Image8: TImage;
+    Label2: TLabel;
+    Label1: TLabel;
+    rect_titulo: TRectangle;
+    lbl_titulo: TLabel;
+    speBtnMenu: TSpeedButton;
+    speBtnAtualizar: TSpeedButton;
+    lytGeral: TLayout;
+    rect_informativo: TRectangle;
+    lblInfoTexto: TLabel;
+    Layout3: TLayout;
+    pthImg: TPath;
+    Line1: TLine;
+    vertLista: TVertScrollBox;
+    lytBotoes: TLayout;
+    TabControl1: TTabControl;
+    TabItem1: TTabItem;
+    TabItem2: TTabItem;
+    VertConf: TVertScrollBox;
+    ActionList1: TActionList;
+    ActTab1: TChangeTabAction;
+    rectTopbtns: TRectangle;
+    btnIniServico: TRectangle;
+    lblIniServ: TLabel;
+    btnFimServico: TRectangle;
+    lblFimServ: TLabel;
+    rectCard2: TRectangle;
+    Layout1: TLayout;
+    LinTop2: TLine;
+    Layout2: TLayout;
+    Layout4: TLayout;
+    Layout5: TLayout;
+    rctTipoDoc2: TRectangle;
+    lblRomaneio2: TLabel;
+    Label6: TLabel;
+    lblAtividade2: TLabel;
+    lblNumRomaneio2: TLabel;
+    Layout6: TLayout;
+    lblEnderecoCompleto2: TLabel;
+    Label10: TLabel;
+    lblCliente2: TLabel;
+    rect_Itens: TRectangle;
+    rect_ItensAbertos: TRectangle;
+    rect_ItensConferidos: TRectangle;
+    lbl_ItensConferidos: TLabel;
+    ActTab2: TChangeTabAction;
+    lblNomeCliente: TLabel;
+    btn_itensAbertos: TSpeedButton;
+    lbl_ItensAbertos: TLabel;
+    btn_itensConferidos: TSpeedButton;
+    lblConferido: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure speBtnAtualizarClick(Sender: TObject);
+    procedure rect_nv_pedidoClick(Sender: TObject);
+    procedure btnIniServicoClick(Sender: TObject);
+    procedure btnFimServicoClick(Sender: TObject);
+    procedure btn_itensAbertosClick(Sender: TObject);
+    procedure btn_itensConferidosClick(Sender: TObject);
+  private
+    { Private declarations }
+     procedure OnSelecionarAtividade(Sender :TObject);
+     procedure TapSelecionaAtividade(Sender: TObject; const Point: TPointF);
+     procedure OnSelecionarConf(Sender :TObject);
+     procedure TapSelecionarConf(Sender: TObject; const Point: TPointF);
+     procedure AbreNotas(Documento:integer;Produto:string);
+     procedure SetCloneAtv(ARectBase : TRectangle; var AClone: TRectangle; AScroll:TVertScrollBox;
+     var APosition,ApositionB : Single; MClick:TNotifyEvent; MTap:TTapEvent;Tipo:string);overload;
+     procedure InsertOnClick(AObject : TRectangle;AEvent : TNotifyEvent);
+     procedure OnClickCliente(Sender :TObject);
+     procedure ConfiguraTela;
+
+  public
+    { Public declarations }
+    procedure CarregaItens;
+    procedure CarregaItensConferidos;
+  end;
+var
+  FrmAtividades: TFrmAtividades;
+
+implementation
+
+{$R *.fmx}
+
+uses uFrmNotas, uLoading, UFrmConfere,uFrmInformativo, uFrmNotasSel,
+  uFrmListaPedidos;
+
+procedure TFrmAtividades.AbreNotas(Documento: integer;Produto : string);
+begin
+  TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Localizando Item ...');
+          TLibery.ActiveForm := nil;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+        End
+
+      );
+    End,
+    procedure()
+    Begin
+      FrmMain.Pedido := Documento;
+
+    End,
+    procedure()
+    begin
+     TLoading.Hide;
+     if (DmLocal.QryFilaTIPO.AsString='CARGA') or (FrmMain.Origem='PEDIDO') then
+     Begin
+      FrmMain.lytNavegacao.Controls.Clear;
+      TLibery.ActiveForm.DisposeOf;
+      TLibery.ActiveForm:=nil;
+      TLibery.OpenForm(TFrmConfere,FrmMain.lytNavegacao);
+      TLibery.MudarAba(FrmMain.tbiMain,self);
+     End else
+     if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+     Begin
+      if not DmLocal.QryItensCONFERIDO.Value then
+      Begin
+       FrmMain.lytNavegacao.Controls.Clear;
+       TLibery.ActiveForm.DisposeOf;
+       TLibery.ActiveForm:=nil;
+       TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+       TLibery.MudarAba(FrmMain.tbiMain,self);
+      End;
+
+     End;
+    end,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Carregar Atividades! ' +
+      AException);
+    End,
+    True
+  );
+end;
+
+procedure TFrmAtividades.btnFimServicoClick(Sender: TObject);
+begin
+if DMLocal.QryFilaTIPO.AsString='DESCARGA' then
+Begin
+     TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Sincronizando Itens em Aberto ...');
+          End
+
+        );
+      End,
+      procedure()
+       var cont :integer;
+       Finalizado :string;
+      Begin
+
+       if not DMLocal.ExisteItensNaoSincronizados then
+       Begin
+        DmLocal.BuscaItensConferidos(DMLocal.QryNotasNRNOTA.AsInteger,DmLocal.QryFilaUND_ARMAZEN.AsString,
+                        DMLocal.QryFilaTIPO.AsString);
+        DmLocal.QryItensConf.First;
+        Cont := 0;
+        while not DmLocal.QryItensConf.Eof do
+         Begin
+          Cont := cont + 1;
+
+         if Cont = Dmlocal.QryItensConf.RecordCount then
+           Finalizado:='T' else
+           Finalizado:='F';
+
+         if DmLocal.EnviaNota(DmLocal.QryItensConf.FieldByName('ID_INTERNO').AsInteger,Finalizado) then
+         DmLocal.QryItensConf.Next ;
+         End;
+       End;
+
+      End,
+      procedure()
+      begin
+       TLoading.Hide;
+       DmLocal.AtualizaStatus('F','Nota');
+       DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+       FrmMain.lytNavegacao.Controls.Clear;
+       TLibery.ActiveForm.DisposeOf;
+       TLibery.ActiveForm:=nil;
+       TLibery.OpenForm(TFrmSelNotas,nil);
+
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        TDialogService.ShowMessage('Não foi possível finalizar a nota, tente Novamente! ' +
+        AException);
+      End,
+      True
+     );
+
+End else
+if (Dmlocal.QryFilaTIPO.AsString='CARGA') or (FrmMain.Origem='PEDIDO') then
+ Begin
+
+    if not Dmlocal.VerificaConferencia then
+    Begin
+     FrmMain.MensagemTost('Não pode ser finalizado , existem itens não conferidos');
+     Abort
+    End else
+    Begin
+     TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Finalizando Carregamento ...');
+            TLibery.ActiveForm := nil;
+            DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+          End
+
+        );
+      End,
+      procedure()
+      Begin
+       DMLocal.FinalizaPedido(FrmMain.Pedido);
+
+      End,
+      procedure()
+      begin
+        DmLocal.AtualizaStatus('F','');
+        if  DMLocal.FinalizaPedido(FrmMain.Pedido) Then
+         Begin
+          DmLocal.DeletarEntradas;
+          DmLocal.DeletarPedidos;
+          DMLocal.DeletarItens;
+         End;
+        FrmMain.MensagemTost('Finalizado com Sucesso!');
+        FrmMain.lytNavegacao.Controls.Clear;
+        TLibery.ActiveForm.DisposeOf;
+        TLibery.ActiveForm:=nil;
+        TLibery.OpenForm(TFrmListaPedidos,FrmMain.lytNavegacao);
+        TLibery.MudarAba(FrmMain.tbiMain,Sender);
+       End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        TDialogService.ShowMessage('Não foi possível finalizar o serviço no Servidor, tente Novamente! ' +
+        AException);
+      End,
+      True
+     );
+    End;
+
+ End;
+
+
+
+end;
+
+procedure TFrmAtividades.btnIniServicoClick(Sender: TObject);
+begin
+ if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+  Begin
+    if DMRest.IniciaServico then
+    Begin
+     DmLocal.AtualizaStatus('E','Nota');
+     FrmMain.MensagemTost('Conferência Iniciada ... ') ;
+     TabControl1.Visible   := true;
+     btnIniServico.Visible := false;
+     CarregaItens;
+    end else
+     FrmMain.MensagemTost('Serviço não Inciado, Verifique! ');
+  End else
+ if DmLocal.QryFilaTIPO.AsString='CARGA' then
+  Begin
+    if DMRest.IniciaServicoCarga(Dmlocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+       DmLocal.Qry_PedidosNROPEDIDO.AsInteger) then
+    Begin
+     DmLocal.AtualizaStatus('E','');
+     FrmMain.MensagemTost('Serviço Iniciado com Sucesso') ;
+     TabControl1.Visible   := true;
+     btnIniServico.Visible := false;
+     CarregaItens;
+    end else
+     FrmMain.MensagemTost('Serviço não Inciado, Verifique! ');
+  End else
+  if FrmMain.Origem='PEDIDO' then
+  Begin
+    if DMRest.IniciaServicoCarga(Dmlocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+       DmLocal.Qry_PedidosNROPEDIDO.AsInteger) then
+    Begin
+     DmLocal.AtualizaStatus('E','');
+     FrmMain.MensagemTost('Serviço Iniciado com Sucesso') ;
+     TabControl1.Visible   := true;
+     btnIniServico.Visible := false;
+     CarregaItens;
+    end else
+     FrmMain.MensagemTost('Serviço não Inciado, Verifique! ');
+  End;
+
+end;
+
+
+procedure TFrmAtividades.btn_itensAbertosClick(Sender: TObject);
+begin
+ CarregaItens;
+ ActTab1.Execute;
+end;
+
+procedure TFrmAtividades.btn_itensConferidosClick(Sender: TObject);
+begin
+  CarregaItensConferidos;
+end;
+
+procedure TFrmAtividades.CarregaItens;
+begin
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Carregando Itens ...');
+          DmLocal.LimparLista(nil,vertLista,'rctCard');
+          vertLista.Visible:=false;
+          vertLista.BeginUpdate;
+          DMLocal.QryItens.DisableControls;
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao,LPosicaoB : Single;
+     s:string;
+     Qtd      : Integer;
+    Begin
+    //Processo Principal
+      if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+      Begin
+        //DmLocal.QryNotas.Locate('NRENTRADA',DMLocal.QryFilaNR_ENTRADA.AsInteger);
+        DmLocal.BuscaItens(DMLocal.QryNotasNRNOTA.AsInteger,DmLocal.QryFilaUND_ARMAZEN.AsString,
+                          DMLocal.QryFilaTIPO.AsString);
+
+      End
+      else
+      Begin
+       if FrmMain.Origem='PEDIDO' then
+       DmLocal.BuscaItens(DMLocal.Qry_PedidosNROPEDIDO.AsInteger,DMLocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+                          'CARGA')
+       else
+       DmLocal.BuscaItens(DMLocal.Qry_PedidosNROPEDIDO.AsInteger,DMLocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+                          DMLocal.QryFilaTIPO.AsString);
+      End;
+
+
+
+
+       DmLocal.QryItens.First;
+
+       rctCard.Visible  := false;
+       LPosicao         := 8;
+       LPosicaoB        := 8;
+
+       qtd := DmLocal.QryItens.RecordCount;
+
+
+          while not DMLocal.QryItens.Eof do
+           Begin
+             qtd:= qtd-1;
+            //Povoando os Cards
+            lblRomaneio.Text             := DmLocal.QryItens.FieldByName('QTD_TOTAL').AsInteger.ToString;
+           // rctCard.TagFloat             := DmLocal.QryItens.FieldByName('ID_INTERNO').AsInteger.ToSingle;
+
+           if DmLocal.QryFilaTipo.AsString='DESCARGA' then
+            Begin
+            rctCard.Tag              := DmLocal.QryItens.FieldByName('NRONota').AsInteger;
+           // s                        := DMLocal.QryItens.FieldByName('Codigo').AsString;
+            rctCard.TagString        := DMLocal.QryItens.FieldByName('ID_INTERNO').AsInteger.ToString;
+            End else
+           if (DmLocal.QryFilaTipo.AsString='CARGA') or (FrmMain.Origem='PEDIDO') then
+            Begin
+            rctCard.Tag              := DmLocal.QryItens.FieldByName('NROPEDIDO').AsInteger;
+            s                        := DMLocal.QryItens.FieldByName('ID_INTERNO').AsString;
+            rctCard.TagString        := s;
+            End;
+
+
+            lblAtividade.Text        := 'Cod.: ' + DmLocal.QryItens.FieldByName('CODIGO').asstring +'-'+
+            UpperCase(DmLocal.QryItens.FieldByName('DESCRICAO').AsString);
+
+            lblNumRomaneio.Text:='';
+          //  lblNumRomaneio.Text      := DmLocal.QryItensUNIDADE.AsString +' - '+ FormatFloat('#0.00',DmLocal.QryItens.FieldByName('vlr_total').AsFloat);
+
+            lblEnderecoCompleto.Text := UpperCase(' '  + DmLocal.QryItens.FieldByName('GALPAO').AsString +
+                                                  '   - '  + DmLocal.QryItens.FieldByName('RUA').AsString    +
+                                                  '   - '  + DmLocal.QryItens.FieldByName('NUMERO').AsString +
+                                                  '   - '  + DmLocal.QryItens.FieldByName('ANDAR').AsString  +
+                                                  '   - ' + DmLocal.QryItens.FieldByName('APTO').AsString);
+
+            lblCliente.Text          := DmLocal.QryITENS.FieldByName('TIPO').AsString;
+
+
+           if DmLocal.QryItens.FieldByName('STATUS').asstring='N' then
+            Begin
+
+            if DmLocal.QryItens.FieldByName('TIPO').AsString='CARGA' then
+             Begin
+              lblRomaneio.FontColor   := $FF000000;
+              lblCliente.FontColor    := $FF000000;
+              LinTOP.Stroke.Color     := $FFE0FF6A;
+              rctTipoDoc.Fill.Color   := $FFE0FF6A;
+              rctTipoDoc.Stroke.Color := $FFE0FF6A;
+
+              //rctCliente.Fill.Color   := $FFE0FF6A;
+             End else
+             Begin
+              if DmLocal.QryItens.FieldByName('CONFERIDO').AsBoolean=True then
+              Begin
+                rctTipoDoc.Fill.Color   := $FF34B812;
+                rctTipoDoc.Stroke.Color := $FF34B812;
+              End else
+              Begin
+                lblRomaneio.FontColor   := $FFFFFFFF;
+                lblCliente.FontColor    := $FF000000;
+                LinTOP.Stroke.Color     := $FF8CA3AD;
+                rctTipoDoc.Fill.Color   := $FF8CA3AD;
+                rctTipoDoc.Stroke.Color := $FF8CA3AD;
+
+              //rctCliente.Fill.Color   := $FF8CA3AD;
+
+              End;
+             End;
+           End else
+           if DmLocal.QryItens.FieldByName('STATUS').asstring ='E' then
+            Begin
+
+            lblRomaneio.FontColor   := $FFFFFFFF;
+            lblCliente.FontColor    := $FF000000;
+            LinTOP.Stroke.Color     := $FFFFAD26;
+            rctTipoDoc.Fill.Color   := $FFFFAD26;
+            rctTipoDoc.Stroke.Color := $FFFFAD26;
+            //rctCliente.Fill.Color   := $FFFFAD26;
+           End ;
+
+           //Clonando
+           SetCloneAtv(rctCard,LFrame,vertLista,LPosicao,LPOsicaoB,OnSelecionarAtividade,TapSelecionaAtividade,'T'+qtd.ToString);
+
+           DMLocal.QryItens.Next;
+          End;
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      VertLista.EndUpdate;
+      VertLista.ScrollTo(0,0);
+      VertLista.Visible := true;
+      TabItem1.Text:= 'ITENS EM ABERTO';
+      TabItem2.Text:= 'ITENS CONFERIDOS';
+      DmLocal.QryItens.EnableControls;
+      if DmLocal.QryItens.IsEmpty then
+      FrmMain.MensagemTost('Sem Itens para conferir!');
+
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Carregar Itens! ' +
+      AException);
+    End,
+    false
+  );
+
+end;
+
+procedure TFrmAtividades.CarregaItensConferidos;
+begin
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Carregando Itens Conferidos...');
+          DmLocal.LimparLista(nil,vertConf,'rectCard2');
+          self.TabItem2.Visible:=true;
+          Self.ActTab2.Execute;
+          vertConf.Visible:=false;
+          vertConf.BeginUpdate;
+          DMLocal.QryItensConf.DisableControls;
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao,LPosicaoB : Single;
+     s:string;
+     Qtd      : Integer;
+    Begin
+    //Processo Principal
+    //  DmLocal.QryNotas.Locate('NRENTRADA',DMLocal.QryFilaNR_ENTRADA.AsInteger);
+       if DMLocal.QryFilaTIPO.AsString='DESCARGA' then
+       Begin
+       DmLocal.BuscaItensConferidos(DMLocal.QryNotasNRNOTA.AsInteger,DmLocal.QryFilaUND_ARMAZEN.AsString,
+                        DMLocal.QryFilaTIPO.AsString);
+
+       End else
+       if (DMLocal.QryFilaTIPO.AsString='CARGA') or (FrmMAin.Origem='PEDIDO') then
+       Begin
+        DmLocal.BuscaItensConferidos(DMLocal.Qry_PedidosNROPEDIDO.AsInteger,DmLocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+                        'CARGA');
+
+       End;
+
+       DmLocal.QryItensConf.First;
+
+       rectCard2.Visible          :=false;
+       LPosicao                   := 8;
+       LPosicaoB                  := 8;
+
+       qtd := DmLocal.QryItensConf.RecordCount;
+
+
+          while not DMLocal.QryItensConf.Eof do
+           Begin
+             qtd:= qtd-1;
+            //Povoando os Cards
+            lblRomaneio2.Text          := DmLocal.QryItensConf.FieldByName('QTD_TOTAL').AsInteger.ToString;
+
+
+           // rectCard2.Tag              := DmLocal.QryItensConf.FieldByName('NRONota').AsInteger;
+            rectCard2.Tag                := DmLocal.QryItensConf.FieldByName('ID_INTERNO').AsInteger;
+            s                            := DMLocal.QryItensConf.FieldByName('Codigo').AsString +
+            DmLocal.QryItensConf.FieldByName('Sequencia').asinteger.toString;
+            rectCard2.TagString        := s;
+
+
+
+            lblAtividade2.Text        := 'Cod.: ' + DmLocal.QryItensConf.FieldByName('CODIGO').asstring +'-'+
+            UpperCase(DmLocal.QryItensConf.FieldByName('DESCRICAO').AsString);
+
+            lblNumRomaneio2.Text:='';
+           // lblNumRomaneio2.Text      := DmLocal.QryItensConf.FieldByName('UNIDADE').AsString +' - ' + FormatFloat('#0.00',DmLocal.QryItensConf.FieldByName('vlr_total').AsFloat);
+
+            lblEnderecoCompleto2.Text := UpperCase('   '   + DmLocal.QryItensConf.FieldByName('GALPAO').AsString +
+                                                  '   - '   + DmLocal.QryItensConf.FieldByName('RUA').AsString    +
+                                                  '   - '   + DmLocal.QryItensConf.FieldByName('NUMERO').AsString +
+                                                  '   - '   + DmLocal.QryItensConf.FieldByName('ANDAR').AsString  +
+                                                  '   - ' + DmLocal.QryItensConf.FieldByName('APTO').AsString);
+
+            lblCliente2.Text          := DmLocal.QryItensConf.FieldByName('TIPO').AsString;
+
+
+
+            lblRomaneio2.FontColor   := $FFFFFFFF;
+            lblCliente2.FontColor    := $FF000000;
+            LinTOP2.Stroke.Color     := $FF4C99C1;
+            rctTipoDoc2.Fill.Color   := $FF4C99C1;
+            rctTipoDoc2.Stroke.Color := $FF4C99C1;
+            rectCard2.Fill.Color     := $FF9BEBEB;
+            rectCard2.Stroke.Color   := $FF9BEBEB;
+
+             //Clonando
+
+            SetCloneAtv(rectCard2,LFrame,VertConf,LPosicao,LPOsicaoB,OnSelecionarConf,TapSelecionarConf,'C'+qtd.ToString);
+
+
+            DMLocal.QryItensConf.Next;
+
+
+
+           End;
+
+
+
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      vertConf.EndUpdate;
+      vertConf.ScrollTo(0,0);
+      vertConf.Visible := true;
+      DmLocal.QryItensConf.EnableControls;
+
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Carregando Itens Conferidos! ' +
+      AException);
+    End,
+    False
+  );
+
+
+end;
+
+procedure TFrmAtividades.ConfiguraTela;
+begin
+lblConferido.Visible    := false;
+ if (DmLocal.QryFilaTIPO.AsString='CARGA') or (FrmMain.Origem='PEDIDO') then
+   Begin
+   speBtnAtualizar.Visible := false;
+   TabItem2.Visible        := false;
+   rect_nv_pedido.Visible  := false;
+   speBtnAtualizar.Visible := false;
+   lblIniServ.Text         := 'Inicia Carga';
+   lblFimServ.Text         := 'Finaliza Carga';
+
+
+    if DmLocal.Qry_PedidosINICIO.IsNull then
+    Begin
+       btnIniServico.Visible   := true;
+       btnFimServico.Visible   := false;
+       TabControl1.Visible     := false;
+
+    End else
+    Begin
+       btnIniServico.Visible   := false;
+       btnFimServico.Visible   := true;
+       TabControl1.Visible     := true;
+    End;
+   End
+   else
+   if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+      Begin
+      rect_nv_pedido.Visible  := false;
+      speBtnAtualizar.Visible := true;
+      TabItem2.Visible        := true;
+      lblIniServ.Text         := 'Inicia Nota';
+      lblFimServ.Text         := 'Finaliza Nota';
+
+       if DmLocal.QryNotasSTATUS.AsString='N' then
+        Begin
+           btnIniServico.Visible   := true;
+           btnFimServico.Visible   := false;
+           TabControl1.Visible     := false;
+
+        End else
+        if DmLocal.QryNotasSTATUS.AsString='E' then
+        Begin
+           btnIniServico.Visible   := false;
+           btnFimServico.Visible   := true;
+           TabControl1.Visible     := true;
+           btn_itensAbertos.OnClick(self);
+        End;
+        if DmLocal.QryNotasSTATUS.AsString='F' then
+        Begin
+           btnIniServico.Visible   := false;
+           btnFimServico.Visible   := false;
+           TabControl1.Visible     := true;
+           lblConferido.Visible    := true;
+        End;
+
+      End;
+
+
+
+
+
+
+
+
+end;
+
+procedure TFrmAtividades.FormCreate(Sender: TObject);
+begin
+  inherited;
+   rctCard.Visible       :=  false;
+   rectCard2.Visible     :=  false;
+   lbl_titulo.Text       := 'Conferência';
+
+   if DmLocal.QryFilaTIPO.AsString='DESCARGA' then
+   Begin
+   lblData.Text          := 'DATA ENTRADA: ' +  FormatDateTime('dd/mm/yy',DmLocal.QryFilaDATA_ENTRADA.AsDateTime);
+   lblInfoTexto.Text     := 'CNPJ:         ' +  DmLocal.QryNotasCNPJ.AsString;
+   lblNomeCliente.Text   := DmLocal.QryNotasNOME_CLIENTE.AsString;
+   lblNOTA.Visible       := true;
+   lblNOTA.Text          := 'Nº NOTA:      ' +  DmLocal.QryNotasNRNOTA.AsInteger.ToString ;
+   lblnroPedido.Visible  := false;
+   End else
+   if DmLocal.QryFilaTIPO.AsString='CARGA' then
+   Begin
+   lblData.Text          := 'DATA ENTRADA: ' +  FormatDateTime('dd/mm/yy',DmLocal.QryFilaDATA_ENTRADA.AsDateTime);
+   lblInfoTexto.Text     := 'CNPJ:         ' +  DmLocal.Qry_PedidosCLIENTE_CNPJ.AsString;
+   lblNomeCliente.Text   := DmLocal.Qry_PedidosCLIENTE.AsString;
+   lblNOTA.Visible       := false;
+   lblnroPedido.Text     := 'Nº PEDIDO:      ' +  DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString ;
+   lblnroPedido.Visible  := true;
+   End else
+   if FrmMain.Origem='PEDIDO' then
+   Begin
+   lblData.Text          := 'DATA ENTRADA: ' +  FormatDateTime('dd/mm/yy',DmLocal.Qry_PedidosData_Emissao.AsDateTime);
+   lblInfoTexto.Text     := 'CNPJ:         ' +  DmLocal.Qry_PedidosCLIENTE_CNPJ.AsString;
+   lblNomeCliente.Text   := DmLocal.Qry_PedidosCLIENTE.AsString;
+   lblNOTA.Visible       := false;
+   lblnroPedido.Text     := 'Nº PEDIDO:      ' +  DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString ;
+   lblnroPedido.Visible  := true;
+   End;
+
+
+   ConfiguraTela;
+
+
+end;
+
+procedure TFrmAtividades.InsertOnClick(AObject: TRectangle;
+  AEvent: TNotifyEvent);
+begin
+  for  var I :Integer := 0 to Pred(AObject.ComponentCount) do
+    Begin
+      if AObject.Components[i] is TSpeedButton then
+       Begin
+         TThread.Synchronize(
+         TThread.CurrentThread,
+         procedure ()
+         Begin
+          TSpeedButton(AObject.Components[i]).OnClick := AEvent;
+         End
+         );
+         Break  ;
+
+       End;
+    End;
+end;
+
+
+procedure TFrmAtividades.OnClickCliente(Sender: TObject);
+begin
+   {DmLocal.QryAtv.Locate('NR_DOCUMENTO',TSpeedButton(SEnder).Tag);
+
+   TLibery.ActiveForm := nil;
+   DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+   TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+   TLibery.MudarAba(FrmMain.tbiMain,self); }
+end;
+
+procedure TFrmAtividades.OnSelecionarAtividade(Sender: TObject);
+begin
+ {$IFDEF MSWINDOWS}
+  if  DmLocal.QryItens.Locate('ID_INTERNO',TRectangle(Sender).TagString) then
+  Begin
+   AbreNotas(TRectangle(Sender).Tag,TRectangle(Sender).TagString);
+  End;
+ {$ENDIF}
+end;
+
+procedure TFrmAtividades.OnSelecionarConf(Sender: TObject);
+begin
+ {$IFDEF MSWINDOWS}
+
+  if DmLocal.QryItensConf.Locate('ID_INTERNO',TRectangle(Sender).Tag) then
+  Begin
+  if DmLocal.QryItensConf.FieldByName('STATUS').AsString='E' then
+   Begin
+    TRectangle(Sender).Fill.Color := $FFBBA2A2;
+    DmLocal.QryItensConf.Edit;
+    DmLocal.QryItensConf.FieldByName('STATUS').AsString:='N' ;
+    DmLocal.QryItensConf.FieldByName('CONFERIDO').AsBoolean := FALSE;
+
+    if DMLocal.AnulaFinalizador(DmLocal.QryItensConf.FieldByName('NRONOTA').asinteger,
+     DmLocal.QryItensConf.FieldByName('CODIGO').asstring ) then
+
+
+    DmLocal.QryItensConf.Post;
+   End else
+  if DmLocal.QryItensConf.FieldByName('STATUS').AsString='N' then
+   Begin
+    TRectangle(Sender).Fill.Color := $FF9BEBEB;
+    DmLocal.QryItensConf.Edit;
+    DmLocal.QryItensConf.FieldByName('STATUS').AsString:='E' ;
+    DmLocal.QryItensConf.FieldByName('CONFERIDO').AsBoolean := TRUE;
+
+    if DMLocal.RestauraFinalizador(DmLocal.QryItensConf.FieldByName('NRONOTA').asinteger,
+     DmLocal.QryItensConf.FieldByName('CODIGO').asstring ) then
+
+
+    DmLocal.QryItensConf.Post;
+   End;
+  End;
+
+
+ {$ENDIF}
+end;
+
+procedure TFrmAtividades.rect_nv_pedidoClick(Sender: TObject);
+begin
+  inherited;
+ if not  DmLocal.LancaPedido(DmLocal.QryFilaNRONOTA.AsInteger,DmLocal.QryFilaCLIENTE_CNPJ.AsString) Then
+ Begin
+   //Pedido não lançado
+   ShowMessage('Erro ao Lançar Pedido. Tente Novamente!');
+ End else
+ Begin
+   //Pedido Lançado
+   if Not DmLocal.ExistePedido(DmLocal.QryFilaNRONOTA.AsInteger,DmLocal.QryFilaCLIENTE_CNPJ.AsString) then
+   Begin
+     // não achou pedido
+     DmLocal.BuscaItens(DmLocal.Qry_PedidosNROPEDIDO.AsInteger,DmLocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+     DmLocal.QryFilaTIPO.AsString);
+   End else
+   Begin
+     // achou pedido
+     lblnroPedido.Text          := DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString;
+     ShowMessage('Pedido Criado Nro : ' + DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString);
+    // DmLocal.BuscaItens(DmLocal.Qry_PedidosNROPEDIDO.AsInteger,'');
+     TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+   End;
+ End;
+end;
+
+procedure TFrmAtividades.SetCloneAtv(ARectBase: TRectangle;
+  var AClone: TRectangle; AScroll: TVertScrollBox; var APosition,ApositionB: Single;
+  MClick: TNotifyEvent; MTap: TTapEvent; Tipo: string);
+begin
+if AScroll.Name='vertLista' then
+ Begin
+  AClone                 := TRectangle(ARectBase.Clone(AScroll));
+  AClone.Parent          := AScroll;
+  AClone.Name            := Tipo + ARectBase.Tag.ToString + DmLocal.LimpaString(ARectBase.TagString,'.-/');
+  ACLOne.TagString       := ARectBase.TagString;
+  AClone.Position.Y      := APosition;
+  AClone.Position.X      := 4;
+  AClone.Height          := ARectBase.Height;
+  {$IFDEF MSWINDOWS}
+   AClone.Width          := AScroll.Width - 24;
+  {$ELSE}
+   AClone.Width          := AScroll.Width - 8;
+  {$ENDIF}
+  ARectBase.Opacity      := 1;
+  AClone.Visible         := True;
+  APosition              := APosition + ARectBase.Height + 4;
+  AClone.OnClick         := MClick;
+  AClone.OnTap           := MTap;
+ End else
+ if AScroll.Name='VertConf' then
+ Begin
+  AClone                 := TRectangle(ARectBase.Clone(AScroll));
+  AClone.Parent          := AScroll;
+  AClone.Name            := Tipo + ARectBase.Tag.ToString + DmLocal.LimpaString(ARectBase.TagString,'.-/') ;
+  AClone.Position.Y      := APositionB;
+  AClone.Position.X      := 4;
+  AClone.Height          := ARectBase.Height;
+  {$IFDEF MSWINDOWS}
+   AClone.Width          := AScroll.Width - 24;
+  {$ELSE}
+   AClone.Width          := AScroll.Width - 8;
+  {$ENDIF}
+  ARectBase.Opacity      := 1;
+  AClone.Visible         := True;
+  APositionB             := APositionB + ARectBase.Height + 4;
+  AClone.OnClick         := MClick;
+  AClone.OnTap           := MTap;
+ End;
+end;
+
+procedure TFrmAtividades.speBtnAtualizarClick(Sender: TObject);
+begin
+ TLibery.CustomThread(
+ Procedure ()
+ Begin
+   //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Devolvendo Itens Conferidos...');
+          DmLocal.LimparLista(nil,vertConf,'rectCard2');
+          vertConf.Visible:=false;
+          vertConf.BeginUpdate;
+          DMLocal.QryItensConf.DisableControls;
+        End
+
+      );
+ End,
+ procedure()
+ Begin
+  if   DmLocal.DevolveItens(DmLocal.QryNotasNRNOTA.AsInteger,DmLocal.QryNotasNRENTRADA.AsInteger) then
+  Begin
+     TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Hide;
+          FrmMain.MensagemTost('Itens devolvidos com Sucesso!');
+        End
+
+      );
+  End;
+ End,
+ procedure()
+ Begin
+  TLoading.Hide;
+  Self.CarregaItens;
+ End,
+ procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Devolvendo Itens Conferidos! ' +
+      AException);
+    End,
+    False
+  );
+
+
+end;
+
+procedure TFrmAtividades.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+   FrmMain.lytNavegacao.Controls.Clear;
+   TLibery.ActiveForm.DisposeOf;
+   TLibery.ActiveForm:=nil;
+   if Dmlocal.QryFilaTIPO.AsString='DESCARGA' then
+    Begin
+       TLibery.OpenForm(TFrmSelNotas,FrmMain.lytNavegacao);
+       TLibery.MudarAba(FrmMain.tbiMain,Sender);
+    End else
+   if (Dmlocal.QryFilaTIPO.AsString='CARGA') or (FrmMain.Origem='PEDIDO') then
+    Begin
+       TLibery.OpenForm(TFrmListaPedidos,FrmMain.lytNavegacao);
+       TLibery.MudarAba(FrmMain.tbiMain,Sender);
+    End;
+end;
+
+procedure TFrmAtividades.TapSelecionaAtividade(Sender: TObject;
+  const Point: TPointF);
+  var
+  s:string;
+begin
+ {$IFDEF ANDROID}
+   if  DmLocal.QryItens.Locate('ID_INTERNO',TRectangle(Sender).TagString.ToInteger) then
+    Begin
+     AbreNotas(TRectangle(Sender).Tag,TRectangle(Sender).TagString);
+    End;
+ {$ENDIF}
+end;
+
+
+procedure TFrmAtividades.TapSelecionarConf(Sender: TObject;
+  const Point: TPointF);
+begin
+  {$IFDEF ANDROID}
+  //FrmMain.MensagemTost(TRectangle(Sender).Tag.ToString);
+
+ if DmLocal.QryItensConf.Locate('ID_INTERNO',TRectangle(Sender).Tag.ToString) then
+  Begin
+  if DmLocal.QryItensConf.FieldByName('STATUS').AsString='E' then
+   Begin
+    TRectangle(Sender).Fill.Color := $FFBBA2A2;
+    DmLocal.QryItensConf.Edit;
+    DmLocal.QryItensConf.FieldByName('STATUS').AsString:='N' ;
+    DmLocal.QryItensConf.FieldByName('CONFERIDO').AsBoolean := FALSE;
+
+    if DMLocal.AnulaFinalizador(DmLocal.QryItensConf.FieldByName('NRONOTA').asinteger,
+     DmLocal.QryItensConf.FieldByName('CODIGO').asstring ) then
+
+    DmLocal.QryItensConf.Post;
+   End else
+  if DmLocal.QryItensConf.FieldByName('STATUS').AsString='N' then
+   Begin
+    TRectangle(Sender).Fill.Color := $FF9BEBEB;
+    DmLocal.QryItensConf.Edit;
+    DmLocal.QryItensConf.FieldByName('STATUS').AsString:='E' ;
+    DmLocal.QryItensConf.FieldByName('CONFERIDO').AsBoolean := TRUE;
+    DmLocal.QryItensConf.Post;
+   End;
+  End;
+   {$ENDIF}
+
+
+
+end;
+
+end.

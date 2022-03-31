@@ -1,0 +1,110 @@
+inherited FrmGPS: TFrmGPS
+  Caption = 'FrmGPS'
+  DesignerMasterStyle = 3
+  inherited lytGeral: TLayout
+    inherited rect_titulo: TRectangle
+      inherited lytBotoes: TLayout
+        inherited lbl_titulo: TLabel
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+        end
+      end
+    end
+    inherited rect_informativo: TRectangle
+      object RoundRect1: TRoundRect
+        Align = Center
+        Fill.Color = xFFE6E6E6
+        Margins.Left = 4.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 4.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Size.Width = 165.000000000000000000
+        Size.Height = 34.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        object lbl_distancia: TLabel
+          Align = Client
+          StyledSettings = [Style, FontColor]
+          Locked = True
+          Margins.Left = 4.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 34.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Comic Sans MS'
+          TextSettings.Font.Size = 13.000000000000000000
+          Text = 'Dist'#226'ncia'
+          TabOrder = 1
+        end
+        object Circle3: TCircle
+          Align = Left
+          Fill.Color = xFFF69A17
+          Margins.Left = 15.000000000000000000
+          Position.X = 15.000000000000000000
+          Size.Width = 9.000000000000000000
+          Size.Height = 34.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+        end
+      end
+    end
+    inherited vertLista: TVertScrollBox
+      Margins.Top = 150.000000000000000000
+      Size.Height = 403.000000000000000000
+      Viewport.Width = 324.000000000000000000
+      Viewport.Height = 403.000000000000000000
+      object Layout9: TLayout
+        Align = Client
+        Size.Width = 324.000000000000000000
+        Size.Height = 327.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object MapView1: TMapView
+          Align = Client
+          Margins.Left = 5.000000000000000000
+          Margins.Top = 5.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 5.000000000000000000
+          Size.Width = 314.000000000000000000
+          Size.Height = 317.000000000000000000
+          Size.PlatformDefault = False
+        end
+      end
+      object Layout10: TLayout
+        Align = Bottom
+        Position.Y = 327.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 76.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 16
+        object Rectangle16: TRectangle
+          Align = Top
+          Fill.Color = xFFCC1616
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 304.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 4.000000000000000000
+          YRadius = 4.000000000000000000
+          object Label12: TLabel
+            Align = Client
+            StyledSettings = [Family]
+            Locked = True
+            Size.Width = 304.000000000000000000
+            Size.Height = 44.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.Font.StyleExt = {00060000000000000004000000}
+            TextSettings.FontColor = claWhite
+            TextSettings.HorzAlign = Center
+            Text = 'GPS'
+          end
+        end
+      end
+    end
+  end
+end

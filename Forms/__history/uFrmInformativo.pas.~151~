@@ -1,0 +1,150 @@
+unit uFrmInformativo;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, AnonThread,
+  Constantes, Notificacao, uDMLocal, uDmRest, uLoading,FMX.DialogService,
+  UntLib, FMX.Edit, System.Sensors.Components,DelphiSelfUpdate,FMX.VirtualKeyboard,FMX.Platform,
+  FMX.ScrollBox, FMX.Memo, FMX.ListView.Types, FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base, FMX.ListView, FMX.Effects, FMX.WebBrowser,Winapi.ShellAPI;
+
+type
+  TFrmInformativo = class(TFrmTemplate)
+    lblAlbum: TLabel;
+    lblMusica: TLabel;
+    Layout4: TLayout;
+    Rectangle1: TRectangle;
+    Rectangle2: TRectangle;
+    lblArtista: TLabel;
+    Rectangle3: TRectangle;
+    Rectangle4: TRectangle;
+    Image2: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Layout1: TLayout;
+    Layout2: TLayout;
+    Layout5: TLayout;
+    Label5: TLabel;
+    Layout6: TLayout;
+    Layout7: TLayout;
+    Layout8: TLayout;
+    Label6: TLabel;
+    Layout9: TLayout;
+    Layout10: TLayout;
+    Layout11: TLayout;
+    Label7: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure spdBtnFinalClick(Sender: TObject);
+    procedure Rectangle3Click(Sender: TObject);
+    procedure Rectangle2Click(Sender: TObject);
+    procedure Rectangle1Click(Sender: TObject);
+  private
+    { Private declarations }
+    var QtdRateio, QtdTotal, QdtEmbalagem, QdtPaletes :Integer;
+
+
+    procedure ListarDados;
+    procedure LimpaCampos;
+    procedure AbreLink(URL:STRING);
+    procedure DevolveValorEmb;
+  public
+    { Public declarations }
+    procedure abreEntregas(Sender :TObject);
+
+  end;
+
+var
+  FrmInformativo: TFrmInformativo;
+
+implementation
+
+{$R *.fmx}
+
+uses  uFrmMain;
+
+procedure TFrmInformativo.abreEntregas(Sender: TObject);
+begin
+end;
+
+procedure TFrmInformativo.AbreLink(URL: STRING);
+begin
+  ShellExecute(0,
+               'open',
+               URL,
+               nil,
+               nil,
+               0);
+end;
+
+procedure TFrmInformativo.DevolveValorEmb;
+begin
+end;
+
+procedure TFrmInformativo.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+
+  lbl_titulo.Text       := 'Detalhamento';
+
+  lblInfoTexto.Text     := 'Deixe sua avaliação...';
+  lblArtista.Text       :=  DmLocal.QryMusicasartistName.AsString ;
+  lblMusica.Text        :=  DmLocal.QryMusicastrackName.AsString;
+  lblAlbum.Text         :=  DmLocal.QryMusicascollectionName.AsString;
+
+
+end;
+
+procedure TFrmInformativo.LimpaCampos;
+begin
+
+end;
+
+procedure TFrmInformativo.ListarDados;
+var EndComp :String;
+begin
+
+end;
+
+procedure TFrmInformativo.Rectangle1Click(Sender: TObject);
+begin
+  inherited;
+   AbreLink(PWideChar(DmLocal.QryMusicascollectionViewUrl.AsString));
+end;
+
+procedure TFrmInformativo.Rectangle2Click(Sender: TObject);
+begin
+  inherited;
+   AbreLink(PWideChar(DmLocal.QryMusicastrackViewUrl.AsString));
+end;
+
+procedure TFrmInformativo.Rectangle3Click(Sender: TObject);
+begin
+  inherited;
+  AbreLink(PWideChar(DmLocal.QryMusicasartistViewUrl.AsString));
+end;
+
+procedure TFrmInformativo.SpeedButton2Click(Sender: TObject);
+var qtd : double;
+    paletes : integer;
+begin
+  inherited;
+
+
+end;
+
+procedure TFrmInformativo.spdBtnFinalClick(Sender: TObject);
+var TotPL,APTO :integer;
+ QdtRatItens,QtdRatEmbalagens,QtdRatPaletes:integer ;
+begin
+  inherited;
+
+end;
+
+end.

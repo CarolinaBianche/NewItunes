@@ -1,0 +1,74 @@
+unit uFrmEntregue;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.Edit;
+
+type
+  TFrmEntregue = class(TFrmTemplate)
+    Layout2: TLayout;
+    rctAssintatura: TRectangle;
+    Label15: TLabel;
+    img_Assinatura: TImage;
+    lyt_img_recb: TLayout;
+    rctFoto: TRectangle;
+    Label6: TLabel;
+    imgFoto: TImage;
+    lyt_recebedor: TLayout;
+    rec_login: TRectangle;
+    EdtNome: TEdit;
+    lyt_recebedor_doc: TLayout;
+    Rectangle10: TRectangle;
+    EdtRG: TEdit;
+    lytFinalizar: TLayout;
+    rct_finalizarPonto: TRectangle;
+    Label11: TLabel;
+    lytFotoAssinatura: TLayout;
+    btnFoto: TButton;
+    btnAssintatura: TButton;
+    Rectangle1: TRectangle;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure btnAssintaturaClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmEntregue: TFrmEntregue;
+
+implementation
+
+{$R *.fmx}
+
+uses AnonThread, Constantes, uDMLocal, uDmRest, uFrmInformativo, uFrmMain,
+  uLoading, UntLib, uFrmAssinatura;
+
+procedure TFrmEntregue.btnAssintaturaClick(Sender: TObject);
+begin
+  inherited;
+  if not Assigned(FrmAssinatura) then
+   application.CreateForm(TFrmAssinatura,FrmAssinatura);
+
+  FrmAssinatura.Show;
+end;
+
+procedure TFrmEntregue.FormCreate(Sender: TObject);
+begin
+  inherited;
+  lbl_titulo.Text    := 'ENTREGA REALIZADA';
+  lblInfoTexto.Text  := 'CLIENTE : ' + DmLocal.QryAtv.FieldByName('NOME_CLIENTE').asstring;
+end;
+
+procedure TFrmEntregue.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  TLibery.OpenForm(TFrmInformativo,FrmMain.lytNavegacao);
+end;
+
+end.

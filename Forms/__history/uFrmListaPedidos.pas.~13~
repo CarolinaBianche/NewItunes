@@ -1,0 +1,399 @@
+unit uFrmListaPedidos;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.Edit,
+  FMX.ListBox;
+
+type
+  TFrmListaPedidos = class(TFrmTemplate)
+    rctCard: TRectangle;
+    lytEsqCard: TLayout;
+    img_pendente: TImage;
+    LinTop: TLine;
+    LinRod: TLine;
+    lytBoxCard: TLayout;
+    lytTopCard: TLayout;
+    lytRomaneio: TLayout;
+    lblNumRomaneio: TLabel;
+    lblRomaneio: TLabel;
+    lytRodCard: TLayout;
+    lbl_dt_entrada: TLabel;
+    Label6: TLabel;
+    lblCondominio: TLabel;
+    Label4: TLabel;
+    lytCliente: TLayout;
+    lytImgVisualizar: TLayout;
+    Label2: TLabel;
+    imgVisualizar: TImage;
+    lblStatus: TLabel;
+    Label1: TLabel;
+    imgArg: TImage;
+    imgEx: TImage;
+    imgVisu: TImage;
+    lblTxtNota: TLabel;
+    Label3: TLabel;
+    lblPlaca: TLabel;
+    lblPlaca2: TLabel;
+    lblVeiculo: TLabel;
+    rctFiltroEd: TRectangle;
+    lytDireita: TLayout;
+    btnLimparFiltro: TSpeedButton;
+    Rectangle2: TRectangle;
+    btnFecharFiltro: TSpeedButton;
+    lytClient: TLayout;
+    ComboBox1: TComboBox;
+    edt_busca_nota: TEdit;
+    Label5: TLabel;
+    lbl_nota: TLabel;
+    rctFiltros: TRectangle;
+    Layout6: TLayout;
+    Label7: TLabel;
+    Var1: TLabel;
+    Var2: TLabel;
+    Var3: TLabel;
+    spdAddFil: TSpeedButton;
+    Rectangle3: TRectangle;
+    btnPesquisaFiltro: TSpeedButton;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure speBtnAtualizarClick(Sender: TObject);
+    procedure btnPesquisaFiltroClick(Sender: TObject);
+    procedure spdAddFilClick(Sender: TObject);
+    procedure edt_busca_notaChangeTracking(Sender: TObject);
+    procedure edt_busca_notaEnter(Sender: TObject);
+    procedure btnLimparFiltroClick(Sender: TObject);
+    procedure btnFecharFiltroClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure CarregaPedidos(Sender:TObject);
+    procedure OnSelecionarPedido(Sender :TObject);
+    procedure TapSelecionaPedido(Sender: TObject; const Point: TPointF);
+    procedure ValidaBusca;
+  public
+    { Public declarations }
+
+  end;
+
+var
+  FrmListaPedidos: TFrmListaPedidos;
+
+implementation
+
+{$R *.fmx}
+
+uses AnonThread, uDMLocal, uDmRest, uFrmMain, uLoading, UntLib, uFrmAtividades,
+  uFrmNotas;
+
+procedure TFrmListaPedidos.btnFecharFiltroClick(Sender: TObject);
+begin
+  inherited;
+   edt_busca_nota.Text:='';
+  rctFiltroEd.Visible:=false;
+  if vertLista.Margins.Top >190 then
+  vertLista.Margins.Top := vertLista.Margins.Top -168 else
+  vertLista.Margins.Top := 190;
+end;
+
+procedure TFrmListaPedidos.btnLimparFiltroClick(Sender: TObject);
+begin
+  inherited;
+   Var1.Text := EmptyStr;
+ Var2.Text := EmptyStr;
+ Var3.Text := EmptyStr;
+ edt_busca_nota.Text := EmptyStr;
+ ComboBox1.ItemIndex := -1 ;
+
+end;
+
+procedure TFrmListaPedidos.btnPesquisaFiltroClick(Sender: TObject);
+begin
+  inherited;
+   ValidaBusca;
+   self.CarregaPedidos(Sender);
+   self.btnFecharFiltro.OnClick(Sender);
+end;
+
+procedure TFrmListaPedidos.CarregaPedidos(Sender: TObject);
+begin
+ TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Carregando Pedidos ...');
+          vertLista.Visible:=false;
+          vertLista.BeginUpdate;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+          DMLocal.Qry_Pedidos.DisableControls;
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao : Single;
+     Qtd      : Integer;
+    Begin
+    //Processo Principal
+      DMLocal.ExistePedido(0,'',FrmMain.Campo,FrmMain.Filtro);
+      DmLocal.Qry_Pedidos.First;
+
+      rctCard.Visible  := false;
+      LPosicao         := 8;
+
+
+
+      while not DMLocal.Qry_Pedidos.Eof do
+      Begin
+
+        //Povoando os Cards
+        lblNumRomaneio.Text := DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString;
+        lblTxtNota.Text     := DmLocal.Qry_PedidosQdt_Total.Value.ToString;
+
+        rctCard.Tag         := DmLocal.Qry_PedidosNROPEDIDO.AsInteger;
+
+        lblPlaca.Text       := DmLocal.Qry_PedidosCLIENTE.asstring;
+        lblPlaca2.Text      := DmLocal.Qry_PedidosCLIENTE_CNPJ.asstring;
+
+        lblCondominio.Text  := ' '+ DmLocal.Qry_PedidosPEDIDO_FILIAL.AsString;
+        lbl_dt_entrada.Text := FormatDateTime('dd/mm/yy hh:mm:ss',DmLocal.Qry_PedidosData_Emissao.AsDateTime);
+
+
+
+        if DmLocal.Qry_PedidosSTATUS.asstring='DG' then
+        Begin
+        LinTOP.Stroke.Color := $FF434343;
+        LinROD.Stroke.Color := $FF434343;
+        lblStatus.Text      := 'aguardando...';
+        img_pendente.Bitmap :=  imgArg.Bitmap;
+
+        End
+        else
+        if DmLocal.Qry_PedidosSTATUS.asstring='V' then
+        Begin
+        LinTOP.Stroke.Color := $FF1D609F;
+        LinROD.Stroke.Color := $FF1D609F;
+        lblStatus.Text      := 'visualizado...';
+        img_pendente.Bitmap :=  imgVisu.Bitmap;
+        End else
+        if DmLocal.Qry_PedidosSTATUS.asstring='E' then
+        Begin
+        LinTOP.Stroke.Color := $FFFFAD26;
+        LinROD.Stroke.Color := $FFFFAD26;
+        lblStatus.Text      := 'execução...';
+        img_pendente.Bitmap := imgEx.Bitmap;
+        End else
+        Begin
+        LinTOP.Stroke.Color := $FF1D609F;
+        LinROD.Stroke.Color := $FF1D609F;
+        lblStatus.Text      := 'visualizado...';
+        img_pendente.Bitmap :=  imgVisu.Bitmap;
+        End;
+
+       //Clonando
+        DmLocal.SetFrameClone(rctCard,LFrame,vertLista,LPosicao,OnSelecionarPedido,TapSelecionaPedido,'Ped');
+        DMLocal.Qry_Pedidos.Next;
+      End;
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      VertLista.EndUpdate;
+      VertLista.ScrollTo(0,0);
+      VertLista.Visible := true;
+      DmLocal.Qry_Pedidos.EnableControls;
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      FrmMain.MensagemTost('Erro no processamento da thread Valida Motrista! ' +
+      AException);
+    End,
+    True
+  );
+end;
+
+procedure TFrmListaPedidos.edt_busca_notaChangeTracking(Sender: TObject);
+begin
+  inherited;
+  frmMain.EscondeTeclado(edt_busca_nota);
+end;
+
+procedure TFrmListaPedidos.edt_busca_notaEnter(Sender: TObject);
+begin
+  inherited;
+  frmMain.EscondeTeclado(edt_busca_nota);
+end;
+
+procedure TFrmListaPedidos.FormCreate(Sender: TObject);
+begin
+  inherited;
+  lbl_titulo.Text    := 'Fila de Pedidos';
+  lblInfoTexto.Text  := FrmMain.motorista;
+  rctCard.Visible    := false;
+  CarregaPedidos(speBtnAtualizar);
+end;
+
+procedure TFrmListaPedidos.OnSelecionarPedido(Sender: TObject);
+begin
+ {$IFDEF MSWINDOWS}
+    DmLocal.Qry_Pedidos.Locate('NROPEDIDO',TRectangle(Sender).Tag);
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Sincronizando Itens...');
+          TLibery.ActiveForm := nil;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao,LPosicaoB : Single;
+     s:string;
+     Qtd      : Integer;
+    Begin
+
+     DmRest.RecebeItensPedido(DMLocal.Qry_PedidosPEDIDO_FILIAL.asstring,
+     DMLocal.Qry_PedidosNROPEDIDO.asinteger);
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      FrmMain.lytNavegacao.Controls.Clear;
+      TLibery.ActiveForm.DisposeOf;
+      TLibery.ActiveForm:=nil;
+      TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+      TLibery.MudarAba(FrmMain.tbiMain,Sender);
+
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      FrmMain.MensagemTost('Erro no processamento da thread Carregar Itens Pedido! ' +
+      AException);
+    End,
+    false
+  );
+ {$ENDIF}
+end;
+
+procedure TFrmListaPedidos.spdAddFilClick(Sender: TObject);
+begin
+  inherited;
+  rctFiltroEd.Visible:=true;
+  ComboBox1.SetFocus;
+  if vertLista.Margins.Top =190 then
+  vertLista.Margins.Top := vertLista.Margins.Top + 168;
+end;
+
+procedure TFrmListaPedidos.speBtnAtualizarClick(Sender: TObject);
+begin
+  inherited;
+  CarregaPedidos(Sender);
+end;
+
+procedure TFrmListaPedidos.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  FrmMain.lytNavegacao.Controls.Clear;
+  TLibery.ActiveForm.DisposeOf;
+  TLibery.ActiveForm:=nil;
+  TLibery.MudarAba(FrmMain.tbiPrincipal,Sender);
+end;
+
+procedure TFrmListaPedidos.TapSelecionaPedido(Sender: TObject;
+  const Point: TPointF);
+begin
+  {$IFDEF ANDROID}
+  DmLocal.Qry_Pedidos.Locate('NROPEDIDO',TRectangle(Sender).Tag);
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Sincronizando Itens...');
+          TLibery.ActiveForm := nil;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao,LPosicaoB : Single;
+     s:string;
+     Qtd      : Integer;
+    Begin
+
+     DmRest.RecebeItensPedido(DMLocal.Qry_PedidosPEDIDO_FILIAL.asstring,
+     DMLocal.Qry_PedidosNROPEDIDO.asinteger);
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      FrmMain.lytNavegacao.Controls.Clear;
+      TLibery.ActiveForm.DisposeOf;
+      TLibery.ActiveForm:=nil;
+      TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+      TLibery.MudarAba(FrmMain.tbiMain,Sender);
+
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      FrmMain.MensagemTost('Erro no processamento da thread Carregar Itens Pedido! ' +
+      AException);
+    End,
+    false
+  );
+
+ {$ENDIF}
+end;
+
+procedure TFrmListaPedidos.ValidaBusca;
+begin
+ Frmmain.Campo  := '';
+  Frmmain.Filtro := '';
+  FrmMain.Data1  := '';
+  FrmMain.Data2  := '';
+
+  case ComboBox1.ItemIndex of
+   -1 : FrmMain.Campo := '';
+    0 : FrmMain.Campo := 'NRONOTA';
+    1 : FrmMain.Campo := 'NR_ENTRADA';
+    2 : FrmMain.Campo := 'NROPEDIDO';
+  end;
+
+  FrmMain.Filtro := edt_busca_nota.Text;
+
+
+  Var1.Text      := Copy(FrmMain.Campo,1,3);
+  Var2.Text      := FrmMain.Filtro;
+end;
+
+end.

@@ -1,0 +1,1013 @@
+unit uFrmInformativo;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, AnonThread,
+  Constantes, Notificacao, uDMLocal, uDmRest, uLoading,FMX.DialogService,
+  UntLib, FMX.Edit, System.Sensors.Components,DelphiSelfUpdate,FMX.VirtualKeyboard,FMX.Platform,
+  FMX.ScrollBox, FMX.Memo, FMX.ListView.Types, FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base, FMX.ListView, FMX.Effects;
+
+type
+  TFrmInformativo = class(TFrmTemplate)
+    lytFinalizar: TLayout;
+    rctEntregue: TRoundRect;
+    lbl_dis: TLabel;
+    Image1: TImage;
+    lblData: TLabel;
+    lblPedido: TLabel;
+    lblnroPedido: TLabel;
+    edtLote: TEdit;
+    edtSerie: TEdit;
+    rctCard2: TRectangle;
+    rect_Proximo: TRectangle;
+    SpeedButton2: TSpeedButton;
+    EdtQtd: TEdit;
+    EdtQtdEm: TEdit;
+    edtQtdPL: TEdit;
+    rctCard3: TRectangle;
+    rctTopCard3: TRectangle;
+    spdBtnFinal: TSpeedButton;
+    spdBtnVC2: TSpeedButton;
+    Layout1: TLayout;
+    edtGalpao: TEdit;
+    edtRua: TEdit;
+    edtNumero: TEdit;
+    Layout2: TLayout;
+    edtAndar: TEdit;
+    edtApto: TEdit;
+    rctFinalizar: TRectangle;
+    Label16: TLabel;
+    ckbVetor: TCheckBox;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Edit1: TEdit;
+    Label12: TLabel;
+    Edit2: TEdit;
+    Label13: TLabel;
+    SpeedButton4: TSpeedButton;
+    rect_tipo_rateio: TRectangle;
+    rect_qtd_inicial: TRectangle;
+    rectExcluir: TRectangle;
+    Label14: TLabel;
+    img_excluir: TImage;
+    img_uncheck: TImage;
+    img_check: TImage;
+    lv: TListView;
+    lblCnpj: TLabel;
+    Layout4: TLayout;
+    Rectangle1: TRectangle;
+    Label1: TLabel;
+    lblQdtRateada: TLabel;
+    Label15: TLabel;
+    lblQtdEmbalagens: TLabel;
+    Label18: TLabel;
+    lblQtdPaletes: TLabel;
+    lblQtds: TLabel;
+    btn_limpa_Lote: TSpeedButton;
+    btn_limpa_serie: TSpeedButton;
+    btn_limpa_qtd: TSpeedButton;
+    btn_limpa_qtdEm: TSpeedButton;
+    btn_limpa_qtdPl: TSpeedButton;
+    btn_limpa_rua: TSpeedButton;
+    btn_limpa_galpao: TSpeedButton;
+    btn_limpa_num: TSpeedButton;
+    btn_limpa_apto: TSpeedButton;
+    btn_limpa_andar: TSpeedButton;
+    rect_EtdEmb: TRectangle;
+    ShadowEffect1: TShadowEffect;
+    ShadowEffect2: TShadowEffect;
+    rect_QtdPal: TRectangle;
+    ShadowEffect3: TShadowEffect;
+    rect_Confirmar: TRectangle;
+    rect_Lote: TRectangle;
+    rect_serie: TRectangle;
+    ShadowEffect5: TShadowEffect;
+    rect_QtdEmb: TRectangle;
+    ShadowEffect6: TShadowEffect;
+    rect_QtdUni: TRectangle;
+    ShadowEffect7: TShadowEffect;
+    rect_QtdPals: TRectangle;
+    ShadowEffect8: TShadowEffect;
+    ShadowEffect4: TShadowEffect;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure rctEntregueClick(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure spdBtnVC2Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure spdBtnFinalClick(Sender: TObject);
+    procedure rctFinalizarClick(Sender: TObject);
+    procedure rctNEntregueClick(Sender: TObject);
+    procedure edtLoteEnter(Sender: TObject);
+    procedure edtSerieEnter(Sender: TObject);
+    procedure EdtQtdEnter(Sender: TObject);
+    procedure EdtQtdEmEnter(Sender: TObject);
+    procedure edtQtdPLEnter(Sender: TObject);
+    procedure edtGalpaoEnter(Sender: TObject);
+    procedure edtRuaEnter(Sender: TObject);
+    procedure edtNumeroEnter(Sender: TObject);
+    procedure edtAndarEnter(Sender: TObject);
+    procedure edtAptoEnter(Sender: TObject);
+    procedure EdtQtdChangeTracking(Sender: TObject);
+    procedure EdtQtdEmChangeTracking(Sender: TObject);
+    procedure edtQtdPLChangeTracking(Sender: TObject);
+    procedure edtLoteChangeTracking(Sender: TObject);
+    procedure edtSerieChangeTracking(Sender: TObject);
+    procedure edtGalpaoChangeTracking(Sender: TObject);
+    procedure edtRuaChangeTracking(Sender: TObject);
+    procedure edtAndarChangeTracking(Sender: TObject);
+    procedure edtAptoChangeTracking(Sender: TObject);
+    procedure edtNumeroChangeTracking(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
+    procedure edtLoteKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure edtSerieKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure EdtQtdKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure edtQtdPLKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure EdtQtdEmKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure edtGalpaoKeyDown(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure Edit2KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure edtRuaKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure edtNumeroKeyDown(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure edtAndarKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure edtAptoKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure lvItemClick(const Sender: TObject; const AItem: TListViewItem);
+    procedure img_excluirClick(Sender: TObject);
+    procedure btn_limpa_LoteClick(Sender: TObject);
+    procedure btn_limpa_serieClick(Sender: TObject);
+    procedure btn_limpa_qtdClick(Sender: TObject);
+    procedure k(Sender: TObject);
+    procedure btn_limpa_qtdPlClick(Sender: TObject);
+    procedure btn_limpa_ruaClick(Sender: TObject);
+    procedure btn_limpa_galpaoClick(Sender: TObject);
+    procedure btn_limpa_numClick(Sender: TObject);
+    procedure btn_limpa_aptoClick(Sender: TObject);
+    procedure btn_limpa_andarClick(Sender: TObject);
+  private
+    { Private declarations }
+    var QtdRateio, QtdTotal, QdtEmbalagem, QdtPaletes :Integer;
+
+
+    procedure ListarDados;
+    procedure LimpaCampos;
+    procedure DevolveValorEmb;
+  public
+    { Public declarations }
+    procedure abreEntregas(Sender :TObject);
+
+  end;
+
+var
+  FrmInformativo: TFrmInformativo;
+
+implementation
+
+{$R *.fmx}
+
+uses uFrmAtividades, uFrmMain, uListview;
+
+procedure TFrmInformativo.abreEntregas(Sender: TObject);
+begin
+    //vertLista.Content.DeleteChildren;
+   { if not Assigned(FrmEntregue) then
+    Application.CreateForm(TFrmEntregue, FrmEntregue);
+
+    FrmEntregue.Show; }
+end;
+
+procedure TFrmInformativo.btn_limpa_LoteClick(Sender: TObject);
+begin
+  inherited;
+  edtLote.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_numClick(Sender: TObject);
+begin
+  inherited;
+  edtNumero.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_qtdClick(Sender: TObject);
+begin
+  inherited;
+  EdtQtd.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_qtdPlClick(Sender: TObject);
+begin
+  inherited;
+  edtQtdPL.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_ruaClick(Sender: TObject);
+begin
+  inherited;
+  edtRua.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_serieClick(Sender: TObject);
+begin
+  inherited;
+  edtSerie.Text:=EmptyStr;
+end;
+
+procedure TFrmInformativo.DevolveValorEmb;
+begin
+  if (lblQtdEmbalagens.Text=EmptyStr) or
+  (lblQtdPaletes.Text=EmptyStr) or (lblQdtRateada.Text=EmptyStr) then
+    Begin
+        QdtEmbalagem         := 0;
+        QdtPaletes           := 0;
+        QtdTotal             := 0;
+    End else
+    Begin
+        QdtEmbalagem         := lblQtdEmbalagens.Text.ToInteger;
+        QdtPaletes           := lblQtdPaletes.Text.ToInteger;
+        QtdTotal             := lblQdtRateada.Text.ToInteger;
+    End;
+end;
+
+procedure TFrmInformativo.Edit1KeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+   if(Key = 13)then
+  Begin
+   Edit2.SetFocus;
+  end
+end;
+
+procedure TFrmInformativo.Edit2KeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+   if(Key = 13)then
+  Begin
+   SpeedButton4.OnClick(Sender);
+  end
+end;
+
+procedure TFrmInformativo.edtAndarChangeTracking(Sender: TObject);
+
+begin
+ frmMain.EscondeTeclado(edtAndar);
+end;
+
+procedure TFrmInformativo.edtAndarEnter(Sender: TObject);
+begin
+ frmMain.EscondeTeclado(edtAndar);
+end;
+
+procedure TFrmInformativo.edtAndarKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+   if(Key = 13)then
+  Begin
+   edtApto.SetFocus;
+  end
+end;
+
+procedure TFrmInformativo.edtAptoChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtApto);
+end;
+
+procedure TFrmInformativo.edtAptoEnter(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtApto);
+end;
+
+procedure TFrmInformativo.edtAptoKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+   if(Key = 13)then
+  Begin
+   spdBtnFinal.OnClick(Sender);
+  end
+end;
+
+procedure TFrmInformativo.edtGalpaoChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtGalpao);
+end;
+
+procedure TFrmInformativo.edtGalpaoEnter(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtGalpao);
+end;
+
+procedure TFrmInformativo.edtGalpaoKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+  if(Key = 13)then
+  Begin
+   edtRua.SetFocus;
+  end
+end;
+
+procedure TFrmInformativo.edtLoteChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtLote);
+end;
+
+procedure TFrmInformativo.edtLoteEnter(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtLote);
+end;
+
+procedure TFrmInformativo.edtLoteKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+   if(Key = 13)then
+  Begin
+   edtSerie.SetFocus;
+  end
+end;
+
+procedure TFrmInformativo.edtNumeroChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtNumero);
+end;
+
+procedure TFrmInformativo.edtNumeroEnter(Sender: TObject);
+begin
+ frmMain.EscondeTeclado(edtNumero);
+end;
+
+procedure TFrmInformativo.edtNumeroKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+  if(Key = 13)then
+  Begin
+   edtAndar.SetFocus;
+  end
+end;
+
+procedure TFrmInformativo.EdtQtdChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(EdtQtd);
+end;
+
+procedure TFrmInformativo.EdtQtdEmChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(EdtQtdEm);
+end;
+
+procedure TFrmInformativo.EdtQtdEmEnter(Sender: TObject);
+begin
+frmMain.EscondeTeclado(EdtQtdEm);
+end;
+
+procedure TFrmInformativo.EdtQtdEmKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+  if(Key = 13)then
+  Begin
+   edtQtdPL.SetFocus;
+  end;
+
+  if FrmMain.VerificaCarEspeciais(KeyChar) Then
+   begin
+    KeyChar:=#0;
+    EdtQtdEm.SetFocus;
+    FrmMain.MensagemTost('Ops, esse campo só aceita números inteiros.Verifique!');
+   end;
+end;
+
+procedure TFrmInformativo.EdtQtdEnter(Sender: TObject);
+begin
+  frmMain.EscondeTeclado(EdtQtd);
+end;
+
+procedure TFrmInformativo.EdtQtdKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+  if(Key = 13)then
+  Begin
+   EdtQtdEm.SetFocus;
+  end;
+   if FrmMain.VerificaCarEspeciais(KeyChar) Then
+   begin
+    EdtQtd.SetFocus;
+    KeyChar:=#0;
+    FrmMain.MensagemTost('Ops, esse campo só aceita números inteiros.Verifique!');
+   end;
+end;
+
+procedure TFrmInformativo.edtQtdPLChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtQtdPL);
+end;
+
+procedure TFrmInformativo.edtQtdPLEnter(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtQtdPL);
+end;
+
+procedure TFrmInformativo.edtQtdPLKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+ if(Key = 13)then
+  Begin
+   SpeedButton2.OnClick(Sender);
+  end;
+   if FrmMain.VerificaCarEspeciais(KeyChar) Then
+   begin
+    KeyChar:=#0;
+    edtQtdPL.SetFocus;
+    FrmMain.MensagemTost('Ops, esse campo só aceita números inteiros.Verifique!');
+   end;
+end;
+
+procedure TFrmInformativo.edtRuaChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtRua);
+end;
+
+procedure TFrmInformativo.edtRuaEnter(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtRua);
+end;
+
+procedure TFrmInformativo.edtRuaKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+  if(Key = 13)then
+  Begin
+   edtNumero.SetFocus;
+  end
+end;
+
+procedure TFrmInformativo.edtSerieChangeTracking(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtSerie);
+end;
+
+procedure TFrmInformativo.edtSerieEnter(Sender: TObject);
+begin
+frmMain.EscondeTeclado(edtSerie);
+end;
+
+procedure TFrmInformativo.edtSerieKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+  if(Key = 13)then
+  Begin
+   
+  end
+end;
+
+procedure TFrmInformativo.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+
+  lbl_titulo.Text       := 'Entrada';
+
+
+
+  lblData.Text          := DmLocal.QryItensDESCRICAO.AsString ;
+  lblInfoTexto.Text     := 'Cliente: ' +  DmLocal.QryItensNOME_CLIENTE.AsString;
+  lblCNPJ.Text          := 'CNPJ:         ' +  DmLocal.QryItensCNPJ.AsString;
+  lblPedido.Text        := 'Código Prod.  ' +  DmLocal.QryItensCODIGO.AsString;
+  lblnroPedido.Text     := 'Nota Nº: ' + DmLocal.QryItensNRONOTA.AsInteger.ToString; 
+  lblQtds.Text          := 'Itens :    ' +  DmLocal.QryItensQTD_TOTAL.AsInteger.ToString;
+  lblQdtRateada.Text    := '';
+  lblQtdEmbalagens.Text := '';
+  lblQtdPaletes.Text    := '';
+  lytFinalizar.Visible  :=  True;
+
+  rect_qtd_inicial.Visible:=true;
+  rctCard2.Visible:= false;
+  rctCard3.Visible:= false;
+
+  img_uncheck.Visible  := false;
+  img_check.Visible    := false;
+  img_excluir.Visible  := false;
+  rectExcluir.Visible  := false;
+  rctFinalizar.Visible := false;
+
+end;
+
+procedure TFrmInformativo.FormShow(Sender: TObject);
+begin
+  inherited;
+  DmLocal.MemRateio.Close;
+  DmLocal.MemRateio.Open;
+end;
+
+procedure TFrmInformativo.img_excluirClick(Sender: TObject);
+begin
+  inherited;
+     FrmMain.lytNavegacao.Controls.Clear;
+     TLibery.ActiveForm.DisposeOf;
+     TLibery.ActiveForm:=nil;
+     TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+     TLibery.MudarAba(FrmMain.tbiMain,Sender);
+     FrmMain.MensagemTost('Reteio Excluido com Sucesso');
+end;
+
+procedure TFrmInformativo.LimpaCampos;
+begin
+     edtLote.Text     := '';
+     edtserie.Text    := '';
+     edtQtd.Text      := '';
+     edtQtdEm.Text    := '';
+     edtQtdPL.Text    := '';
+     edtGalpao.Text   :='';
+     edtRua.Text      :='';
+     edtNumero.Text   :='';
+     edtAndar.Text    :='';
+     edtApto.Text     :='';
+end;
+
+procedure TFrmInformativo.ListarDados;
+var EndComp :String;
+begin
+  DmLocal.MemItens.First;
+  while not DmLocal.MemItens.Eof do
+  Begin
+     EndComp := DmLocal.MemItensGALPAO.AsString +'- '+  DmLocal.MemItensRUA.AsString +'- '+   DmLocal.MemItensNUMERO.AsString +'- '+
+                DmLocal.MemItensANDAR.AsString +'- '+ DmLocal.MemItensAPTO.AsString ;
+     TMyListview.AddItem(lv,DmLocal.MemItensID_INTERNO.AsInteger.ToString, DmLocal.MemItensDESCRICAO.AsString,
+                        'Endereco: '+EndComp, img_check.Bitmap);
+
+     DmLocal.MemItens.Next;
+  End;
+
+end;
+
+procedure TFrmInformativo.lvItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  inherited;
+    TMyListview.SelecionarItem(lv, Aitem, img_uncheck.Bitmap, img_check.Bitmap);
+    img_excluir.Visible := TMyListview.SelectedCount(lv) > 0;
+
+end;
+
+procedure TFrmInformativo.rctEntregueClick(Sender: TObject);
+begin
+  inherited;
+  if (DMLocal.MemRateio.RecordCount=0) and (DMLocal.QryFilaTIPO.asstring='DESCARGA') then
+  Begin
+   FrmMain.MensagemTost('Preencha Qtd.Embalagens e Qtd.Paletes antes de Continuar!');
+   Edit1.SetFocus;
+   Abort
+  End else
+  Begin
+    rctCard2.Visible         := true;
+    QtdTotal                 := 0;
+    QdtEmbalagem             := 0;
+    QdtPaletes               := 0;
+    qtdRateio                := DmLocal.QryItensQTD_TOTAL.AsInteger;
+    lytFinalizar.Visible     := false;
+    rect_tipo_rateio.Visible := false;
+    DMLocal.MemItens.Close;
+    DmLocal.MemItens.Open;
+    edtLote.Text             := DmLocal.QryItensLOTE.AsString;
+    EdtQtdEm.Text            := (DmLocal.MemRateioQTD_EMBALAGEM.AsInteger/DmLocal.MemRateioQTD_PALETES.AsInteger).ToString;
+    edtQtdPL.Text            := DmLocal.MemRateioQTD_PALETES.AsInteger.ToString;
+    edtLote.SetFocus;
+  End;
+end;
+
+procedure TFrmInformativo.rctFinalizarClick(Sender: TObject);
+begin
+  inherited;
+
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Rateando ...');
+          TLibery.ActiveForm := nil;
+          DmLocal.AtualizaRateio;
+        End
+
+      );
+    End,
+    procedure()
+    Begin
+       DmLocal.Ratear;
+
+    End,
+    procedure()
+    begin
+     rctCard3.Visible := false;
+
+     TLoading.Hide;
+     FrmMain.lytNavegacao.Controls.Clear;
+     TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+     TLibery.MudarAba(FrmMain.tbiMain,Sender);
+    end,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      TDialogService.ShowMessage('Erro no processamento da thread Rateio de Itens! ' +
+      AException);
+    End,
+    True
+    );
+
+end;
+
+procedure TFrmInformativo.rctNEntregueClick(Sender: TObject);
+begin
+  inherited;
+  if (DMLocal.MemRateio.RecordCount=0) and (DMLocal.QryFilaTIPO.asstring='DESCARGA') then
+  Begin
+   TDialogService.ShowMessage('Preencha Qtd.Embalagens e Qtd.Paletes antes de Continuar!');
+   Edit1.SetFocus;
+   Abort
+  End else
+  Begin
+   rctCard2.Visible         := true;
+   edtLote.SetFocus;
+   lytFinalizar.Visible     := false;
+   rect_tipo_rateio.Visible := false;
+
+   DMLocal.MemItens.Close;
+   DmLocal.MemItens.Open;
+
+  End;
+end;
+
+procedure TFrmInformativo.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+   FrmMain.lytNavegacao.Controls.Clear;
+   TLibery.ActiveForm.DisposeOf;
+   TLibery.ActiveForm:=nil;
+   TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+   TLibery.MudarAba(FrmMain.tbiMain,Sender);
+end;
+
+procedure TFrmInformativo.k(Sender: TObject);
+begin
+  inherited;
+  EdtQtdEm.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_galpaoClick(Sender: TObject);
+begin
+  inherited;
+  edtGalpao.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_andarClick(Sender: TObject);
+begin
+  inherited;
+  edtAndar.Text := EmptyStr;
+end;
+
+procedure TFrmInformativo.btn_limpa_aptoClick(Sender: TObject);
+begin
+  inherited;
+  edtApto.Text:= EmptyStr;
+end;
+
+procedure TFrmInformativo.SpeedButton2Click(Sender: TObject);
+var qtd : double;
+    paletes : integer;
+begin
+  inherited;
+
+   if (EdtQtd.Text='') or (EdtQtdEm.Text='') or (edtQtdPL.Text='') then
+   Begin
+     FrmMain.MensagemTost('Atenção, preencha todos os campos antes de Continuar');
+     Abort
+   End;
+
+   DmLocal.MemRateio.Edit;
+   DMLocal.MemRateioLOTE.AsString     := edtLote.Text;
+   DmLocal.MemRateioSERIE.AsString    := edtSerie.Text;
+   if DmLocal.MemRateioUQtd.AsInteger=0 then
+   Begin
+   DmLocal.MemRateioUQtd.AsInteger    := DmLocal.MemRateioQTD_TOTAL.AsInteger - EdtQtd.Text.ToInteger;
+   DmLocal.MemRateioUQtdEmb.AsInteger := DmLocal.MemRateioQTD_EMBALAGEM.AsInteger - EdtQtdEm.Text.ToInteger;
+   DmLocal.MemRateioUQtdPal.AsInteger := DmLocal.MemRateioQTD_PALETES.AsInteger - EdtQtdPL.Text.ToInteger;
+   end else
+   Begin
+   DmLocal.MemRateioUQtd.AsInteger    := DmLocal.MemRateioUQtd.AsInteger - EdtQtd.Text.ToInteger;
+   DmLocal.MemRateioUQtdEmb.AsInteger := DmLocal.MemRateioUQtdEmb.AsInteger - EdtQtdEm.Text.ToInteger;
+   DmLocal.MemRateioUQtdPal.AsInteger := DmLocal.MemRateioUQtdPal.AsInteger - EdtQtdPL.Text.ToInteger;
+
+   End;
+   DmLocal.MemRateio.Post;
+
+   rctCard2.Visible:=false;
+   rctCard3.Visible:=true;
+   edtGalpao.SetFocus;
+
+end;
+
+procedure TFrmInformativo.SpeedButton3Click(Sender: TObject);
+begin
+  inherited;
+  rctCard2.Visible:=false;
+end;
+
+procedure TFrmInformativo.SpeedButton4Click(Sender: TObject);
+begin
+  inherited;
+  if (Edit1.Text<>'') and (Edit2.Text<>'') then
+  Begin
+   if not DMLocal.MemRateio.Active then
+    DmLocal.MemRateio.Open;
+
+    DmLocal.MemRateio.Insert;
+    DmLocal.MemRateioQTD_TOTAL.AsInteger     := DmLocal.QryItensQTD_TOTAL.AsInteger;
+    DmLocal.MemRateioQTD_EMBALAGEM.AsInteger := Edit1.Text.ToInteger;
+    DmLocal.MemRateioQTD_PALETES.AsInteger   := Edit2.Text.ToInteger;
+    try
+    DmLocal.MemRateio.Post;
+    finally
+      rect_tipo_rateio.Visible := true;
+      rect_qtd_inicial.Visible := false;
+      lblQtds.Text     := 'Itens :    ' +  DmLocal.QryItensQTD_TOTAL.AsInteger.ToString +
+      '  Embalagens :    ' +  Edit1.Text +  '  Paletes :    ' +  Edit2.Text;
+      edtLote.SetFocus;
+    end;
+  End else
+  FrmMain.MensagemTost('Preencha os totais antes de Continuar!');
+end;
+
+procedure TFrmInformativo.spdBtnFinalClick(Sender: TObject);
+var TotPL,APTO :integer;
+ QdtRatItens,QtdRatEmbalagens,QtdRatPaletes:integer ;
+begin
+  inherited;
+    DmLocal.MemRateio.First;
+
+    if (edtGalpao.Text='') or (edtRua.Text='') or (edtNumero.Text='') or (edtAndar.Text='') or (edtApto.Text='') then
+        Begin
+          FrmMain.MensagemTost('Atenção , preencha todos os campos antes de Continuar');
+          rctCard3.Visible := true;
+          abort  ;
+        End;
+
+
+
+    Try
+      if ckbVetor.IsChecked then
+      Begin
+        QtdTotal     := QtdTotal     + (edtQtdPL.Text.ToInteger)*(EdtQtd.Text.ToInteger);
+        QdtEmbalagem := QdtEmbalagem + (EdtQtdEm.Text.ToInteger)*(edtQtdPL.Text.ToInteger);
+        QdtPaletes   := QdtPaletes   + (edtQtdPL.Text.ToInteger);
+      End else
+      Begin
+        QtdTotal     := QtdTotal     + (EdtQtd.Text.ToInteger);
+        QdtEmbalagem := QdtEmbalagem + (EdtQtdEm.Text.ToInteger);
+        QdtPaletes   := QdtPaletes   + (edtQtdPL.Text.ToInteger);
+      End;
+
+      if QdtEmbalagem > DmLocal.MemRateioQTD_EMBALAGEM.AsInteger then
+      Begin
+        FrmMain.MensagemTost('Atenção, Quantidade de Embalagens não bate com o Informado, verifique');
+        rctCard3.Visible     :=false;
+        rctCard2.Visible     :=True;
+        EdtQtdEm.Text        :='';
+        edtLote.Text         := DmLocal.MemRateioLote.AsString;
+        edtSerie.Text        := DmLocal.MemRateioSERIE.AsString;
+        DevolveValorEmb;
+        EdtQtdEm.SetFocus;
+        ABort
+      End;
+
+      if QdtPaletes > DmLocal.MemRateioQTD_PALETES.AsInteger then
+      Begin
+        FrmMain.MensagemTost('Atenção, Quantidade de Paletes não bate com o Informado, verifique');
+        rctCard3.Visible:=false;
+        rctCard2.Visible:=True;
+        edtLote.Text         := DmLocal.MemRateioLote.AsString;
+        edtSerie.Text        := DmLocal.MemRateioSERIE.AsString;
+        DevolveValorEmb;
+        edtQtdPL.SetFocus;
+        ABort
+      End;
+
+
+      if QtdTotal > QtdRateio then
+      Begin
+        FrmMain.MensagemTost('Atenção, Quantidade de Itens não bate com o Informado na Nota, verifique');
+        edtLote.Text         := DmLocal.MemRateioLote.AsString;
+        edtSerie.Text        := DmLocal.MemRateioSERIE.AsString;
+        EdtQtdEm.Text        := DmLocal.MemRateioUQtdEmb.AsInteger.ToString;
+        edtQtdPL.Text        := DmLocal.MemRateioUQtdPal.AsInteger.ToString;
+        edtQtd.Text          := '';
+        DevolveValorEmb;
+        edtQtd.SetFocus;
+        ABort
+      End;
+
+      {
+       try
+         APTO := edtApto.Text.ToInteger;
+        except
+         FrmMain.MensagemTost('Atenção, não é possível converter o APTO em Vetor, verifique o Campo');
+         Abort
+        end;
+       }
+
+       if ckbVetor.IsChecked then
+        Begin
+         if DmLocal.LancaQuintoVetor(edtQtdPL.Text.ToInteger,APTO,edtLote.Text,edtSerie.Text,edtQtd.Text.ToInteger,
+          EdtQtdEm.Text.ToInteger,edtGalpao.Text,edtNumero.Text,edtRua.Text,edtAndar.Text,QdtRatItens,QtdRatEmbalagens,QtdRatPaletes) Then
+          Begin
+              try
+              if lblQdtRateada.Text='' then
+              lblQdtRateada.Text:= IntToStr(QtdTotal) else
+              lblQdtRateada.Text:= IntToStr(lblQdtRateada.Text.ToInteger+ (QdtRatItens * QtdRatPaletes));
+             except
+              lblQdtRateada.Text:='';
+             end;
+
+
+              try
+              if lblQtdEmbalagens.Text='' then
+              lblQtdEmbalagens.Text:= IntToStr(QdtEmbalagem) else
+              lblQtdEmbalagens.Text:= IntToStr(lblQtdEmbalagens.Text.ToInteger+ QtdRatEmbalagens);
+             except
+              lblQtdEmbalagens.Text:='';
+             end;
+
+
+              try
+              if lblQtdPaletes.Text='' then
+              lblQtdPaletes.Text:= IntToStr(QdtPaletes) else
+              lblQtdPaletes.Text:= IntToStr(lblQtdPaletes.Text.ToInteger+ QtdRatPaletes );
+             except
+              lblQtdPaletes.Text:='';
+             end;
+
+           if QtdRateio > QtdTotal then
+            Begin
+             edtLote.Text         := DmLocal.MemRateioLote.AsString;
+             edtSerie.Text        := DmLocal.MemRateioSERIE.AsString;
+             EdtQtd.Text          := IntToStr(DmLocal.MemRateioUQtd.AsInteger);
+             EdtQtdEm.Text        := IntToStr(DmLocal.MemRateioUQtdEmb.AsInteger);
+             edtQtdPL.Text        := IntToStr(DmLocal.MemRateioUQtdPal.AsInteger );
+             edtLote.SetFocus;
+             rctCard2.Visible     := true;
+             rctCard3.Visible     := false;
+             rctFinalizar.Visible := false;
+            End
+            else
+            Begin
+             LimpaCampos;
+             rctCard2.Visible     := false;
+             rctCard3.Visible     := false;
+             rctFinalizar.Visible := true;
+             ListarDados;
+             Lv.Visible           := true;
+             rectExcluir.Visible  := True;
+            End;
+
+           FrmMain.MensagemTost('Item Adicionado!');
+
+          End else
+          Begin
+           FrmMain.MensagemTost('Ops, não foi possível realizar o Rateio. Tente Novamente!');
+           edtLote.Text         := DmLocal.MemRateioLote.AsString;
+           edtSerie.Text        := DmLocal.MemRateioSERIE.AsString;
+           EdtQtdEm.Text        := DmLocal.MemRateioUQtdEmb.AsInteger.ToString;
+           edtQtdPL.Text        := DmLocal.MemRateioUQtdPal.AsInteger.ToString;
+           EdtQtd.Text          := DmLocal.MemRateioUQtd.AsInteger.ToString;
+           edtLote.SetFocus;
+           rctCard2.Visible     := true;
+           rctCard3.Visible     := false;
+           rctFinalizar.Visible := false;
+          End;
+
+        End else
+        Begin
+         if DmLocal.LancaSemVetor(edtQtdPL.Text.ToInteger,edtApto.Text,edtLote.Text,edtSerie.Text,edtQtd.Text.ToInteger,
+          EdtQtdEm.Text.ToInteger,edtGalpao.Text,edtNumero.Text,edtRua.Text,edtAndar.Text,QdtRatItens,QtdRatEmbalagens,QtdRatPaletes) Then
+          Begin
+              try
+              if lblQdtRateada.Text='' then
+              lblQdtRateada.Text:= QdtRatItens.ToString else
+              lblQdtRateada.Text:= IntToStr(lblQdtRateada.Text.ToInteger+ QdtRatItens );
+             except
+              lblQdtRateada.Text:='';
+             end;
+
+
+              try
+              if lblQtdEmbalagens.Text='' then
+              lblQtdEmbalagens.Text:= QtdRatEmbalagens.ToString else
+              lblQtdEmbalagens.Text:= IntToStr(lblQtdEmbalagens.Text.ToInteger+ QtdRatEmbalagens);
+             except
+              lblQtdEmbalagens.Text:='';
+             end;
+
+
+              try
+              if lblQtdPaletes.Text='' then
+              lblQtdPaletes.Text:= QtdRatPaletes.ToString else
+              lblQtdPaletes.Text:= IntToStr(lblQtdPaletes.Text.ToInteger+ QtdRatPaletes );
+             except
+              lblQtdPaletes.Text:='';
+             end;
+
+
+           if QtdRateio > QtdTotal then
+            Begin
+             edtLote.Text         := DmLocal.MemRateioLote.AsString;
+             edtSerie.Text        := DmLocal.MemRateioSERIE.AsString;
+             EdtQtd.Text          := IntToStr(DmLocal.MemRateioUQtd.AsInteger);
+             EdtQtdEm.Text        := IntToStr(DmLocal.MemRateioUQtdEmb.AsInteger);
+             edtQtdPL.Text        := IntToStr(DmLocal.MemRateioUQtdPal.AsInteger );
+             edtLote.SetFocus;
+             rctCard2.Visible     := true;
+             rctCard3.Visible     := false;
+             rctFinalizar.Visible := false;
+            End
+            else
+            Begin
+             LimpaCampos;
+             rctCard2.Visible     := false;
+             rctCard3.Visible     := false;
+             rctFinalizar.Visible := true;
+             ListarDados;
+             Lv.Visible           := true;
+             rectExcluir.Visible  := True;
+            End;
+
+          FrmMain.MensagemTost('Item Adicionado!');
+
+          End else
+          Begin
+           FrmMain.MensagemTost('Ops, não foi possível realizar o Rateio. Tente Novamente!');
+           edtLote.Text         := DmLocal.MemRateioLote.AsString;
+           edtSerie.Text        := DmLocal.MemRateioSERIE.AsString;
+           edtQtdEm.Text        := DmLocal.MemRateioUQtdEmb.AsInteger.ToString;
+           edtQtdPL.Text        := DmLocal.MemRateioUQtdPal.AsInteger.ToString;
+           edtQtd.Text          := DmLocal.MemRateioUQtd.AsInteger.ToString;
+           edtLote.SetFocus;
+           rctCard2.Visible     := true;
+           rctCard3.Visible     := false;
+           rctFinalizar.Visible := false;
+          End;
+        End;
+
+
+    Finally
+
+
+    End;
+
+
+
+
+
+end;
+
+procedure TFrmInformativo.spdBtnVC2Click(Sender: TObject);
+begin
+  inherited;
+  rctCard2.Visible:=true;
+  rctCard3.Visible:=false;
+end;
+
+end.

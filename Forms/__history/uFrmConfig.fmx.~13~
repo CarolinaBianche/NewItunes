@@ -1,0 +1,403 @@
+inherited FrmConfig: TFrmConfig
+  Caption = 'FrmTemplate1'
+  DesignerMasterStyle = 3
+  inherited lytGeral: TLayout
+    inherited rect_titulo: TRectangle
+      inherited lytBotoes: TLayout
+        inherited lbl_titulo: TLabel
+          TextSettings.Font.StyleExt = {00060000000000000004000000}
+        end
+        inherited speBtnMenu: TSpeedButton
+          OnClick = speBtnMenuClick
+        end
+      end
+    end
+    inherited vertLista: TVertScrollBox
+      Margins.Top = 150.000000000000000000
+      Size.Height = 403.000000000000000000
+      TabOrder = 0
+      Viewport.Width = 324.000000000000000000
+      Viewport.Height = 403.000000000000000000
+      object edtAPI: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 0
+        Text = 'http://portalallisson.ddns.com.br/armazem-api/'
+        TextSettings.Font.Family = 'Century Gothic'
+        TextSettings.Font.Size = 10.000000000000000000
+        TextSettings.HorzAlign = Center
+        Position.X = 15.000000000000000000
+        Position.Y = 38.000000000000000000
+        Margins.Left = 15.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Size.Width = 294.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TextPrompt = 'DIGITE O ENDERE'#199'O DE SUA API PARA INICIAR'
+        StyledSettings = [Style, FontColor]
+        OnChangeTracking = edtAPIChangeTracking
+        OnClick = edtAPIClick
+      end
+      object Label1: TLabel
+        Align = Top
+        StyledSettings = []
+        Margins.Left = 15.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Position.X = 15.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 294.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Century Gothic'
+        TextSettings.Font.Size = 13.000000000000000000
+        TextSettings.FontColor = xFF434343
+        TextSettings.HorzAlign = Center
+        Text = 'Configura'#231#227'o da API'
+        TabOrder = 1
+      end
+      object rctTermina: TRectangle
+        Align = Top
+        Fill.Color = claWhite
+        Size.Width = 324.000000000000000000
+        Size.Height = 185.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF959595
+        Stroke.Thickness = 2.000000000000000000
+        Visible = False
+        XRadius = 10.000000000000000000
+        YRadius = 10.000000000000000000
+        object Rectangle2: TRectangle
+          Align = Top
+          Corners = [TopLeft, TopRight]
+          Fill.Color = xFF434343
+          Margins.Left = 2.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 2.000000000000000000
+          Position.X = 2.000000000000000000
+          Position.Y = 2.000000000000000000
+          Size.Width = 320.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object SpeedButton2: TSpeedButton
+            Align = Left
+            IconTintColor = claWhite
+            Position.Y = 1.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'deletetoolbutton'
+            Text = 'SpeedButton1'
+            OnClick = SpeedButton1Click
+          end
+        end
+        object Layout2: TLayout
+          Align = Bottom
+          Locked = True
+          Position.Y = 135.000000000000000000
+          Size.Width = 324.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object Rectangle3: TRectangle
+            Align = Center
+            Fill.Color = xFFE22700
+            Size.Width = 99.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 10.000000000000000000
+            YRadius = 10.000000000000000000
+            OnClick = Rectangle3Click
+            object Label6: TLabel
+              Align = Client
+              StyledSettings = []
+              Locked = True
+              Size.Width = 99.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Century Gothic'
+              TextSettings.Font.Size = 14.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              Text = 'OK'
+              TabOrder = 0
+            end
+          end
+        end
+        object Label5: TLabel
+          Align = Client
+          StyledSettings = []
+          Locked = True
+          Size.Width = 324.000000000000000000
+          Size.Height = 83.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Century Gothic'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFF5C5C5C
+          TextSettings.HorzAlign = Center
+          Text = 
+            'Sua aplica'#231#227'o ser'#225' terminada, para aderir as novas configura'#231#245'es' +
+            '  '
+          TabOrder = 2
+        end
+      end
+      object rctSenha: TRectangle
+        Align = Top
+        Position.Y = 70.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 185.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF959595
+        Stroke.Thickness = 2.000000000000000000
+        Visible = False
+        XRadius = 10.000000000000000000
+        YRadius = 10.000000000000000000
+        object rctTopSenha: TRectangle
+          Align = Top
+          Corners = [TopLeft, TopRight]
+          Fill.Color = xFF434343
+          Margins.Left = 2.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 2.000000000000000000
+          Position.X = 2.000000000000000000
+          Position.Y = 2.000000000000000000
+          Size.Width = 320.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          object SpeedButton1: TSpeedButton
+            Align = Left
+            IconTintColor = claWhite
+            Position.Y = 1.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'deletetoolbutton'
+            Text = 'SpeedButton1'
+            OnClick = SpeedButton1Click
+          end
+          object Label3: TLabel
+            Align = Client
+            StyledSettings = []
+            Locked = True
+            Size.Width = 272.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Century Gothic'
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = claWhite
+            TextSettings.HorzAlign = Center
+            Text = 'DIGITE SUA SENHA PARA CONTINUAR '
+            TabOrder = 1
+          end
+        end
+        object Layout1: TLayout
+          Align = Bottom
+          Locked = True
+          Position.Y = 135.000000000000000000
+          Size.Width = 324.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object rctOK: TRectangle
+            Align = Center
+            Fill.Color = xFFE22700
+            Size.Width = 99.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 10.000000000000000000
+            YRadius = 10.000000000000000000
+            OnClick = rctOKClick
+            object Label4: TLabel
+              Align = Client
+              StyledSettings = []
+              Locked = True
+              Size.Width = 99.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Century Gothic'
+              TextSettings.Font.Size = 14.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              Text = 'OK'
+              TabOrder = 0
+            end
+          end
+        end
+        object Layout4: TLayout
+          Align = Top
+          Locked = True
+          Position.Y = 52.000000000000000000
+          Size.Width = 324.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object edtSenha: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            TabOrder = 0
+            Password = True
+            TextSettings.HorzAlign = Center
+            Margins.Left = 15.000000000000000000
+            Margins.Top = 7.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Size.Width = 254.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'DIGITE SUA SENHA'
+            OnChangeTracking = edtSenhaChangeTracking
+          end
+          object Layout5: TLayout
+            Align = Right
+            HitTest = True
+            Position.X = 274.000000000000000000
+            TabOrder = 1
+            OnClick = Layout5Click
+            object Path1: TPath
+              Align = Right
+              Data.Path = {
+                530000000000000039749343DB390E4302000000C62B934352780D4302000000
+                975E8C431203F7420200000033038043E510D34202000000D92E5F43434BA342
+                0200000082003A43430B8A420200000041801443430B8A4202000000FFFFDD42
+                430B8A4202000000D0A29342434BA342020000006AE723426210D34202000000
+                871682411203F74202000000AC1C2A4052780D430200000054E30540DB390E43
+                02000000986E32BFAAF1114302000000986E32BF970E17430200000054E30540
+                66C61A4302000000AC1C2A40EF871B430200000087168241B87E2D4302000000
+                6CE7234210783F430200000054A393429F5A5743020000000000DE429FFA6343
+                02000000428014439FFA634302000000C5003A439FFA6343020000001B2F5F43
+                9F5A57430200000034038043CE773F4302000000985E8C43767E2D4302000000
+                A72B9343AD871B43020000003A74934366C61A430200000037D99443980E1743
+                0200000037D9944368F111430200000039749343DB390E430300000039749343
+                DB390E4300000000A4104F430080144302000000A4104F43C0CA344302000000
+                44CB344362104F43020000008380144362104F4302000000846BE84262104F43
+                0200000042E0B342C1CA34430200000042E0B342008014430200000042E0B342
+                7E6AE84202000000026BE842BEDFB3420200000042801443BEDFB34202000000
+                03CB3443BEDFB34202000000A4104F437F6AE84202000000A4104F4300801443
+                03000000A4104F4300801443000000004C37C141BE7F1443020000001D5A0442
+                D0A20A430200000092ED53422671EE42020000006A7CA342EEE7D24202000000
+                026B934269BCEB4202000000430B8A429BA4044302000000430B8A42FF7F1443
+                02000000430B8A42FB69244302000000647B9342ED3C33430200000072A8A342
+                55AE3F4302000000FD949042701D3B4302000000D2CD7B42B989354302000000
+                02565742FDF42E430200000077BE1F42CDEC24430200000014AEEE416DC71A43
+                020000004C37C141BE7F1443030000004C37C141BE7F144300000000C12A7343
+                FEF42E4302000000CD0C6A43BA89354302000000C3B56043EE1C3B4302000000
+                8C2C574356AE3F4302000000D2425F432F3D334302000000E2FA6343BA692443
+                02000000E2FA63430080144302000000E2FA63434696044302000000D2425F43
+                2586EB42020000008C2C574354A3D24202000000C3B56043A2C5DB4202000000
+                CE0C6A438BECE64202000000C12A73430416F442020000003188804333130443
+                020000001F95854393380E43020000006B6C884300801443020000009C948543
+                73C81A4302000000F087804350ED244302000000C12A7343FEF42E4303000000
+                C12A7343FEF42E43}
+              Fill.Color = claDarkgray
+              Locked = True
+              HitTest = False
+              Margins.Left = 5.000000000000000000
+              Margins.Top = 15.000000000000000000
+              Margins.Right = 10.000000000000000000
+              Margins.Bottom = 15.000000000000000000
+              Position.X = 7.000000000000000000
+              Position.Y = 15.000000000000000000
+              Size.Width = 33.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+            end
+          end
+        end
+      end
+      object Rectangle10: TRectangle
+        Align = Bottom
+        Fill.Color = xFF594E4E
+        Margins.Top = 10.000000000000000000
+        Margins.Bottom = 10.000000000000000000
+        Position.Y = 348.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 45.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        XRadius = 5.000000000000000000
+        YRadius = 5.000000000000000000
+        OnClick = Rectangle10Click
+        object Label7: TLabel
+          Align = Client
+          StyledSettings = []
+          Locked = True
+          Size.Width = 324.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Calibri'
+          TextSettings.Font.Size = 16.000000000000000000
+          TextSettings.FontColor = claWhite
+          TextSettings.HorzAlign = Center
+          Text = 'Cancelar '
+          TabOrder = 0
+          object ShadowEffect5: TShadowEffect
+            Distance = 3.000000000000000000
+            Direction = 45.000000000000000000
+            Softness = 0.300000011920929000
+            Opacity = 0.600000023841857900
+            ShadowColor = claBlack
+          end
+        end
+      end
+      object rctConfirmar: TRectangle
+        Align = Bottom
+        Fill.Color = xFFE22700
+        Position.Y = 293.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 45.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        XRadius = 5.000000000000000000
+        YRadius = 5.000000000000000000
+        OnClick = rctConfirmarClick
+        object Label2: TLabel
+          Align = Client
+          StyledSettings = []
+          Locked = True
+          Size.Width = 324.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Century Gothic'
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claWhite
+          TextSettings.HorzAlign = Center
+          Text = 'CONFIRMAR'
+          TabOrder = 0
+        end
+      end
+      object Layout6: TLayout
+        Align = Top
+        HitTest = True
+        Margins.Top = 10.000000000000000000
+        Position.Y = 80.000000000000000000
+        Size.Width = 324.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+        object ckbCelular: TCheckBox
+          Align = Center
+          IsChecked = True
+          Size.Width = 281.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Utilizar no Celular '
+          OnChange = ckbCelularChange
+        end
+      end
+    end
+  end
+end

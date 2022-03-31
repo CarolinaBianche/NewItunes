@@ -1,0 +1,290 @@
+unit uFrmListaPedidos;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation;
+
+type
+  TFrmListaPedidos = class(TFrmTemplate)
+    rctCard: TRectangle;
+    lytEsqCard: TLayout;
+    img_pendente: TImage;
+    LinTop: TLine;
+    LinRod: TLine;
+    lytBoxCard: TLayout;
+    lytTopCard: TLayout;
+    lytRomaneio: TLayout;
+    lblNumRomaneio: TLabel;
+    lblRomaneio: TLabel;
+    lytRodCard: TLayout;
+    lbl_dt_entrada: TLabel;
+    Label6: TLabel;
+    lblCondominio: TLabel;
+    Label4: TLabel;
+    lytCliente: TLayout;
+    lytImgVisualizar: TLayout;
+    Label2: TLabel;
+    imgVisualizar: TImage;
+    lblStatus: TLabel;
+    Label1: TLabel;
+    imgArg: TImage;
+    imgEx: TImage;
+    imgVisu: TImage;
+    lblTxtNota: TLabel;
+    Label3: TLabel;
+    lblPlaca: TLabel;
+    lblPlaca2: TLabel;
+    lblVeiculo: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure CarregaPedidos(Sender:TObject);
+    procedure OnSelecionarPedido(Sender :TObject);
+    procedure TapSelecionaPedido(Sender: TObject; const Point: TPointF);
+  public
+    { Public declarations }
+
+  end;
+
+var
+  FrmListaPedidos: TFrmListaPedidos;
+
+implementation
+
+{$R *.fmx}
+
+uses AnonThread, uDMLocal, uDmRest, uFrmMain, uLoading, UntLib, uFrmAtividades,
+  uFrmNotas;
+
+procedure TFrmListaPedidos.CarregaPedidos(Sender: TObject);
+begin
+ TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Carregando Pedidos ...');
+          vertLista.Visible:=false;
+          vertLista.BeginUpdate;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+          DMLocal.Qry_Pedidos.DisableControls;
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao : Single;
+     Qtd      : Integer;
+    Begin
+    //Processo Principal
+      DMLocal.ExistePedido(0,'');
+      DmLocal.Qry_Pedidos.First;
+
+      rctCard.Visible  := false;
+      LPosicao         := 8;
+
+
+
+      while not DMLocal.Qry_Pedidos.Eof do
+      Begin
+
+        //Povoando os Cards
+        lblNumRomaneio.Text := DmLocal.Qry_PedidosNROPEDIDO.AsInteger.ToString;
+        lblTxtNota.Text     := DmLocal.Qry_PedidosQdt_Total.Value.ToString;
+
+        rctCard.Tag         := DmLocal.Qry_PedidosNROPEDIDO.AsInteger;
+
+        lblPlaca.Text       := DmLocal.Qry_PedidosCLIENTE.asstring;
+        lblPlaca2.Text      := DmLocal.Qry_PedidosCLIENTE_CNPJ.asstring;
+
+        lblCondominio.Text  := ' '+ DmLocal.Qry_PedidosPEDIDO_FILIAL.AsString;
+        lbl_dt_entrada.Text := FormatDateTime('dd/mm/yy hh:mm:ss',DmLocal.Qry_PedidosData_Emissao.AsDateTime);
+
+
+
+        if DmLocal.Qry_PedidosSTATUS.asstring='DG' then
+        Begin
+        LinTOP.Stroke.Color := $FF434343;
+        LinROD.Stroke.Color := $FF434343;
+        lblStatus.Text      := 'aguardando...';
+        img_pendente.Bitmap :=  imgArg.Bitmap;
+
+        End
+        else
+        if DmLocal.Qry_PedidosSTATUS.asstring='V' then
+        Begin
+        LinTOP.Stroke.Color := $FF1D609F;
+        LinROD.Stroke.Color := $FF1D609F;
+        lblStatus.Text      := 'visualizado...';
+        img_pendente.Bitmap :=  imgVisu.Bitmap;
+        End else
+        if DmLocal.Qry_PedidosSTATUS.asstring='E' then
+        Begin
+        LinTOP.Stroke.Color := $FFFFAD26;
+        LinROD.Stroke.Color := $FFFFAD26;
+        lblStatus.Text      := 'execução...';
+        img_pendente.Bitmap := imgEx.Bitmap;
+        End ;
+
+       //Clonando
+        DmLocal.SetFrameClone(rctCard,LFrame,vertLista,LPosicao,OnSelecionarPedido,TapSelecionaPedido,'Ped');
+        DMLocal.Qry_Pedidos.Next;
+      End;
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      VertLista.EndUpdate;
+      VertLista.ScrollTo(0,0);
+      VertLista.Visible := true;
+      DmLocal.Qry_Pedidos.EnableControls;
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      FrmMain.MensagemTost('Erro no processamento da thread Valida Motrista! ' +
+      AException);
+    End,
+    True
+  );
+end;
+
+procedure TFrmListaPedidos.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+  lbl_titulo.Text    := 'Fila de Pedidos';
+  lblInfoTexto.Text  := FrmMain.motorista;
+  rctCard.Visible    := false;
+  CarregaPedidos(speBtnAtualizar);
+end;
+
+procedure TFrmListaPedidos.OnSelecionarPedido(Sender: TObject);
+begin
+ {$IFDEF MSWINDOWS}
+    DmLocal.Qry_Pedidos.Locate('NROPEDIDO',TRectangle(Sender).Tag);
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Sincronizando Itens...');
+          TLibery.ActiveForm := nil;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao,LPosicaoB : Single;
+     s:string;
+     Qtd      : Integer;
+    Begin
+
+     DmRest.RecebeItensPedido(DMLocal.Qry_PedidosPEDIDO_FILIAL.asstring,
+     DMLocal.Qry_PedidosNROPEDIDO.asinteger);
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      FrmMain.lytNavegacao.Controls.Clear;
+      TLibery.ActiveForm.DisposeOf;
+      TLibery.ActiveForm:=nil;
+      TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+      TLibery.MudarAba(FrmMain.tbiMain,Sender);
+
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      FrmMain.MensagemTost('Erro no processamento da thread Carregar Itens Pedido! ' +
+      AException);
+    End,
+    false
+  );
+ {$ENDIF}
+end;
+
+procedure TFrmListaPedidos.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  FrmMain.lytNavegacao.Controls.Clear;
+  TLibery.ActiveForm.DisposeOf;
+  TLibery.ActiveForm:=nil;
+  TLibery.OpenForm(TFrmNotas,FrmMain.lytNavegacao);
+  TLibery.MudarAba(FrmMain.tbiMain,Sender);
+end;
+
+procedure TFrmListaPedidos.TapSelecionaPedido(Sender: TObject;
+  const Point: TPointF);
+begin
+  {$IFDEF ANDROID}
+  DmLocal.Qry_Pedidos.Locate('NROPEDIDO',TRectangle(Sender).Tag);
+   TLibery.CustomThread(
+    procedure()
+    Begin
+    //Processo de Inicio
+      TThread.Synchronize(
+       TThread.CurrentThread,
+        procedure()
+        Begin
+          TLoading.Show(FrmMain,'Sincronizando Itens...');
+          TLibery.ActiveForm := nil;
+          DmLocal.LimparLista(Self,vertLista,rctCard.Name);
+        End
+
+      );
+    End,
+    procedure()
+    var
+     LFrame   : TRectangle;
+     LPosicao,LPosicaoB : Single;
+     s:string;
+     Qtd      : Integer;
+    Begin
+
+     DmRest.RecebeItensPedido(DMLocal.Qry_PedidosPEDIDO_FILIAL.asstring,
+     DMLocal.Qry_PedidosNROPEDIDO.asinteger);
+
+    End,
+    procedure()
+    Begin
+     //Processo Completo
+      TLoading.Hide;
+      FrmMain.lytNavegacao.Controls.Clear;
+      TLibery.ActiveForm.DisposeOf;
+      TLibery.ActiveForm:=nil;
+      TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+      TLibery.MudarAba(FrmMain.tbiMain,Sender);
+
+    End,
+    procedure(const AException :string)
+    Begin
+      TLoading.Hide;
+      FrmMain.MensagemTost('Erro no processamento da thread Carregar Itens Pedido! ' +
+      AException);
+    End,
+    false
+  );
+
+ {$ENDIF}
+end;
+
+end.

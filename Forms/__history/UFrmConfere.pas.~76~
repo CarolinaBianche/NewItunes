@@ -1,0 +1,450 @@
+unit UFrmConfere;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  uFrmTemplate, FMX.Edit, FMX.Layouts, FMX.Objects, FMX.Controls.Presentation,
+  FMX.ListBox,FMX.DialogService, System.Sensors.Components,DelphiSelfUpdate,FMX.VirtualKeyboard,FMX.Platform,
+  FMX.CodeReader, FMX.Android.Permissions, FMX.Effects;
+
+type
+  TFrmConfere = class(TFrmTemplate)
+    lyt_codigo_barras: TLayout;
+    rect_cod_barras: TRectangle;
+    edt_codbarras: TEdit;
+    btnLancar: TSpeedButton;
+    lstItens: TListBox;
+    rect_finalizar_carga: TRectangle;
+    Label5: TLabel;
+    Layout1: TLayout;
+    Path1: TPath;
+    rect_tipo_conferencia: TRectangle;
+    ShadowEffect1: TShadowEffect;
+    rect_confere_paletes: TRectangle;
+    Label2: TLabel;
+    rect_confere_embalagens: TRectangle;
+    Label1: TLabel;
+    rect_confere_itens: TRectangle;
+    Label3: TLabel;
+    procedure edt_codbarrasKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure btnLancarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure speBtnMenuClick(Sender: TObject);
+    procedure rect_finalizar_cargaClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure speBtnAtualizarClick(Sender: TObject);
+    procedure edt_codbarrasKeyDown(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure edt_codbarrasEnter(Sender: TObject);
+    procedure Layout1Click(Sender: TObject);
+    procedure edt_codbarrasChangeTracking(Sender: TObject);
+    procedure CodeReader1CodeReady(aCode: string);
+    procedure edt_codbarrasChange(Sender: TObject);
+    procedure rect_confere_paletesClick(Sender: TObject);
+    procedure rect_confere_embalagensClick(Sender: TObject);
+    procedure rect_confere_itensClick(Sender: TObject);
+  private
+    procedure DelayedSetFocus(control: TControl);
+    function  LeItem:Boolean;
+    { Private declarations }
+  public
+    { Public declarations }
+
+    procedure CriaFrameItens;
+  end;
+
+var
+  FrmConfere: TFrmConfere;
+
+implementation
+
+{$R *.fmx}
+
+uses uDMLocal, uFramItens, uFrmAtividades, uLoading, UntLib, uFrmMain,
+  uFrmNotas, Constantes, uDmRest, uFrmListaPedidos;
+
+procedure TFrmConfere.edt_codbarrasChange(Sender: TObject);
+begin
+  inherited;
+ {$IFDEF MSWINDOWS}
+ LeItem;
+ {$ENDIF}
+end;
+
+procedure TFrmConfere.edt_codbarrasChangeTracking(Sender: TObject);
+begin
+  inherited;
+  {$IFNDEF MSWINDOWS}
+  FrmMain.EscondeTeclado(edt_codbarras);
+  {$ENDIF}
+end;
+
+procedure TFrmConfere.edt_codbarrasEnter(Sender: TObject);
+begin
+ {$IFNDEF MSWINDOWS}
+  FrmMain.EscondeTeclado(edt_codbarras);
+  {$ENDIF}
+end;
+
+procedure TFrmConfere.edt_codbarrasKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+ {$IFDEF ANDROID}
+  if not LeItem then
+  Begin
+     if DmRest.rstResponse.StatusCode = 204 then
+         begin
+           FrmMain.MensagemTost(DmRest.memRest.FieldByName('message').AsString);
+         end;
+  end;
+ {$ENDIF}
+
+end;
+
+procedure TFrmConfere.edt_codbarrasKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  inherited;
+    {if Length(edt_codbarras.Text)>=13 then
+     Begin
+     DMLocal.InseriItens(DmLocal.QryItensNROPEDIDO.AsInteger,DmLocal.QryItensFILIAL.AsString,edt_codbarras.Text);
+     DMLocal.BuscaItens(DmLocal.QryItensNROPEDIDO.AsInteger,DmLocal.QryItensFILIAL.asstring,DmLocal.QryFilaTipo.asstring);
+     speBtnAtualizarClick(Sender);
+      {if DmRest.AddItem('SPE','48',edtEtiqueta.Text) then
+       begin
+         edtEtiqueta.Text := '';
+         DelayedSetFocus(edtEtiqueta);
+         DM.ConsultarItensCarregados('SPE',48);
+       end else
+       begin
+         if DmRest.rstResponse.StatusCode = 202 then
+         begin
+           edtEtiqueta.Text := EmptyStr;
+           TDialogService.ShowMessage(DmRest.memRest.FieldByName('message').AsString);
+           DelayedSetFocus(edtEtiqueta);
+         end;
+       end; }
+     //End;
+
+end;
+
+procedure TFrmConfere.DelayedSetFocus(control: TControl);
+begin
+  TThread.CreateAnonymousThread(
+    procedure
+    begin
+      TThread.Synchronize( nil,
+         procedure
+         begin
+           control.SetFocus;
+         end
+      );
+    end
+  ).Start;
+end;
+
+
+procedure TFrmConfere.FormCreate(Sender: TObject);
+begin
+  inherited;
+  vertLista.Visible := true;
+  lbl_titulo.Text   := 'Conferência';
+  lblInfoTexto.Text := 'Conferente : '+ FrmMain.motorista;
+
+ 
+
+  if UsaCelular then
+  btnLancar.Visible:=true else
+  btnLancar.Visible:=false;
+
+  //speBtnAtualizarClick(Sender);
+
+end;
+
+procedure TFrmConfere.FormShow(Sender: TObject);
+begin
+  inherited;
+  rect_informativo.Visible:=false;
+  
+end;
+
+procedure TFrmConfere.Layout1Click(Sender: TObject);
+begin
+  inherited;
+   edt_codbarras.Text:='';
+end;
+
+function TFrmConfere.LeItem: Boolean;
+begin
+ if Length(edt_codbarras.Text)>=6 then
+  Begin
+    TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            if not DmLocal.BuscaItemLido(edt_codbarras.Text.ToInteger()) then
+             Begin
+              TDialogService.ShowMessage('Item não encontrado no Pedido....');
+              speBtnAtualizar.OnClick(self);
+              edt_codbarras.Text:='';
+              edt_codbarras.SetFocus;
+              abort
+             End;
+          End
+
+        );
+      End,
+      procedure()
+      Begin
+      //Processo Principal
+       if not DmRest.IntegraItemLido(DmLocal.QryItensFILIAL.AsString,DmLocal.QryItensDCA.AsString,
+       DmLocal.QryItensNROPEDIDO.AsInteger,DmLocal.QryItensSEQUENCIA.AsInteger) then
+        Begin
+         FrmMain.MensagemTost('Item não Integrado');
+         exit
+        end else
+        DmLocal.InseriItens(DmLocal.QryItensNROPEDIDO.AsInteger,DmLocal.QryItensFILIAL.AsString,edt_codBarras.Text);
+
+
+      End,
+      procedure()
+      Begin
+       //Processo Completo
+
+       DMLocal.BuscaItens(DmLocal.QryItensNROPEDIDO.AsInteger,DmLocal.Qry_PedidosPEDIDO_FILIAL.AsString,
+       'CARGA');
+
+       TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+
+           lstItens.Items.Clear;
+           DmLocal.QryItens.First;
+           if not DmLocal.QryItens.IsEmpty then
+           Begin
+             while not DmLocal.QryItens.Eof  do
+             Begin
+               CriaFrameItens;
+               DmLocal.QryItens.next;
+             End;
+           End;
+            edt_codbarras.SetFocus;
+          End);
+
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        FrmMain.MensagemTost('Erro no processamento da thread Valida Motrista! ' +
+        AException);
+      End,
+      True
+    );
+ End;
+end;
+
+procedure TFrmConfere.rect_confere_embalagensClick(Sender: TObject);
+begin
+  inherited;
+  FrmMain.TipoSaida :='EM';
+  lyt_codigo_barras.Visible     := true;
+  speBtnAtualizarClick(Sender);
+end;
+
+procedure TFrmConfere.rect_confere_itensClick(Sender: TObject);
+begin
+  inherited;
+  FrmMain.TipoSaida :='UN';
+  lyt_codigo_barras.Visible     := true;
+  speBtnAtualizarClick(Sender);
+end;
+
+procedure TFrmConfere.rect_confere_paletesClick(Sender: TObject);
+begin
+  inherited;
+  FrmMain.TipoSaida :='PL';
+  lyt_codigo_barras.Visible     := true;
+  speBtnAtualizarClick(Sender);
+end;
+
+procedure TFrmConfere.rect_finalizar_cargaClick(Sender: TObject);
+begin
+  inherited;
+  if not Dmlocal.VerificaConferencia then
+  Begin
+    TDialogService.ShowMessage('Existem produtos não conferidos, verifique antes de continuar');
+    speBtnAtualizarClick(Sender);
+    abort;
+  End
+  else
+  Begin
+    DMLocal.FinalizaPedido(FrmMain.Pedido);
+    FrmMain.MensagemTost('Finalizado com Sucesso!');
+    lstItens.Items.Clear;
+    FrmMain.lytNavegacao.Controls.Clear;
+    TLibery.ActiveForm.DisposeOf;
+    TLibery.ActiveForm:=nil;
+    TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+    TLibery.MudarAba(FrmMain.tbiMain,Sender);
+  End;
+
+end;
+
+procedure TFrmConfere.speBtnAtualizarClick(Sender: TObject);
+begin
+  inherited;
+   TLibery.CustomThread(
+      procedure()
+      Begin
+      //Processo de Inicio
+        TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+            TLoading.Show(FrmMain,'Calculando Itens');
+            DMLocal.BuscaItens(FrmMain.Pedido,'',DmLocal.QryFilaTIPO.AsString);
+          End
+
+        );
+      End,
+      procedure()
+      Begin
+      //Processo Principal
+         TThread.Synchronize(
+         TThread.CurrentThread,
+          procedure()
+          Begin
+
+           lstItens.Items.Clear;
+           DmLocal.QryItens.First;
+           if not DmLocal.QryItens.IsEmpty then
+           Begin
+             while not DmLocal.QryItens.Eof  do
+             Begin
+               CriaFrameItens;
+               DmLocal.QryItens.next;
+             End;
+           End;
+
+          End);
+
+      End,
+      procedure()
+      Begin
+       //Processo Completo
+        TLoading.Hide;
+       Self.DelayedSetFocus(edt_codbarras);
+
+
+      End,
+      procedure(const AException :string)
+      Begin
+        TLoading.Hide;
+        FrmMain.MensagemTost('Erro no processamento da thread Valida Motrista! ' +
+        AException);
+      End,
+      True
+    );
+end;
+
+procedure TFrmConfere.speBtnMenuClick(Sender: TObject);
+begin
+  inherited;
+  FrmMain.lytNavegacao.Controls.Clear;
+  TLibery.ActiveForm.DisposeOf;
+  TLibery.ActiveForm:=nil;
+  TLibery.OpenForm(TFrmAtividades,FrmMain.lytNavegacao);
+  TLibery.MudarAba(FrmMain.tbiMain,Sender);
+end;
+
+procedure TFrmConfere.CodeReader1CodeReady(aCode: string);
+begin
+  inherited;
+ edt_codbarras.Text:= aCode;
+end;
+
+procedure TFrmConfere.CriaFrameItens;
+var f :TFrameItens;
+      item:TListBoxItem;
+begin
+   item:= TListBoxItem.Create(nil);
+   item.Text       := '';
+   item.Height     := 130;
+   item.align      := TAlignLayout.Client;
+   item.Tag        := DmLocal.QryItens.FieldByName('NROPEDIDO').AsInteger ;
+   item.TagString  := DmLocal.QryItens.FieldByName('FILIAL').AsString ;
+   item.Selectable := false;
+
+
+   f := TFrameItens.Create(item);
+   f.Parent := Item;
+
+   f.lbl_c_pedido.Text  :=  DmLocal.QryItensNROPEDIDO.AsInteger.ToString ;
+   f.lbl_c_produto.Text :=  DmLocal.QryItensCODIGO.AsString + '-' + DmLocal.QryItensDESCRICAO.AsString;
+
+   f.lbl_c_qtd_unidades.text   := DmLocal.QryItensQTD_TOTAL.AsInteger.ToString;
+   f.lbl_c_qtd_embalagens.text := DmLocal.QryItensQTD_EMBALAGEM.AsInteger.ToString;
+   f.lbl_c_qtd_paletes.text    := DmLocal.QryItensQTD_PALETES.AsInteger.ToString;
+
+   f.lbl_lidos.text     :=  DmLocal.QryItensQTD_LIDA.AsInteger.ToString ;
+   f.lbl_total.Text     :=  DmLocal.QryItensQTD_TOTAL.AsInteger.ToString;
+
+   f.lblTipoConferencia.Text  := 'Conferindo por : '+FrmMAin.TipoSaida;
+
+   if FrmMain.TipoSaida='PL' then
+   Begin
+    if DmLocal.QryItensQTD_LIDA.AsInteger = DmLocal.QryItensQTD_PALETES.AsInteger then
+     Begin
+     f.Rectangle1.Fill.Color := $FFFFD3D3;
+     DmLocal.AtualizaProd;
+     End;
+   End else
+   if FrmMain.TipoSaida='EM' then
+    Begin
+     if DmLocal.QryItensQTD_LIDA.AsInteger = DmLocal.QryItensQTD_EMBALAGEM.AsInteger then
+     Begin
+     f.Rectangle1.Fill.Color := $FFFFD3D3;
+     DmLocal.AtualizaProd;
+     End;
+    End else
+   if FrmMain.TipoSaida='UN' then
+    Begin
+     if DmLocal.QryItensQTD_LIDA.AsInteger = DmLocal.QryItensQTD_TOTAL.AsInteger then
+     Begin
+     f.Rectangle1.Fill.Color := $FFFFD3D3;
+     DmLocal.AtualizaProd;
+     End
+    End;
+
+
+ {  if DmLocal.QryItensQTD_LIDA.AsInteger > DmLocal.QryItensQTD_TOTAL.AsInteger then
+   f.Rectangle1.Fill.Color := $FFFFD3D3 else
+   if DmLocal.QryItensQTD_LIDA.AsInteger = DmLocal.QryItensQTD_TOTAL.AsInteger then
+   Begin
+   f.Rectangle1.Fill.Color := $FFBFFFBF;
+   DmLocal.AtualizaProd;
+   End
+   else
+   f.Rectangle1.Fill.Color := $FFE5E5E5;
+  }
+
+   LstItens.AddObject(item);
+
+end;
+
+procedure TFrmConfere.btnLancarClick(Sender: TObject);
+begin
+  inherited;
+  LeItem;
+end;
+
+end.
